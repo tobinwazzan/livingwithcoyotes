@@ -14,3 +14,59 @@ html {
 body {
   @apply bg-sand text-bark antialiased;
 }
+
+/* --- Motion --- */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slowZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.14); }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.hero-bg {
+  /* Source art is a bright daytime scene; dim it so the logo + text read
+     against it. Tune brightness (lower = darker) to taste. */
+  filter: brightness(0.55);
+  animation: slowZoom 26s ease-in-out infinite alternate;
+}
+.hero-anim {
+  opacity: 0;
+  animation: heroIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-anim-1 { animation-delay: 0.05s; }
+.hero-anim-2 { animation-delay: 0.2s; }
+.hero-anim-3 { animation-delay: 0.38s; }
+.hero-anim-4 { animation-delay: 0.56s; }
+.hero-anim-5 { animation-delay: 0.78s; }
+
+.float-y { animation: floatY 2.4s ease-in-out infinite; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg,
+  .hero-anim,
+  .float-y { animation: none; }
+  .hero-anim { opacity: 1; }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
