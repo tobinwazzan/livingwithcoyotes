@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative overflow-hidden text-sand">
+      <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden text-sand sm:min-h-[600px]">
         {/* Layered hero: background street, dusk overlay, then action characters on top */}
         <Image
           src="/hero-bg-street.png"
@@ -60,7 +60,7 @@ export default function Home() {
           width={384}
           height={384}
           priority
-          className="hero-anim hero-anim-1 absolute left-6 top-6 z-20 h-[168px] w-[168px] sm:left-10 sm:top-10 sm:h-[192px] sm:w-[192px]"
+          className="hero-anim hero-anim-1 absolute left-4 top-4 z-20 h-20 w-20 sm:left-8 sm:top-8 sm:h-[168px] sm:w-[168px] lg:h-[192px] lg:w-[192px]"
         />
         <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
           <p className="hero-anim hero-anim-2 mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-clay">
