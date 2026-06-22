@@ -75,7 +75,7 @@ export default function Home() {
           <p className="hero-anim hero-anim-2 mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-clay sm:text-base">
             Welcome to the
           </p>
-          <h1 className="hero-anim hero-anim-2 text-5xl font-extrabold leading-[1.05] sm:text-7xl">
+          <h1 className="hero-anim hero-anim-2 whitespace-nowrap font-extrabold leading-[1.1] text-[clamp(1.4rem,5vw,4.5rem)]">
             Coyote Coexistence Council
           </h1>
           <p className="hero-anim hero-anim-3 mt-6 text-2xl font-semibold text-sand sm:text-3xl">
