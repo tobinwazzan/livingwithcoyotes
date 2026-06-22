@@ -35,20 +35,34 @@ export default function Home() {
     <main>
       {/* Hero */}
       <section className="relative overflow-hidden text-sand">
-        <div
-          className="hero-bg absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/hero-coyote-street-canva.png')" }}
+        {/* Layered hero: background street, dusk overlay, then action characters on top */}
+        <Image
+          src="/hero-bg-street.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-bottom"
         />
-        <div className="absolute inset-0 bg-dusk/80" />
+        <div className="absolute inset-0 bg-dusk/65" />
+        <Image
+          src="/hero-action.png"
+          alt="Residents walking a dog as a coyote rests nearby"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-bottom"
+        />
+        {/* Logo — top-left, 1.5x size */}
+        <Image
+          src="/logo-ccc.png"
+          alt="Coyote Coexistence Council logo"
+          width={384}
+          height={384}
+          priority
+          className="hero-anim hero-anim-1 absolute left-6 top-6 z-20 h-[168px] w-[168px] sm:left-10 sm:top-10 sm:h-[192px] sm:w-[192px]"
+        />
         <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
-          <Image
-            src="/logo-ccc.png"
-            alt="Coyote Coexistence Council logo"
-            width={256}
-            height={256}
-            priority
-            className="hero-anim hero-anim-1 mx-auto mb-6 h-28 w-28 sm:h-32 sm:w-32"
-          />
           <p className="hero-anim hero-anim-2 mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-clay">
             Coyote Coexistence Council
           </p>
