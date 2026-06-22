@@ -15,6 +15,11 @@ body {
   @apply bg-sand text-bark antialiased;
 }
 
+/* Lift hero text off the illustration so it reads as a distinct top layer. */
+.hero-text {
+  text-shadow: 0 2px 14px rgba(18, 24, 18, 0.55);
+}
+
 /* --- Motion --- */
 @keyframes heroIn {
   from { opacity: 0; transform: translateY(18px); }

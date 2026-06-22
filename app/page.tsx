@@ -62,7 +62,16 @@ export default function Home() {
           priority
           className="hero-anim hero-anim-1 absolute left-4 top-4 z-20 h-20 w-20 sm:left-8 sm:top-8 sm:h-[168px] sm:w-[168px] lg:h-[192px] lg:w-[192px]"
         />
-        <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
+        {/* Scrim: pools dark behind the centered text, fades out at the edges
+            so the corner characters stay vivid. Keeps text clearly on top. */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(58% 52% at 50% 48%, rgba(20,27,21,0.6) 0%, rgba(20,27,21,0.28) 48%, transparent 76%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-32 hero-text">
           <p className="hero-anim hero-anim-2 mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-clay">
             Coyote Coexistence Council
           </p>
