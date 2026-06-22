@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden text-sand sm:min-h-[600px]">
+      <section className="relative flex min-h-screen items-center justify-center overflow-hidden text-sand">
         {/* Layered hero: background street, dusk overlay, then action characters on top */}
         <Image
           src="/hero-bg-street.png"
@@ -72,13 +72,16 @@ export default function Home() {
           }}
         />
         <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-32 hero-text">
-          <p className="hero-anim hero-anim-2 mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-clay">
-            Coyote Coexistence Council
+          <p className="hero-anim hero-anim-2 mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-clay sm:text-base">
+            Welcome to the
           </p>
-          <h1 className="hero-anim hero-anim-2 text-4xl font-bold leading-tight sm:text-6xl">
-            Shared streets, wild balance.
+          <h1 className="hero-anim hero-anim-2 text-5xl font-extrabold leading-[1.05] sm:text-7xl">
+            Coyote Coexistence Council
           </h1>
-          <p className="hero-anim hero-anim-3 mx-auto mt-6 max-w-2xl text-lg text-sand/80">
+          <p className="hero-anim hero-anim-3 mt-6 text-2xl font-semibold text-sand sm:text-3xl">
+            Shared streets, wild balance.
+          </p>
+          <p className="hero-anim hero-anim-3 mx-auto mt-4 max-w-2xl text-base text-sand/75 sm:text-lg">
             Working together to keep our neighborhoods safe and our coyotes wild.
           </p>
           <div className="hero-anim hero-anim-4 mt-10 flex justify-center gap-4">
