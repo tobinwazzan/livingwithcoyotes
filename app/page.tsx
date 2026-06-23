@@ -78,10 +78,7 @@ export default function Home() {
           <h1 className="hero-anim hero-anim-2 whitespace-nowrap font-extrabold leading-[1.1] text-[clamp(1.4rem,5vw,4.5rem)]">
             Coyote Coexistence Council
           </h1>
-          <p className="hero-anim hero-anim-3 mt-6 text-2xl font-semibold text-sand sm:text-3xl">
-            Shared streets, wild balance.
-          </p>
-          <p className="hero-anim hero-anim-3 mx-auto mt-4 max-w-2xl text-base text-sand/75 sm:text-lg">
+          <p className="hero-anim hero-anim-3 mx-auto mt-6 max-w-2xl text-base text-sand/75 sm:text-lg">
             Working together to keep our neighborhoods safe and our coyotes wild.
           </p>
           <div className="hero-anim hero-anim-4 mt-10 flex justify-center gap-4">
@@ -90,12 +87,6 @@ export default function Home() {
               className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-sand hover:text-dusk"
             >
               Join the Council
-            </a>
-            <a
-              href="#mission"
-              className="rounded-lg border border-sand/40 px-6 py-3 font-semibold transition hover:bg-sand/10"
-            >
-              Our mission
             </a>
           </div>
           <a
