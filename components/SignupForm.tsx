@@ -234,6 +234,7 @@ export default function SignupForm() {
           <option value="resident">A resident / citizen</option>
           <option value="municipality">A municipality / city official</option>
           <option value="expert">An expert / professional</option>
+          <option value="partner">A vet, animal-control, or shelter</option>
           <option value="other">Other / just interested</option>
         </select>
       </div>
@@ -264,6 +265,14 @@ export default function SignupForm() {
           placeholder="LinkedIn profile URL * (linkedin.com/in/…)"
           aria-label="LinkedIn profile URL" className={inputCls}
         />
+      )}
+
+      {role === "partner" && (
+        <p className="-mt-1 text-xs text-bark/60">
+          Technical Partners (veterinarians, animal-control departments, and
+          shelters) contribute frontline data and opinions to the Council. Put
+          your organization's city above; we'll follow up about your role.
+        </p>
       )}
 
       <fieldset className="rounded-lg border border-bark/15 bg-white/40 p-4">

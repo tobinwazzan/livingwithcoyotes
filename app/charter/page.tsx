@@ -106,6 +106,21 @@ export default function CharterPage() {
           ))}
         </div>
 
+        {/* Partners & advisors note */}
+        <Reveal>
+          <p className="mt-6 rounded-lg border-l-4 border-moss/40 bg-white/60 p-5 text-sm leading-relaxed text-bark/75">
+            <strong className="text-bark">Partners &amp; advisors.</strong>{" "}
+            Beyond the four voting tiers, the Council draws on{" "}
+            <strong>Technical Partners</strong> — veterinarians, animal-control
+            departments, and shelters — who contribute frontline data and
+            opinions but do not vote, and an{" "}
+            <Link href="/about" className="text-clay hover:underline">
+              Advisory Board
+            </Link>{" "}
+            of expertise seats that provides guidance.
+          </p>
+        </Reveal>
+
         {/* Operating principles */}
         <Reveal>
           <h2 className="mt-14 text-2xl font-bold text-moss">
@@ -215,6 +230,31 @@ export default function CharterPage() {
                   <p className="mt-1 text-xs text-sand/50">
                     Invited members join with a code
                   </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Technical partners */}
+          <Reveal>
+            <h3 className="mt-12 text-center text-lg font-semibold text-sand">
+              Technical Partners
+            </h3>
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
+              Veterinarians, animal-control departments, and shelters — they
+              advise and inform, without a vote.
+            </p>
+          </Reveal>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            {[
+              "A veterinary clinic",
+              "An animal-control department",
+              "An animal shelter or rescue",
+            ].map((label, i) => (
+              <Reveal key={label} delay={i * 80} className="h-full">
+                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-sand/25 p-6 text-center">
+                  <p className="font-semibold text-sand/80">{label}</p>
+                  <p className="mt-1 text-xs text-sand/50">Seat open</p>
                 </div>
               </Reveal>
             ))}
