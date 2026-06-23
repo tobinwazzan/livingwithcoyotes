@@ -26,6 +26,78 @@ export default function ResourcesPage() {
           </p>
         </Reveal>
 
+        <Reveal>
+          <section className="mt-12 rounded-2xl border border-clay/30 bg-clay/5 p-6 sm:p-8">
+            <div className="flex items-baseline gap-3">
+              <span className="rounded-full bg-clay px-3 py-1 text-xs font-bold uppercase tracking-wide text-sand">
+                Start here
+              </span>
+              <h2 className="text-2xl font-bold text-moss">
+                If you only have ten minutes
+              </h2>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-bark/75">
+              Three picks, in order. Watch the first two and you'll know more
+              than most of your neighbors.
+            </p>
+
+            <div className="mt-6 grid gap-5 sm:grid-cols-3">
+              {[
+                {
+                  title: "How to Haze a Coyote",
+                  url: "https://www.youtube.com/watch?v=rlxMPpFQClM",
+                  source: "LA Animal Services",
+                  length: "~4 min",
+                  why: "The single most useful skill — what to do when a coyote won't move along.",
+                },
+                {
+                  title: "Coexisting With Urban Coyotes",
+                  url: "https://www.youtube.com/watch?v=2v4WK65w8pg",
+                  source: "Michigan DNR",
+                  length: "~5 min",
+                  why: "What pulls coyotes into your yard — and how to make your property boring to them.",
+                },
+                {
+                  title: "Coyotes: Safety & Coexistence in California",
+                  url: "https://www.youtube.com/watch?v=OdOewqXCS-I",
+                  source: "California Dept. of Fish & Wildlife",
+                  length: "~12 min",
+                  why: "The authoritative explainer: biology, boldness vs. food-conditioning, and what to do.",
+                },
+              ].map((pick, i) => (
+                <Reveal key={pick.url} delay={i * 80} className="h-full">
+                  <a
+                    href={pick.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-full flex-col rounded-xl border border-clay/30 bg-white/80 p-5 transition hover:-translate-y-0.5 hover:border-clay hover:shadow-md"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-clay text-sm font-bold text-sand">
+                        {i + 1}
+                      </span>
+                      {pick.length && (
+                        <span className="rounded-full bg-clay/10 px-2 py-0.5 text-xs font-medium text-clay">
+                          {pick.length}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-3 font-semibold text-bark transition group-hover:text-clay">
+                      {pick.title}
+                    </h3>
+                    <p className="mt-0.5 text-xs uppercase tracking-wide text-bark/50">
+                      {pick.source}
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-bark/75">
+                      {pick.why}
+                    </p>
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
         <div className="mt-14 space-y-16">
           {RESOURCE_GROUPS.map((group) => (
             <section key={group.id} id={group.id} className="scroll-mt-24">

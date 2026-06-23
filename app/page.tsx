@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import ByTheNumbers from "@/components/ByTheNumbers";
 
 const tiers = [
   {
@@ -163,6 +164,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* By the numbers */}
+      <ByTheNumbers />
+
       {/* How we work */}
       <section className="mx-auto max-w-3xl px-6 py-20">
         <Reveal>
@@ -192,6 +196,72 @@ export default function Home() {
             </Link>
           </p>
         </Reveal>
+      </section>
+
+      {/* Watch first */}
+      <section className="bg-white/50 py-20">
+        <div className="mx-auto max-w-5xl px-6">
+          <Reveal>
+            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+              New here? Watch these first.
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-center text-bark/70">
+              Three short videos from wildlife agencies — about fifteen minutes
+              total, and most of what a neighbor needs to know.
+            </p>
+          </Reveal>
+          <div className="mt-12 grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                title: "How to Haze a Coyote",
+                url: "https://www.youtube.com/watch?v=rlxMPpFQClM",
+                source: "LA Animal Services",
+                length: "~4 min",
+              },
+              {
+                title: "Coexisting With Urban Coyotes",
+                url: "https://www.youtube.com/watch?v=2v4WK65w8pg",
+                source: "Michigan DNR",
+                length: "~5 min",
+              },
+              {
+                title: "Coyotes: Safety & Coexistence in California",
+                url: "https://www.youtube.com/watch?v=OdOewqXCS-I",
+                source: "California Dept. of Fish & Wildlife",
+                length: "~12 min",
+              },
+            ].map((v, i) => (
+              <Reveal key={v.url} delay={i * 120} className="h-full">
+                <a
+                  href={v.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex h-full flex-col rounded-xl border border-moss/15 bg-sand p-6 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-clay/30 hover:shadow-md"
+                >
+                  <span className="w-fit rounded-full bg-moss/10 px-2 py-0.5 text-xs font-medium text-moss">
+                    {v.length}
+                  </span>
+                  <h3 className="mt-3 font-semibold text-bark transition group-hover:text-clay">
+                    {v.title}
+                  </h3>
+                  <p className="mt-0.5 text-xs uppercase tracking-wide text-bark/50">
+                    {v.source}
+                  </p>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p className="mt-8 text-center">
+              <Link
+                href="/resources"
+                className="font-semibold text-clay transition hover:text-bark"
+              >
+                See all resources →
+              </Link>
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       {/* Join CTA */}
