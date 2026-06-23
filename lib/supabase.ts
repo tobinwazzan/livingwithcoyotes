@@ -10,7 +10,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
+// Fall back to a syntactically-valid placeholder so the client constructs at
+// build time even when env vars are absent (local/CI). Production sets the real
+// values in Vercel. Pages that actually query are request-time (dynamic) only.
 export const supabase = createClient(
-  supabaseUrl ?? "",
-  supabaseAnonKey ?? "",
+  supabaseUrl || "https://placeholder.supabase.co",
+  supabaseAnonKey || "placeholder-anon-key",
 );
