@@ -21,13 +21,15 @@ const tiers = [
   },
 ];
 
-const principles = [
-  "Keep discussion open and language respectful",
-  "Solicit an exhaustive range of perspectives",
-  "Build toward a concrete action plan",
-  "Implement the plan and monitor its results",
-  "Adjust and re-implement based on the data",
-  "Repeat until our safety and stewardship goals are met",
+const steps = [
+  "Members share their experiences, observations, and concerns.",
+  "Professionals add expertise and evidence.",
+  "Everyone weighs it together and updates their positions — experts included.",
+  "The Council shapes an action plan and works toward agreement, with a fair way to settle a deadlock.",
+  "Municipal representatives bring the plan to their cities for approval.",
+  "Implementation begins, closely monitored by the Council.",
+  "Results are evaluated and the plan is adjusted.",
+  "When the goals are met, the active phase ends and ongoing maintenance passes to the municipalities.",
 ];
 
 export default function Home() {
@@ -155,23 +157,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Principles */}
+      {/* How we work */}
       <section className="mx-auto max-w-3xl px-6 py-20">
         <Reveal>
           <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
             How we work
           </h2>
         </Reveal>
-        <ul className="mx-auto mt-10 grid gap-4 sm:grid-cols-2">
-          {principles.map((p, i) => (
-            <Reveal key={p} delay={i * 90}>
+        <ol className="mx-auto mt-10 grid gap-4 sm:grid-cols-2">
+          {steps.map((s, i) => (
+            <Reveal key={s} delay={i * 80}>
               <li className="flex items-start gap-3 rounded-lg bg-white/60 p-4">
-                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-clay" />
-                <span className="text-bark/85">{p}</span>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-clay text-sm font-bold text-sand">
+                  {i + 1}
+                </span>
+                <span className="text-bark/85">{s}</span>
               </li>
             </Reveal>
           ))}
-        </ul>
+        </ol>
       </section>
 
       {/* Join / signup */}
