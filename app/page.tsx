@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SignupForm from "@/components/SignupForm";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 
 const tiers = [
@@ -83,13 +83,19 @@ export default function Home() {
           <p className="hero-anim hero-anim-3 mx-auto mt-6 max-w-2xl text-base text-sand/75 sm:text-lg">
             Working together to keep our neighborhoods safe and our coyotes wild.
           </p>
-          <div className="hero-anim hero-anim-4 mt-10 flex justify-center gap-4">
-            <a
-              href="#join"
+          <div className="hero-anim hero-anim-4 mt-10 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/join"
               className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-sand hover:text-dusk"
             >
               Join the Council
-            </a>
+            </Link>
+            <Link
+              href="/about"
+              className="rounded-lg border border-sand/40 px-6 py-3 font-semibold text-sand transition hover:bg-sand/10"
+            >
+              Why we exist
+            </Link>
           </div>
           <a
             href="#mission"
@@ -176,39 +182,47 @@ export default function Home() {
             </Reveal>
           ))}
         </ol>
+        <Reveal>
+          <p className="mt-8 text-center">
+            <Link
+              href="/charter"
+              className="font-semibold text-clay transition hover:text-bark"
+            >
+              Read the full Charter →
+            </Link>
+          </p>
+        </Reveal>
       </section>
 
-      {/* Join / signup */}
+      {/* Join CTA */}
       <section id="join" className="bg-moss/10 py-20">
-        <div className="mx-auto max-w-2xl px-6">
+        <div className="mx-auto max-w-2xl px-6 text-center">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-2xl font-bold text-moss sm:text-3xl">
               Be part of the plan
             </h2>
-            <p className="mx-auto mt-3 mb-8 max-w-lg text-center text-bark/75">
-              Leave your email to get involved as the Council takes shape. Tell
-              us your city and how you'd like to contribute.
+            <p className="mx-auto mt-3 max-w-lg text-bark/75">
+              Membership is $25 a year — and free for invited municipal
+              representatives, experts, and Council members with a code. Tell us
+              your city and how you'd like to help.
             </p>
-            <SignupForm />
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/join"
+                className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark"
+              >
+                Join the Council
+              </Link>
+              <Link
+                href="/resources"
+                className="rounded-lg border border-moss/30 px-6 py-3 font-semibold text-moss transition hover:bg-moss/10"
+              >
+                Start learning
+              </Link>
+            </div>
           </Reveal>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-dusk py-10 text-center text-sm text-sand/70">
-        <Image
-          src="/logo-ccc.png"
-          alt=""
-          width={112}
-          height={112}
-          className="mx-auto mb-3 h-14 w-14"
-          aria-hidden="true"
-        />
-        <p className="font-semibold text-sand">Coyote Coexistence Council</p>
-        <p className="mt-3 text-sand/50">
-          © {new Date().getFullYear()} CCC · livingwithcoyotes.org
-        </p>
-      </footer>
     </main>
   );
 }
