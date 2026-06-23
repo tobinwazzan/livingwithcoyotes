@@ -1,46 +1,56 @@
-// The CCC advisory board — nine seats, each modeled on the published work of a
-// leading real-world authority. Source: Board of Advisors/BofA.md.
+// PUBLIC, de-identified advisory board — disciplines only, NO names.
+// The real individuals each seat is modeled on are kept INTERNAL (vault:
+// "Board of Advisors/") and must not appear in this repo or the deployed site.
 
-export type Advisor = {
-  name: string;
-  seat: string;
+export type Seat = {
+  discipline: string;
+  focus: string;
 };
 
-export const ADVISORS: Advisor[] = [
+export const ADVISORY_SEATS: Seat[] = [
   {
-    name: "Stanley Gehrt",
-    seat: "Urban coyote science — 25 years, 1,400+ collared coyotes; the data anchor",
+    discipline: "Urban Coyote Science",
+    focus:
+      "What urban coyotes actually do — behavior, diet, territory, and population dynamics, grounded in long-term tracking data.",
   },
   {
-    name: "Niamh Quinn",
-    seat: "Southern California / Orange County field expert; built Coyote Cacher",
+    discipline: "Southern California Field Research",
+    focus:
+      "Region-specific research on coyote behavior, diet, and conflict across Los Angeles and Orange counties.",
   },
   {
-    name: "Camilla Fox",
-    seat: "Project Coyote; coexistence program design & advocacy; non-lethal",
+    discipline: "Coexistence Program Design",
+    focus:
+      "Designing and running community coexistence programs; non-lethal strategy, education, and advocacy.",
   },
   {
-    name: "Lynsey White",
-    seat: "The practitioner — municipal programs, hazing, ordinances, response protocols",
+    discipline: "Municipal Implementation",
+    focus:
+      "How cities actually stand up programs — community hazing, ordinance design, and tiered response protocols.",
   },
   {
-    name: "Marc Bekoff",
-    seat: "Cognitive ethology, compassionate conservation — the ethics & values seat",
+    discipline: "Animal Ethics",
+    focus:
+      "The moral dimension of coexistence — the cognitive and emotional lives of coyotes, and humane practice.",
   },
   {
-    name: "Shelley Alexander",
-    seat: "Coyote conflict mapping & citizen science — data quality for the incident map",
+    discipline: "Conflict Mapping & Citizen Science",
+    focus:
+      "Incident-map design and data quality — guarding against reporting bias and fear amplification.",
   },
   {
-    name: "Christopher Schell",
-    seat: "Urban ecology + environmental justice — the equity seat",
+    discipline: "Urban Ecology & Environmental Justice",
+    focus:
+      "Equity in who is heard and served, so tools don't quietly favor only affluent, well-connected neighborhoods.",
   },
   {
-    name: "Stewart Breck",
-    seat: "USDA non-lethal deterrence + management realism — the pragmatist",
+    discipline: "Non-Lethal Deterrence & Management Realism",
+    focus:
+      "What the evidence says about deterrents — and the hard cases where management decisions get tested.",
   },
   {
-    name: "Peter Sandman",
-    seat: "Risk communication (“risk = hazard + outrage”) — messaging, alerts, panic",
+    discipline: "Risk Communication",
+    focus:
+      "Informing residents without amplifying panic — alerts, messaging, and calibrating public concern.",
   },
 ];

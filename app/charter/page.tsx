@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
-import { ADVISORS } from "@/content/board";
+import { ADVISORY_SEATS } from "@/content/board";
 
 export const metadata: Metadata = {
   title: "Charter",
@@ -223,11 +223,11 @@ export default function CharterPage() {
           {/* Advisory board names */}
           <Reveal>
             <h3 className="mt-14 text-center text-lg font-semibold text-sand">
-              Advisory Board
+              Advisory Board — nine expertise seats
             </h3>
             <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
-              Nine seats, each modeled on the published work of a leading
-              authority. See{" "}
+              Each seat is modeled on the published work of leading authorities
+              in that discipline. See{" "}
               <Link href="/about" className="text-clay hover:underline">
                 About
               </Link>{" "}
@@ -235,12 +235,12 @@ export default function CharterPage() {
             </p>
           </Reveal>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {ADVISORS.map((a) => (
+            {ADVISORY_SEATS.map((s) => (
               <span
-                key={a.name}
+                key={s.discipline}
                 className="rounded-full border border-sand/20 bg-sand/5 px-4 py-2 text-sm font-medium text-sand/85"
               >
-                {a.name}
+                {s.discipline}
               </span>
             ))}
           </div>

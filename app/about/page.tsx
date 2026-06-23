@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
-import { ADVISORS } from "@/content/board";
+import { ADVISORY_SEATS } from "@/content/board";
 
 export const metadata: Metadata = {
   title: "About",
@@ -177,12 +177,12 @@ export default function AboutPage() {
             </p>
           </Reveal>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ADVISORS.map((a, i) => (
-              <Reveal key={a.name} delay={i * 60} className="h-full">
+            {ADVISORY_SEATS.map((s, i) => (
+              <Reveal key={s.discipline} delay={i * 60} className="h-full">
                 <div className="h-full rounded-xl border border-sand/15 bg-sand/5 p-5">
-                  <h3 className="font-semibold text-clay">{a.name}</h3>
+                  <h3 className="font-semibold text-clay">{s.discipline}</h3>
                   <p className="mt-1 text-sm leading-relaxed text-sand/75">
-                    {a.seat}
+                    {s.focus}
                   </p>
                 </div>
               </Reveal>
@@ -190,14 +190,15 @@ export default function AboutPage() {
           </div>
           <Reveal>
             <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-sand/60">
-              In full transparency: this founding board is an{" "}
-              <strong className="text-sand/80">AI advisory panel</strong>, each
-              member modeled on the published work of a leading real-world
-              authority. It is not a substitute for those experts and they have
-              not endorsed us — it's a way to pressure-test every claim on this
-              site against the best of what each discipline knows, and to argue
-              with our blind spots before they become policy. The board does not
-              always agree. That is the point.
+              In full transparency: these are{" "}
+              <strong className="text-sand/80">nine expertise seats</strong>,
+              each modeled on the published work of leading authorities in that
+              discipline. It is a way to pressure-test every claim on this site
+              against the best of what each field knows, and to argue with our
+              blind spots before they become policy — not a claim that any
+              individual expert endorses us. The disciplines do not always point
+              the same way. That is the point. As real advisors join, we'll name
+              them here with their consent.
             </p>
           </Reveal>
         </div>
