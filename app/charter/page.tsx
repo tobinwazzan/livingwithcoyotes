@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
@@ -180,13 +181,37 @@ export default function CharterPage() {
           {/* Founder / Admin */}
           <Reveal>
             <div className="mx-auto mt-12 max-w-md rounded-xl border border-clay/40 bg-sand/5 p-6 text-center">
-              <p className="text-xs font-semibold uppercase tracking-wide text-clay">
+              <Image
+                src="/founder-tobin.png"
+                alt="Tobin Wazzan"
+                width={500}
+                height={500}
+                className="mx-auto h-24 w-24 rounded-full object-cover ring-2 ring-clay/40"
+              />
+              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-clay">
                 Founder &amp; Steward
               </p>
               <p className="mt-2 text-xl font-bold text-sand">Tobin Wazzan</p>
               <p className="mt-1 text-sm text-sand/70">
                 Convener, Coyote Coexistence Council
               </p>
+              <details className="mt-4 text-left">
+                <summary className="cursor-pointer list-none text-center text-sm font-semibold text-clay transition hover:text-sand [&::-webkit-details-marker]:hidden">
+                  Read the role description ▾
+                </summary>
+                <div className="mt-3 rounded-lg border border-sand/15 bg-dusk/40 p-4 text-sm leading-relaxed text-sand/80">
+                  As Founder and Convener, Tobin Wazzan started the Council and
+                  stewards its process — bringing the four tiers (residents,
+                  municipalities, experts, and partners) to one table, keeping
+                  the dialogue open and respectful, and drawing out the full
+                  range of perspectives. The Convener doesn&apos;t override the
+                  Council; the role is to keep the work moving, fair, and
+                  accountable to results — guiding it from first concern toward a
+                  concrete, evidence-based plan, ensuring a fair way to settle a
+                  deadlock, and handing ongoing maintenance to the
+                  municipalities once the goals are met.
+                </div>
+              </details>
             </div>
           </Reveal>
 
