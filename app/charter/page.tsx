@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
+import RoleDetails from "@/components/RoleDetails";
 import { ADVISORY_SEATS } from "@/content/board";
 
 export const metadata: Metadata = {
@@ -35,18 +36,22 @@ const participants = [
   {
     title: "Residents",
     body: "Citizens grouped by their city of residence, sharing on-the-ground experience and local concerns.",
+    role: "Residents join grouped by the city they live in. They bring on-the-ground experience and local concerns, take part in the Council's deliberations, and vote on the plans that shape their own neighborhoods — no expertise required; local knowledge is the qualification.",
   },
   {
     title: "Municipalities",
     body: "Cities and their officials, who set policy and carry approved plans into practice.",
+    role: "City staff and officials translate the Council's plans into policy and practice — bringing approved plans to their cities, shaping what's actually workable, and carrying implementation and enforcement on the ground. Voting members of the Council.",
   },
   {
     title: "Experts",
     body: "Subject-matter authorities — wildlife biologists and specialists — grounding decisions in evidence.",
+    role: "Wildlife biologists and subject-matter specialists ground the Council's decisions in evidence. They add expertise, challenge assumptions, update their own positions as the data comes in, and vote alongside the other tiers.",
   },
   {
     title: "Stewards",
     body: "Admins who keep the dialogue open, respectful, and moving toward action.",
+    role: "Stewards (admins) keep the conversation open, respectful, and moving toward action — facilitating deliberation, safeguarding the operating principles, and making sure every voice is heard without putting a thumb on the scale.",
   },
 ];
 
@@ -102,6 +107,7 @@ export default function CharterPage() {
                 <p className="mt-1.5 text-sm leading-relaxed text-bark/80">
                   {p.body}
                 </p>
+                <RoleDetails text={p.role} variant="light" />
               </div>
             </Reveal>
           ))}
@@ -195,23 +201,11 @@ export default function CharterPage() {
               <p className="mt-1 text-sm text-sand/70">
                 Convener, Coyote Coexistence Council
               </p>
-              <details className="mt-4 text-left">
-                <summary className="cursor-pointer list-none text-center text-sm font-semibold text-clay transition hover:text-sand [&::-webkit-details-marker]:hidden">
-                  Read the role description ▾
-                </summary>
-                <div className="mt-3 rounded-lg border border-sand/15 bg-dusk/40 p-4 text-sm leading-relaxed text-sand/80">
-                  As Founder and Convener, Tobin Wazzan started the Council and
-                  stewards its process — bringing the four tiers (residents,
-                  municipalities, experts, and partners) to one table, keeping
-                  the dialogue open and respectful, and drawing out the full
-                  range of perspectives. The Convener doesn&apos;t override the
-                  Council; the role is to keep the work moving, fair, and
-                  accountable to results — guiding it from first concern toward a
-                  concrete, evidence-based plan, ensuring a fair way to settle a
-                  deadlock, and handing ongoing maintenance to the
-                  municipalities once the goals are met.
-                </div>
-              </details>
+              <RoleDetails
+                variant="dark"
+                center
+                text="As Founder and Convener, Tobin Wazzan started the Council and stewards its process — bringing the four tiers (residents, municipalities, experts, and partners) to one table, keeping the dialogue open and respectful, and drawing out the full range of perspectives. The Convener doesn't override the Council; the role is to keep the work moving, fair, and accountable to results — guiding it from first concern toward a concrete, evidence-based plan, ensuring a fair way to settle a deadlock, and handing ongoing maintenance to the municipalities once the goals are met."
+              />
             </div>
           </Reveal>
 
@@ -224,6 +218,11 @@ export default function CharterPage() {
               Cities that have committed to bringing Council plans to their
               communities.
             </p>
+            <RoleDetails
+              variant="dark"
+              center
+              text="A Municipal Representative commits their city to the Council's table — bringing Council plans to their city for consideration and approval, sharing local data and constraints, and helping carry approved plans into implementation. Signing the Charter signals a city's intent to participate, not a binding obligation to adopt any particular plan."
+            />
           </Reveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[0, 1, 2].map((i) => (
@@ -246,6 +245,11 @@ export default function CharterPage() {
             <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
               Experts and community leaders seated on the Council.
             </p>
+            <RoleDetails
+              variant="dark"
+              center
+              text="Council Members are seated experts and community leaders who deliberate on plans, weigh the evidence and the perspectives in the room, and vote. They serve voluntarily, engage honestly, update their positions as the data warrants, and uphold the Council's operating principles."
+            />
           </Reveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[0, 1, 2].map((i) => (
@@ -269,6 +273,11 @@ export default function CharterPage() {
               Veterinarians, animal-control departments, and shelters — they
               advise and inform, without a vote.
             </p>
+            <RoleDetails
+              variant="dark"
+              center
+              text="Technical Partners — veterinarians, animal-control departments, and shelters — contribute frontline data and operational reality: the injuries treated, the incidents logged, the pets lost and found. They advise and inform the Council with on-the-ground insight, but they do not vote."
+            />
           </Reveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[
