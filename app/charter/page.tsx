@@ -223,8 +223,11 @@ export default function CharterPage() {
           {/* Advisory board names */}
           <Reveal>
             <h3 className="mt-14 text-center text-lg font-semibold text-sand">
-              Advisory Board — nine expertise seats
+              Advisory Board
             </h3>
+            <p className="mt-1 text-center text-sm text-sand/55">
+              nine expertise seats
+            </p>
             <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
               Each seat is modeled on the published work of leading authorities
               in that discipline. See{" "}
