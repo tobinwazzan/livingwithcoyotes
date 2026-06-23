@@ -201,7 +201,6 @@ export default function Home() {
           aria-hidden="true"
         />
         <p className="font-semibold text-sand">Coyote Coexistence Council</p>
-        <p className="mt-1">Shared streets, wild balance.</p>
         <p className="mt-3 text-sand/50">
           © {new Date().getFullYear()} CCC · livingwithcoyotes.org
         </p>

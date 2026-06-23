@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://livingwithcoyotes.org"),
   openGraph: {
     title: "Coyote Coexistence Council",
-    description: "Shared streets, wild balance.",
+    description: "Working together to keep our neighborhoods safe and our coyotes wild.",
     url: "https://livingwithcoyotes.org",
     siteName: "Living With Coyotes",
     type: "website",
