@@ -57,7 +57,7 @@ export default function MembershipPage() {
       <PageHeader
         eyebrow="Membership"
         title="Why join the Council"
-        subtitle="Coexistence doesn't happen in a viral thread. It takes a funded, organized, accountable effort — and $19 a year is how a volunteer council becomes a real one."
+        subtitle="Coexistence doesn't happen in a viral thread. It takes a funded, organized effort — and $19 a year is how a volunteer council becomes a real one."
       />
 
       {/* Why it matters */}
