@@ -18,7 +18,7 @@ const APPS = [
 ];
 
 const inputCls =
-  "w-full rounded-lg border border-bark/20 bg-white/80 px-4 py-3 outline-none focus:border-clay focus:ring-2 focus:ring-clay/30";
+  "w-full rounded-lg border border-line/20 bg-card/80 px-4 py-3 outline-none focus:border-clay focus:ring-2 focus:ring-clay/30";
 
 function ContinueButton() {
   const { pending } = useFormStatus();
@@ -47,9 +47,9 @@ export default function SignupForm() {
   // ---------- PHASE 3: done ----------
   if (done) {
     return (
-      <div className="rounded-xl border border-moss/30 bg-white/60 p-6 text-center">
-        <p className="text-lg font-semibold text-moss">Welcome aboard.</p>
-        <p className="mt-1 text-bark/80">{done}</p>
+      <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
+        <p className="text-lg font-semibold text-heading">Welcome aboard.</p>
+        <p className="mt-1 text-ink/80">{done}</p>
       </div>
     );
   }
@@ -96,40 +96,40 @@ export default function SignupForm() {
 
     const optionCls = (m: string) =>
       `rounded-lg border px-4 py-3 text-left text-sm font-medium transition ${
-        method === m ? "border-clay bg-clay/10 text-bark" : "border-bark/20 bg-white/70 text-bark/80 hover:border-clay/50"
+        method === m ? "border-clay bg-clay/10 text-ink" : "border-line/20 bg-card/70 text-ink/80 hover:border-clay/50"
       }`;
 
     return (
       <div className="space-y-5">
-        <div className="rounded-xl border border-moss/30 bg-white/60 p-5 text-center">
-          <p className="text-lg font-semibold text-moss">You&apos;re on the list. ✅</p>
-          <p className="mt-1 text-bark/80">
+        <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
+          <p className="text-lg font-semibold text-heading">You&apos;re on the list. ✅</p>
+          <p className="mt-1 text-ink/80">
             Make it official — <strong>annual membership is $25</strong>. Invited
             municipal &amp; expert representatives and Council members join free with a code.
           </p>
         </div>
 
-        <p className="text-center text-sm font-medium text-bark/70">How would you like to join?</p>
+        <p className="text-center text-sm font-medium text-ink/70">How would you like to join?</p>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <button type="button" className={optionCls("card")} onClick={() => choose("card")}>
-            💳 Card<span className="block text-xs font-normal text-bark/55">{dollars(cardTotal)}</span>
+            💳 Card<span className="block text-xs font-normal text-ink/55">{dollars(cardTotal)}</span>
           </button>
           <button type="button" className={optionCls("venmo")} onClick={() => choose("venmo")}>
-            Venmo<span className="block text-xs font-normal text-bark/55">{dollars(MEMBERSHIP_CENTS)}</span>
+            Venmo<span className="block text-xs font-normal text-ink/55">{dollars(MEMBERSHIP_CENTS)}</span>
           </button>
           <button type="button" className={optionCls("zelle")} onClick={() => choose("zelle")}>
-            Zelle<span className="block text-xs font-normal text-bark/55">{dollars(MEMBERSHIP_CENTS)}</span>
+            Zelle<span className="block text-xs font-normal text-ink/55">{dollars(MEMBERSHIP_CENTS)}</span>
           </button>
           <button type="button" className={optionCls("code")} onClick={() => choose("code")}>
-            I have a code<span className="block text-xs font-normal text-bark/55">Free</span>
+            I have a code<span className="block text-xs font-normal text-ink/55">Free</span>
           </button>
         </div>
 
         {/* Card */}
         {method === "card" && (
-          <div className="rounded-lg border border-bark/15 bg-white/50 p-4">
-            <p className="text-sm text-bark/75">
+          <div className="rounded-lg border border-line/15 bg-card/50 p-4">
+            <p className="text-sm text-ink/75">
               You&apos;ll pay <strong>{dollars(cardTotal)}</strong> — that&apos;s the $25 membership
               plus the card processing fee, so the Council nets the full $25.
             </p>
@@ -144,50 +144,50 @@ export default function SignupForm() {
 
         {/* Venmo */}
         {method === "venmo" && (
-          <div className="rounded-lg border border-bark/15 bg-white/50 p-4">
+          <div className="rounded-lg border border-line/15 bg-card/50 p-4">
             {VENMO_HANDLE ? (
               <>
-                <p className="text-sm text-bark/75">
+                <p className="text-sm text-ink/75">
                   Send <strong>{dollars(MEMBERSHIP_CENTS)}</strong> on Venmo to{" "}
                   <strong>{VENMO_HANDLE}</strong> — please put your name in the note. Then upload a screenshot of your receipt:
                 </p>
                 <input
                   type="file" accept="image/*,application/pdf" disabled={busy}
                   onChange={(e) => onReceipt(e, "venmo")}
-                  className="mt-3 block w-full text-sm text-bark/70 file:mr-3 file:rounded-lg file:border-0 file:bg-clay file:px-4 file:py-2 file:font-semibold file:text-sand"
+                  className="mt-3 block w-full text-sm text-ink/70 file:mr-3 file:rounded-lg file:border-0 file:bg-clay file:px-4 file:py-2 file:font-semibold file:text-sand"
                 />
               </>
             ) : (
-              <p className="text-sm text-bark/70">Venmo isn&apos;t set up yet — please use a card or a code for now.</p>
+              <p className="text-sm text-ink/70">Venmo isn&apos;t set up yet — please use a card or a code for now.</p>
             )}
           </div>
         )}
 
         {/* Zelle */}
         {method === "zelle" && (
-          <div className="rounded-lg border border-bark/15 bg-white/50 p-4">
+          <div className="rounded-lg border border-line/15 bg-card/50 p-4">
             {ZELLE_HANDLE ? (
               <>
-                <p className="text-sm text-bark/75">
+                <p className="text-sm text-ink/75">
                   Send <strong>{dollars(MEMBERSHIP_CENTS)}</strong> via Zelle to{" "}
                   <strong>{ZELLE_HANDLE}</strong> — please put your name in the memo. Then upload a screenshot of your receipt:
                 </p>
                 <input
                   type="file" accept="image/*,application/pdf" disabled={busy}
                   onChange={(e) => onReceipt(e, "zelle")}
-                  className="mt-3 block w-full text-sm text-bark/70 file:mr-3 file:rounded-lg file:border-0 file:bg-clay file:px-4 file:py-2 file:font-semibold file:text-sand"
+                  className="mt-3 block w-full text-sm text-ink/70 file:mr-3 file:rounded-lg file:border-0 file:bg-clay file:px-4 file:py-2 file:font-semibold file:text-sand"
                 />
               </>
             ) : (
-              <p className="text-sm text-bark/70">Zelle isn&apos;t set up yet — please use a card or a code for now.</p>
+              <p className="text-sm text-ink/70">Zelle isn&apos;t set up yet — please use a card or a code for now.</p>
             )}
           </div>
         )}
 
         {/* Code */}
         {method === "code" && (
-          <div className="rounded-lg border border-bark/15 bg-white/50 p-4">
-            <p className="text-sm text-bark/75">
+          <div className="rounded-lg border border-line/15 bg-card/50 p-4">
+            <p className="text-sm text-ink/75">
               Enter your invitation code (honorary or Council). Each code works once.
             </p>
             <div className="mt-3 flex gap-2">
@@ -210,7 +210,7 @@ export default function SignupForm() {
         <button
           type="button"
           onClick={() => setDone("No problem — we have your info and we'll be in touch as the Council takes shape.")}
-          className="mx-auto block text-sm text-bark/50 underline-offset-2 hover:text-bark/80 hover:underline"
+          className="mx-auto block text-sm text-ink/50 underline-offset-2 hover:text-ink/80 hover:underline"
         >
           I&apos;ll decide later — just keep me posted
         </button>
@@ -222,13 +222,13 @@ export default function SignupForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label className="mb-1 block text-sm font-medium text-bark/80">
+        <label className="mb-1 block text-sm font-medium text-ink/80">
           I&apos;m joining as <span className="text-clay">*</span>
         </label>
         <select
           name="role" required value={role}
           onChange={(e) => setRole(e.target.value)}
-          className={inputCls + " text-bark/90"}
+          className={inputCls + " text-ink/90"}
         >
           <option value="" disabled>Choose one …</option>
           <option value="resident">A resident / citizen</option>
@@ -254,7 +254,7 @@ export default function SignupForm() {
       </div>
 
       {role === "municipality" && (
-        <p className="-mt-1 text-xs text-bark/60">
+        <p className="-mt-1 text-xs text-ink/60">
           Use your official city/government email (e.g., name@cityofirvine.org) so we can verify your role.
         </p>
       )}
@@ -268,20 +268,20 @@ export default function SignupForm() {
       )}
 
       {role === "partner" && (
-        <p className="-mt-1 text-xs text-bark/60">
+        <p className="-mt-1 text-xs text-ink/60">
           Technical Partners (veterinarians, animal-control departments, and
           shelters) contribute frontline data and opinions to the Council. Put
           your organization's city above; we'll follow up about your role.
         </p>
       )}
 
-      <fieldset className="rounded-lg border border-bark/15 bg-white/40 p-4">
-        <legend className="px-1 text-sm font-medium text-bark/80">
+      <fieldset className="rounded-lg border border-line/15 bg-card/40 p-4">
+        <legend className="px-1 text-sm font-medium text-ink/80">
           Which of these do you use? (select all that apply)
         </legend>
         <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
           {APPS.map((app) => (
-            <label key={app} className="flex items-center gap-2 text-sm text-bark/80">
+            <label key={app} className="flex items-center gap-2 text-sm text-ink/80">
               <input type="checkbox" name="apps" value={app} className="h-4 w-4 accent-clay" />
               {app}
             </label>
@@ -295,7 +295,7 @@ export default function SignupForm() {
           <p className="text-sm text-clay" role="alert">{state.message}</p>
         )}
       </div>
-      <p className="text-center text-xs text-bark/50">
+      <p className="text-center text-xs text-ink/50">
         Next: choose membership ($25/yr) or enter a free code. Your info is saved either way.
       </p>
     </form>

@@ -63,16 +63,16 @@ export default function MembershipPage() {
       {/* Why it matters */}
       <section className="mx-auto max-w-5xl px-6 py-16">
         <Reveal>
-          <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+          <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
             Why membership matters
           </h2>
         </Reveal>
         <div className="mt-10 grid gap-6 sm:grid-cols-3">
           {why.map((w, i) => (
             <Reveal key={w.title} delay={i * 100} className="h-full">
-              <div className="h-full rounded-xl border border-moss/15 bg-white/60 p-6">
+              <div className="h-full rounded-xl border border-line/15 bg-card/60 p-6">
                 <h3 className="font-semibold text-clay">{w.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                <p className="mt-2 text-sm leading-relaxed text-ink/80">
                   {w.body}
                 </p>
               </div>
@@ -82,22 +82,22 @@ export default function MembershipPage() {
       </section>
 
       {/* What it offers */}
-      <section className="bg-white/50 py-16">
+      <section className="bg-card/50 py-16">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               What your membership offers
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-bark/70">
+            <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
               For $25 a year — the price of a couple of coffees a month.
             </p>
           </Reveal>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {offers.map((o, i) => (
               <Reveal key={o.title} delay={i * 80} className="h-full">
-                <div className="h-full rounded-xl border border-moss/15 bg-sand p-6 shadow-sm">
+                <div className="h-full rounded-xl border border-line/15 bg-card p-6 shadow-sm">
                   <h3 className="font-semibold text-clay">{o.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                  <p className="mt-2 text-sm leading-relaxed text-ink/80">
                     {o.body}
                   </p>
                 </div>
@@ -110,7 +110,7 @@ export default function MembershipPage() {
       {/* How it works */}
       <section className="mx-auto max-w-3xl px-6 py-16">
         <Reveal>
-          <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+          <h2 className="text-2xl font-bold text-heading sm:text-3xl">
             How membership works
           </h2>
           <ul className="mt-6 space-y-3">
@@ -123,7 +123,7 @@ export default function MembershipPage() {
             ].map((line) => (
               <li key={line} className="flex items-start gap-3">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-clay" />
-                <span className="text-bark/85">{line}</span>
+                <span className="text-ink/85">{line}</span>
               </li>
             ))}
           </ul>
@@ -131,13 +131,13 @@ export default function MembershipPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-moss/10 py-16">
+      <section className="bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <Reveal>
-            <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-2xl font-bold text-heading sm:text-3xl">
               Ready when you are
             </h2>
-            <p className="mx-auto mt-3 max-w-lg text-bark/75">
+            <p className="mx-auto mt-3 max-w-lg text-ink/75">
               Tell us your city and how you'd like to help. It takes two minutes.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -149,7 +149,7 @@ export default function MembershipPage() {
               </Link>
               <Link
                 href="/resources"
-                className="rounded-lg border border-moss/30 px-6 py-3 font-semibold text-moss transition hover:bg-moss/10"
+                className="rounded-lg border border-line/30 px-6 py-3 font-semibold text-heading transition hover:bg-panel"
               >
                 Browse the resources
               </Link>

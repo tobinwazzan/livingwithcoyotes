@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NAV_ITEMS, JOIN_HREF } from "@/lib/nav";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -27,14 +28,14 @@ export default function SiteHeader() {
 
   const linkBase = "text-sm font-medium transition-colors";
   const linkColor = solid
-    ? "text-bark/75 hover:text-clay"
+    ? "text-ink/75 hover:text-clay"
     : "text-sand/90 hover:text-white";
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
         solid
-          ? "border-b border-bark/10 bg-sand/95 shadow-sm backdrop-blur"
+          ? "border-b border-line/10 bg-surface/95 shadow-sm backdrop-blur"
           : "bg-transparent"
       }`}
     >
@@ -54,7 +55,7 @@ export default function SiteHeader() {
             height={48}
             className="h-9 w-9 sm:h-11 sm:w-11"
           />
-          <span className="hidden text-base font-bold leading-tight text-moss sm:block">
+          <span className="hidden text-base font-bold leading-tight text-heading sm:block">
             Coyote Coexistence Council
           </span>
         </Link>
@@ -75,6 +76,13 @@ export default function SiteHeader() {
               </Link>
             );
           })}
+          <ThemeToggle
+            className={
+              solid
+                ? "text-ink/70 hover:text-clay"
+                : "text-sand/90 hover:text-white"
+            }
+          />
           <Link
             href={JOIN_HREF}
             className="rounded-lg bg-clay px-4 py-2 text-sm font-semibold text-sand transition hover:bg-bark"
@@ -83,14 +91,16 @@ export default function SiteHeader() {
           </Link>
         </nav>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          className={`md:hidden ${solid ? "text-bark" : "text-sand"}`}
-        >
+        {/* Mobile: theme toggle + menu button */}
+        <div className="flex items-center gap-3 md:hidden">
+          <ThemeToggle className={solid ? "text-ink" : "text-sand"} />
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            className={solid ? "text-ink" : "text-sand"}
+          >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             {open ? (
               <>
@@ -105,19 +115,20 @@ export default function SiteHeader() {
               </>
             )}
           </svg>
-        </button>
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu panel */}
       {open && (
-        <div className="border-t border-bark/10 bg-sand md:hidden">
+        <div className="border-t border-line/10 bg-card md:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col px-4 py-3">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`border-b border-bark/5 py-3 text-base font-medium ${
-                  pathname === item.href ? "text-clay" : "text-bark/80"
+                className={`border-b border-line/5 py-3 text-base font-medium ${
+                  pathname === item.href ? "text-clay" : "text-ink/80"
                 }`}
               >
                 {item.label}

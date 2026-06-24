@@ -122,10 +122,10 @@ export default function Home() {
       {/* Mission */}
       <section id="mission" className="mx-auto max-w-3xl px-6 py-20 text-center">
         <Reveal>
-          <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+          <h2 className="text-2xl font-bold text-heading sm:text-3xl">
             Our mission
           </h2>
-          <p className="mt-6 text-lg leading-relaxed text-bark/85">
+          <p className="mt-6 text-lg leading-relaxed text-ink/85">
             The Coyote Coexistence Council brings together residents, municipal
             officials, and wildlife experts to develop, implement, and refine
             evidence-based safety plans that protect our communities while
@@ -139,22 +139,22 @@ export default function Home() {
       </section>
 
       {/* Tiers */}
-      <section className="bg-white/50 py-20">
+      <section className="bg-card/50 py-20">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               A seat for every voice
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-bark/70">
+            <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
               Coexistence works when everyone affected is at the table.
             </p>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {tiers.map((t, i) => (
               <Reveal key={t.title} delay={i * 120} className="h-full">
-                <div className="h-full rounded-xl border border-moss/15 bg-sand p-6 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-clay/30 hover:shadow-md">
+                <div className="h-full rounded-xl border border-line/15 bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-clay/30 hover:shadow-md">
                   <h3 className="text-lg font-semibold text-clay">{t.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                  <p className="mt-2 text-sm leading-relaxed text-ink/80">
                     {t.body}
                   </p>
                 </div>
@@ -170,18 +170,18 @@ export default function Home() {
       {/* How we work */}
       <section className="mx-auto max-w-3xl px-6 py-20">
         <Reveal>
-          <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+          <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
             How we work
           </h2>
         </Reveal>
         <ol className="mx-auto mt-10 grid gap-4 sm:grid-cols-2">
           {steps.map((s, i) => (
             <Reveal key={s} delay={i * 80}>
-              <li className="flex items-start gap-3 rounded-lg bg-white/60 p-4">
+              <li className="flex items-start gap-3 rounded-lg bg-card/60 p-4">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-clay text-sm font-bold text-sand">
                   {i + 1}
                 </span>
-                <span className="text-bark/85">{s}</span>
+                <span className="text-ink/85">{s}</span>
               </li>
             </Reveal>
           ))}
@@ -190,7 +190,7 @@ export default function Home() {
           <p className="mt-8 text-center">
             <Link
               href="/charter"
-              className="font-semibold text-clay transition hover:text-bark"
+              className="font-semibold text-clay transition hover:text-ink"
             >
               Read the full Charter →
             </Link>
@@ -199,13 +199,13 @@ export default function Home() {
       </section>
 
       {/* Watch first */}
-      <section className="bg-white/50 py-20">
+      <section className="bg-card/50 py-20">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               New here? Watch these first.
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-bark/70">
+            <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
               Three short videos from wildlife agencies — about fifteen minutes
               total, and most of what a neighbor needs to know.
             </p>
@@ -236,15 +236,15 @@ export default function Home() {
                   href={v.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex h-full flex-col rounded-xl border border-moss/15 bg-sand p-6 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-clay/30 hover:shadow-md"
+                  className="group flex h-full flex-col rounded-xl border border-line/15 bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-clay/30 hover:shadow-md"
                 >
-                  <span className="w-fit rounded-full bg-moss/10 px-2 py-0.5 text-xs font-medium text-moss">
+                  <span className="w-fit rounded-full bg-panel px-2 py-0.5 text-xs font-medium text-heading">
                     {v.length}
                   </span>
-                  <h3 className="mt-3 font-semibold text-bark transition group-hover:text-clay">
+                  <h3 className="mt-3 font-semibold text-ink transition group-hover:text-clay">
                     {v.title}
                   </h3>
-                  <p className="mt-0.5 text-xs uppercase tracking-wide text-bark/50">
+                  <p className="mt-0.5 text-xs uppercase tracking-wide text-ink/50">
                     {v.source}
                   </p>
                 </a>
@@ -255,7 +255,7 @@ export default function Home() {
             <p className="mt-8 text-center">
               <Link
                 href="/resources"
-                className="font-semibold text-clay transition hover:text-bark"
+                className="font-semibold text-clay transition hover:text-ink"
               >
                 See all resources →
               </Link>
@@ -265,13 +265,13 @@ export default function Home() {
       </section>
 
       {/* Join CTA */}
-      <section id="join" className="bg-moss/10 py-20">
+      <section id="join" className="bg-panel py-20">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <Reveal>
-            <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-2xl font-bold text-heading sm:text-3xl">
               Be part of the plan
             </h2>
-            <p className="mx-auto mt-3 max-w-lg text-bark/75">
+            <p className="mx-auto mt-3 max-w-lg text-ink/75">
               Membership is $25 a year — and free for invited municipal
               representatives, experts, and Council members with a code. Tell us
               your city and how you'd like to help.
@@ -285,7 +285,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/resources"
-                className="rounded-lg border border-moss/30 px-6 py-3 font-semibold text-moss transition hover:bg-moss/10"
+                className="rounded-lg border border-line/30 px-6 py-3 font-semibold text-heading transition hover:bg-panel"
               >
                 Start learning
               </Link>

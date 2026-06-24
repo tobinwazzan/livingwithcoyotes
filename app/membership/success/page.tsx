@@ -31,12 +31,12 @@ export default async function MembershipSuccess({
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-sand px-6 py-24 text-center">
+    <main className="flex min-h-screen items-center justify-center bg-card px-6 py-24 text-center">
       <div className="max-w-md">
         {activated ? (
           <>
-            <h1 className="text-3xl font-bold text-moss sm:text-4xl">You&apos;re a member 🎉</h1>
-            <p className="mt-4 text-lg text-bark/80">
+            <h1 className="text-3xl font-bold text-heading sm:text-4xl">You&apos;re a member 🎉</h1>
+            <p className="mt-4 text-lg text-ink/80">
               Thank you for joining the Coyote Coexistence Council
               {amount ? ` — ${dollars(amount)} received` : ""}. Your membership is
               active for one year. We&apos;ll be in touch as the Council takes shape.
@@ -44,8 +44,8 @@ export default async function MembershipSuccess({
           </>
         ) : (
           <>
-            <h1 className="text-3xl font-bold text-moss sm:text-4xl">Payment received</h1>
-            <p className="mt-4 text-lg text-bark/80">
+            <h1 className="text-3xl font-bold text-heading sm:text-4xl">Payment received</h1>
+            <p className="mt-4 text-lg text-ink/80">
               Thanks! If your membership doesn&apos;t show as active right away, we&apos;ll
               confirm it shortly.
             </p>

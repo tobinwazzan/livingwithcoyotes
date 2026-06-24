@@ -61,14 +61,14 @@ export default function AboutPage() {
       {/* Why we exist */}
       <section className="mx-auto max-w-3xl px-6 py-16">
         <Reveal>
-          <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+          <h2 className="text-2xl font-bold text-heading sm:text-3xl">
             Why we exist
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-bark/85">
+          <p className="mt-5 text-lg leading-relaxed text-ink/85">
             The most important question about coyotes in our neighborhoods was
             settled long ago — <em>whether</em> we share this place with them.
             Almost nobody is working on the question that's actually still open:{" "}
-            <strong className="text-bark">how.</strong> The Coyote Coexistence
+            <strong className="text-ink">how.</strong> The Coyote Coexistence
             Council brings residents, municipal officials, and wildlife experts
             to one table to build, implement, and refine evidence-based safety
             plans — and to stay accountable to them.
@@ -76,7 +76,7 @@ export default function AboutPage() {
         </Reveal>
 
         <Reveal>
-          <blockquote className="mt-8 border-l-4 border-clay bg-white/60 p-6 text-lg italic leading-relaxed text-bark/85">
+          <blockquote className="mt-8 border-l-4 border-clay bg-card/60 p-6 text-lg italic leading-relaxed text-ink/85">
             A sighting is not an incident. A coyote crossing your yard at dusk is
             a healthy animal doing exactly what it should. Real conflict
             concentrates in a few individuals that have learned to associate
@@ -85,7 +85,7 @@ export default function AboutPage() {
         </Reveal>
 
         <Reveal>
-          <p className="mt-8 leading-relaxed text-bark/80">
+          <p className="mt-8 leading-relaxed text-ink/80">
             So the problem is not the coyote. It's a landscape we've made
             extraordinarily hospitable to coyotes — and the fix starts in your
             own yard: keep cats indoors, supervise small dogs, secure the trash,
@@ -100,13 +100,13 @@ export default function AboutPage() {
       </section>
 
       {/* Four tiers */}
-      <section className="bg-white/50 py-16">
+      <section className="bg-card/50 py-16">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               Four tiers, one table
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-bark/70">
+            <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
               Coexistence works when everyone affected is in the room — and
               accountable to results.
             </p>
@@ -114,9 +114,9 @@ export default function AboutPage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {tiers.map((t, i) => (
               <Reveal key={t.title} delay={i * 100} className="h-full">
-                <div className="h-full rounded-xl border border-moss/15 bg-sand p-6 shadow-sm">
+                <div className="h-full rounded-xl border border-line/15 bg-card p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-clay">{t.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                  <p className="mt-2 text-sm leading-relaxed text-ink/80">
                     {t.body}
                   </p>
                 </div>
@@ -129,10 +129,10 @@ export default function AboutPage() {
       {/* What we believe */}
       <section className="mx-auto max-w-3xl px-6 py-16">
         <Reveal>
-          <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+          <h2 className="text-2xl font-bold text-heading sm:text-3xl">
             What we believe
           </h2>
-          <p className="mt-3 text-bark/70">
+          <p className="mt-3 text-ink/70">
             A council that launches with vague aspirations gives cover to
             inaction. Here's where we stand.
           </p>
@@ -140,9 +140,9 @@ export default function AboutPage() {
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           {beliefs.map((b, i) => (
             <Reveal key={b.title} delay={i * 90} className="h-full">
-              <div className="h-full rounded-xl bg-white/60 p-6">
+              <div className="h-full rounded-xl bg-card/60 p-6">
                 <h3 className="font-semibold text-clay">{b.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                <p className="mt-2 text-sm leading-relaxed text-ink/80">
                   {b.body}
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function AboutPage() {
           <p className="mt-8 text-center">
             <Link
               href="/charter"
-              className="font-semibold text-clay transition hover:text-bark"
+              className="font-semibold text-clay transition hover:text-ink"
             >
               Read the full Charter →
             </Link>
@@ -162,13 +162,13 @@ export default function AboutPage() {
       </section>
 
       {/* Technical Partners */}
-      <section className="bg-white/50 py-16">
+      <section className="bg-card/50 py-16">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               Technical Partners
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-bark/70">
+            <p className="mx-auto mt-3 max-w-2xl text-center text-ink/70">
               Veterinarians, animal-control departments, and animal shelters —
               the operational frontline. They bring important opinions and the
               data that lives in their records. They advise and inform the
@@ -178,9 +178,9 @@ export default function AboutPage() {
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {TECH_PARTNERS.map((p, i) => (
               <Reveal key={p.title} delay={i * 100} className="h-full">
-                <div className="h-full rounded-xl border border-clay/20 bg-sand p-6 shadow-sm">
+                <div className="h-full rounded-xl border border-clay/20 bg-card p-6 shadow-sm">
                   <h3 className="font-semibold text-clay">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                  <p className="mt-2 text-sm leading-relaxed text-ink/80">
                     {p.body}
                   </p>
                 </div>
@@ -235,13 +235,13 @@ export default function AboutPage() {
       </section>
 
       {/* Invitation */}
-      <section className="bg-moss/10 py-16">
+      <section className="bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <Reveal>
-            <h2 className="text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-2xl font-bold text-heading sm:text-3xl">
               Help us build the human board
             </h2>
-            <p className="mx-auto mt-3 max-w-lg text-bark/75">
+            <p className="mx-auto mt-3 max-w-lg text-ink/75">
               The AI board is the beginning, not the destination. We're inviting
               the real thing — biologists and practitioners, municipal officials
               ready to pilot real tools, residents tired of choosing between

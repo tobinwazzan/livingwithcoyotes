@@ -67,8 +67,8 @@ export default function CharterPage() {
       <div className="mx-auto max-w-3xl px-6 py-16">
         {/* Mission */}
         <Reveal>
-          <h2 className="text-2xl font-bold text-moss">Mission</h2>
-          <p className="mt-4 text-lg leading-relaxed text-bark/85">
+          <h2 className="text-2xl font-bold text-heading">Mission</h2>
+          <p className="mt-4 text-lg leading-relaxed text-ink/85">
             The Coyote Coexistence Council brings together residents, municipal
             officials, and wildlife experts to develop, implement, and refine
             evidence-based safety plans that protect our communities while
@@ -82,11 +82,11 @@ export default function CharterPage() {
 
         {/* Objective */}
         <Reveal>
-          <div className="mt-10 rounded-xl border-l-4 border-clay bg-white/60 p-6">
+          <div className="mt-10 rounded-xl border-l-4 border-clay bg-card/60 p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-clay">
               Objective
             </h2>
-            <p className="mt-2 text-lg leading-relaxed text-bark/85">
+            <p className="mt-2 text-lg leading-relaxed text-ink/85">
               Produce and implement an action plan that meets agreed-upon safety
               standards while minimizing disruption to ecological balance.
             </p>
@@ -95,16 +95,16 @@ export default function CharterPage() {
 
         {/* Participants */}
         <Reveal>
-          <h2 className="mt-14 text-2xl font-bold text-moss">
+          <h2 className="mt-14 text-2xl font-bold text-heading">
             Participants — four tiers
           </h2>
         </Reveal>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {participants.map((p, i) => (
             <Reveal key={p.title} delay={i * 80} className="h-full">
-              <div className="h-full rounded-xl bg-white/60 p-5">
+              <div className="h-full rounded-xl bg-card/60 p-5">
                 <h3 className="font-semibold text-clay">{p.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-bark/80">
+                <p className="mt-1.5 text-sm leading-relaxed text-ink/80">
                   {p.body}
                 </p>
                 <RoleDetails text={p.role} variant="light" />
@@ -115,8 +115,8 @@ export default function CharterPage() {
 
         {/* Partners & advisors note */}
         <Reveal>
-          <p className="mt-6 rounded-lg border-l-4 border-moss/40 bg-white/60 p-5 text-sm leading-relaxed text-bark/75">
-            <strong className="text-bark">Partners &amp; advisors.</strong>{" "}
+          <p className="mt-6 rounded-lg border-l-4 border-line/40 bg-card/60 p-5 text-sm leading-relaxed text-ink/75">
+            <strong className="text-ink">Partners &amp; advisors.</strong>{" "}
             Beyond the four voting tiers, the Council draws on{" "}
             <strong>Technical Partners</strong> — veterinarians, animal-control
             departments, and shelters — who contribute frontline data and
@@ -130,7 +130,7 @@ export default function CharterPage() {
 
         {/* Operating principles */}
         <Reveal>
-          <h2 className="mt-14 text-2xl font-bold text-moss">
+          <h2 className="mt-14 text-2xl font-bold text-heading">
             Operating principles
           </h2>
         </Reveal>
@@ -139,7 +139,7 @@ export default function CharterPage() {
             <Reveal key={p} delay={i * 70}>
               <li className="flex items-start gap-3">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-clay" />
-                <span className="text-bark/85">{p}</span>
+                <span className="text-ink/85">{p}</span>
               </li>
             </Reveal>
           ))}
@@ -147,8 +147,8 @@ export default function CharterPage() {
 
         {/* The process */}
         <Reveal>
-          <h2 className="mt-14 text-2xl font-bold text-moss">How we work</h2>
-          <p className="mt-2 text-bark/70">
+          <h2 className="mt-14 text-2xl font-bold text-heading">How we work</h2>
+          <p className="mt-2 text-ink/70">
             The cycle every Council effort follows, from first concern to
             handoff.
           </p>
@@ -156,11 +156,11 @@ export default function CharterPage() {
         <ol className="mt-6 space-y-3">
           {process.map((s, i) => (
             <Reveal key={s} delay={i * 60}>
-              <li className="flex items-start gap-3 rounded-lg bg-white/60 p-4">
+              <li className="flex items-start gap-3 rounded-lg bg-card/60 p-4">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-clay text-sm font-bold text-sand">
                   {i + 1}
                 </span>
-                <span className="text-bark/85">{s}</span>
+                <span className="text-ink/85">{s}</span>
               </li>
             </Reveal>
           ))}

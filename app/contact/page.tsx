@@ -51,22 +51,22 @@ export default function ContactPage() {
         <div className="grid gap-6 sm:grid-cols-2">
           {paths.map((p, i) => (
             <Reveal key={p.title} delay={i * 90} className="h-full">
-              <div className="flex h-full flex-col rounded-xl border border-moss/15 bg-white/60 p-6">
+              <div className="flex h-full flex-col rounded-xl border border-line/15 bg-card/60 p-6">
                 <h3 className="text-lg font-semibold text-clay">{p.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-bark/80">
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/80">
                   {p.body}
                 </p>
                 {p.href.startsWith("/") ? (
                   <Link
                     href={p.href}
-                    className="mt-4 inline-block font-semibold text-clay transition hover:text-bark"
+                    className="mt-4 inline-block font-semibold text-clay transition hover:text-ink"
                   >
                     {p.cta} →
                   </Link>
                 ) : (
                   <a
                     href={p.href}
-                    className="mt-4 inline-block font-semibold text-clay transition hover:text-bark"
+                    className="mt-4 inline-block font-semibold text-clay transition hover:text-ink"
                   >
                     {p.cta} →
                   </a>
@@ -77,11 +77,11 @@ export default function ContactPage() {
         </div>
 
         <Reveal>
-          <div className="mt-12 rounded-xl bg-moss/10 p-8 text-center">
-            <h2 className="text-xl font-bold text-moss">
+          <div className="mt-12 rounded-xl bg-panel p-8 text-center">
+            <h2 className="text-xl font-bold text-heading">
               General questions
             </h2>
-            <p className="mx-auto mt-2 max-w-lg text-bark/75">
+            <p className="mx-auto mt-2 max-w-lg text-ink/75">
               For anything else — media, suggestions, or a resource link that's
               gone stale — email us directly.
             </p>

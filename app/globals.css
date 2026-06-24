@@ -5,6 +5,29 @@
 :root {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
+
+  /* Light theme — the original "coyote at dusk" daylight palette. */
+  --clay: 181 118 79; /* #b5764f */
+  --surface: 244 240 230; /* #f4f0e6 sand */
+  --card: 255 255 255; /* #ffffff */
+  --panel: 235 230 216; /* #ebe6d8 warm tint */
+  --ink: 61 53 42; /* #3d352a bark */
+  --heading: 90 107 74; /* #5a6b4a moss */
+  --line: 90 107 74; /* moss, used at low alpha */
+  color-scheme: light;
+}
+
+/* Dark theme — built from scratch: a deep, warm green-black night palette,
+   not an inversion of the light theme. */
+.dark {
+  --clay: 205 138 95; /* #cd8a5f — brightened for contrast on dark */
+  --surface: 21 25 17; /* #151911 deep warm green-black */
+  --card: 32 38 28; /* #20261c raised */
+  --panel: 27 32 22; /* #1b2016 */
+  --ink: 233 228 214; /* #e9e4d6 warm off-white */
+  --heading: 165 186 138; /* #a5ba8a light sage */
+  --line: 233 228 214; /* light, used at low alpha */
+  color-scheme: dark;
 }
 
 html {
@@ -12,7 +35,8 @@ html {
 }
 
 body {
-  @apply bg-sand text-bark antialiased;
+  @apply bg-surface text-ink antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Lift hero text off the illustration so it reads as a distinct top layer. */

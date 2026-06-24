@@ -21,7 +21,7 @@ export default function ResourcesPage() {
 
       <div className="mx-auto max-w-3xl px-6 py-16">
         <Reveal>
-          <p className="text-lg leading-relaxed text-bark/85">
+          <p className="text-lg leading-relaxed text-ink/85">
             {RESOURCE_INTRO}
           </p>
         </Reveal>
@@ -32,11 +32,11 @@ export default function ResourcesPage() {
               <span className="rounded-full bg-clay px-3 py-1 text-xs font-bold uppercase tracking-wide text-sand">
                 Start here
               </span>
-              <h2 className="text-2xl font-bold text-moss">
+              <h2 className="text-2xl font-bold text-heading">
                 If you only have ten minutes
               </h2>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-bark/75">
+            <p className="mt-3 text-sm leading-relaxed text-ink/75">
               Three picks, in order. Watch the first two and you'll know more
               than most of your neighbors.
             </p>
@@ -70,7 +70,7 @@ export default function ResourcesPage() {
                     href={pick.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex h-full flex-col rounded-xl border border-clay/30 bg-white/80 p-5 transition hover:-translate-y-0.5 hover:border-clay hover:shadow-md"
+                    className="group flex h-full flex-col rounded-xl border border-clay/30 bg-card/80 p-5 transition hover:-translate-y-0.5 hover:border-clay hover:shadow-md"
                   >
                     <div className="flex items-center gap-2">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-clay text-sm font-bold text-sand">
@@ -82,13 +82,13 @@ export default function ResourcesPage() {
                         </span>
                       )}
                     </div>
-                    <h3 className="mt-3 font-semibold text-bark transition group-hover:text-clay">
+                    <h3 className="mt-3 font-semibold text-ink transition group-hover:text-clay">
                       {pick.title}
                     </h3>
-                    <p className="mt-0.5 text-xs uppercase tracking-wide text-bark/50">
+                    <p className="mt-0.5 text-xs uppercase tracking-wide text-ink/50">
                       {pick.source}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-bark/75">
+                    <p className="mt-2 text-sm leading-relaxed text-ink/75">
                       {pick.why}
                     </p>
                   </a>
@@ -102,14 +102,14 @@ export default function ResourcesPage() {
           {RESOURCE_GROUPS.map((group) => (
             <section key={group.id} id={group.id} className="scroll-mt-24">
               <Reveal>
-                <h2 className="flex items-baseline gap-3 text-2xl font-bold text-moss">
+                <h2 className="flex items-baseline gap-3 text-2xl font-bold text-heading">
                   <span aria-hidden="true" className="text-clay">
                     {group.icon}
                   </span>
                   {group.heading}
                 </h2>
                 {group.note && (
-                  <p className="mt-1 text-sm text-bark/60">{group.note}</p>
+                  <p className="mt-1 text-sm text-ink/60">{group.note}</p>
                 )}
               </Reveal>
 
@@ -121,22 +121,22 @@ export default function ResourcesPage() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group block rounded-xl border border-moss/15 bg-white/60 p-5 transition hover:-translate-y-0.5 hover:border-clay/40 hover:shadow-md"
+                        className="group block rounded-xl border border-line/15 bg-card/60 p-5 transition hover:-translate-y-0.5 hover:border-clay/40 hover:shadow-md"
                       >
                         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                          <h3 className="font-semibold text-bark transition group-hover:text-clay">
+                          <h3 className="font-semibold text-ink transition group-hover:text-clay">
                             {item.title}
                           </h3>
                           {item.length && (
-                            <span className="rounded-full bg-moss/10 px-2 py-0.5 text-xs font-medium text-moss">
+                            <span className="rounded-full bg-panel px-2 py-0.5 text-xs font-medium text-heading">
                               {item.length}
                             </span>
                           )}
                         </div>
-                        <p className="mt-0.5 text-xs uppercase tracking-wide text-bark/50">
+                        <p className="mt-0.5 text-xs uppercase tracking-wide text-ink/50">
                           {item.source}
                         </p>
-                        <p className="mt-2 text-sm leading-relaxed text-bark/75">
+                        <p className="mt-2 text-sm leading-relaxed text-ink/75">
                           {item.blurb}
                         </p>
                       </a>
@@ -149,13 +149,13 @@ export default function ResourcesPage() {
         </div>
 
         <Reveal>
-          <div className="mt-16 rounded-xl bg-moss/10 p-8 text-center">
-            <p className="text-bark/80">
+          <div className="mt-16 rounded-xl bg-panel p-8 text-center">
+            <p className="text-ink/80">
               Found a link that's gone stale, or have something we should add?
             </p>
             <Link
               href="/contact"
-              className="mt-3 inline-block font-semibold text-clay transition hover:text-bark"
+              className="mt-3 inline-block font-semibold text-clay transition hover:text-ink"
             >
               Tell us and we'll fix it →
             </Link>

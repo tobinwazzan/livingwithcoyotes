@@ -38,9 +38,9 @@ export default function JoinPage() {
         <div className="grid gap-6 sm:grid-cols-3">
           {reasons.map((r, i) => (
             <Reveal key={r.title} delay={i * 90} className="h-full">
-              <div className="h-full rounded-xl border border-moss/15 bg-white/60 p-6">
+              <div className="h-full rounded-xl border border-line/15 bg-card/60 p-6">
                 <h3 className="font-semibold text-clay">{r.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-bark/80">
+                <p className="mt-2 text-sm leading-relaxed text-ink/80">
                   {r.body}
                 </p>
               </div>
@@ -50,13 +50,13 @@ export default function JoinPage() {
       </section>
 
       {/* The form */}
-      <section id="form" className="bg-moss/10 py-16">
+      <section id="form" className="bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-moss sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               Join in two steps
             </h2>
-            <p className="mx-auto mt-3 mb-8 max-w-lg text-center text-bark/75">
+            <p className="mx-auto mt-3 mb-8 max-w-lg text-center text-ink/75">
               First tell us about yourself — your info is saved either way. Then
               choose how to become a member: card, Venmo, Zelle, or a free code.
             </p>
@@ -64,7 +64,7 @@ export default function JoinPage() {
           </Reveal>
 
           <Reveal>
-            <p className="mt-6 text-center text-xs leading-relaxed text-bark/55">
+            <p className="mt-6 text-center text-xs leading-relaxed text-ink/55">
               Card payments are processed securely by Stripe (a small processing
               fee is added so the Council nets the full $25). Venmo and Zelle
               members upload a receipt. Invited municipal, expert, and Council

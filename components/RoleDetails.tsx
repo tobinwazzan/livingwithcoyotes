@@ -13,11 +13,11 @@ export default function RoleDetails({
   const summaryColor =
     variant === "dark"
       ? "text-clay hover:text-sand"
-      : "text-clay hover:text-bark";
+      : "text-clay hover:text-ink";
   const boxColor =
     variant === "dark"
       ? "border-sand/15 bg-dusk/40 text-sand/80"
-      : "border-bark/10 bg-white/70 text-bark/75";
+      : "border-line/10 bg-card/70 text-ink/75";
 
   return (
     <details className={`mt-3 ${center ? "mx-auto max-w-xl" : ""}`}>
