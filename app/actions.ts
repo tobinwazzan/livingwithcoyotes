@@ -30,7 +30,9 @@ const digits = (s: string) => s.replace(/\D/g, "");
 export async function submitLead(_prev: LeadState, formData: FormData): Promise<LeadState> {
   // Honeypot: a hidden field real users never see. Bots fill everything, so a
   // non-empty value means a bot — silently drop it (no row, no progression).
-  if (String(formData.get("company") ?? "").trim() !== "") {
+  // NB: field is named "hp_token" (not an autofill keyword) so real members'
+  // browser autofill / password managers don't accidentally trip it.
+  if (String(formData.get("hp_token") ?? "").trim() !== "") {
     return { status: "idle", message: "" };
   }
 

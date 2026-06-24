@@ -314,13 +314,17 @@ export default function SignupForm() {
         <input type="hidden" name="source" value={attr.source} />
         <input type="hidden" name="referrer" value={attr.referrer} />
         <input type="hidden" name="meta" value={attr.meta} />
-        {/* Honeypot — hidden from humans; bots fill it and get silently dropped. */}
+        {/* Honeypot — hidden from humans; bots fill it and get silently dropped.
+            Name must NOT match a browser-autofill field (e.g. "company"), or real
+            members' autofill trips it. Also told password managers to ignore it. */}
         <input
           type="text"
-          name="company"
+          name="hp_token"
           tabIndex={-1}
           autoComplete="off"
           aria-hidden="true"
+          data-lpignore="true"
+          data-1p-ignore=""
           className="absolute left-[-9999px] h-0 w-0 opacity-0"
         />
 
