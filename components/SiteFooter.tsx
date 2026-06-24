@@ -60,8 +60,11 @@ export default function SiteFooter() {
         </div>
 
         <div className="mt-10 border-t border-sand/15 pt-6 text-center text-xs text-sand/50">
-          © {new Date().getFullYear()} Coyote Coexistence Council ·
-          livingwithcoyotes.org
+          © {new Date().getFullYear()} Coyote Coexistence Council ·{" "}
+          <Link href="/privacy" className="transition-colors hover:text-sand">
+            Privacy
+          </Link>{" "}
+          · livingwithcoyotes.org
         </div>
       </div>
     </footer>

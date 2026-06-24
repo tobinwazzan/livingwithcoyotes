@@ -26,6 +26,12 @@ export const metadata: Metadata = {
     siteName: "Living With Coyotes",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Coyote Coexistence Council",
+    description:
+      "Working together to keep our neighborhoods safe and our coyotes wild.",
+  },
 };
 
 const siteJsonLd = {

@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/checklist", priority: 0.7 },
     { path: "/contact", priority: 0.6 },
     { path: "/join", priority: 0.9 },
+    { path: "/privacy", priority: 0.3 },
   ];
   return routes.map((r) => ({
     url: `${BASE}${r.path}`,
