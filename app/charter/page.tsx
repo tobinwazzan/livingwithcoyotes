@@ -44,9 +44,9 @@ const participants = [
     role: "City staff and officials translate the Council's plans into policy and practice — bringing approved plans to their cities, shaping what's actually workable, and carrying implementation and enforcement on the ground. Voting members of the Council.",
   },
   {
-    title: "Experts",
-    body: "Subject-matter authorities — wildlife biologists and specialists — grounding decisions in evidence.",
-    role: "Wildlife biologists and subject-matter specialists ground the Council's decisions in evidence. They add expertise, challenge assumptions, update their own positions as the data comes in, and vote alongside the other tiers.",
+    title: "Experts & professionals",
+    body: "Subject-matter authorities — wildlife biologists, vets, animal-control, and shelter staff — grounding decisions in evidence and frontline data.",
+    role: "Wildlife biologists, veterinarians, animal-control, and shelter professionals ground the Council's decisions in evidence and frontline data. They add expertise, challenge assumptions, update their own positions as the data comes in, and vote alongside the other tiers.",
   },
   {
     title: "Stewards",
@@ -116,11 +116,8 @@ export default function CharterPage() {
         {/* Partners & advisors note */}
         <Reveal>
           <p className="mt-6 rounded-lg border-l-4 border-line/40 bg-card/60 p-5 text-sm leading-relaxed text-ink/75">
-            <strong className="text-ink">Partners &amp; advisors.</strong>{" "}
-            Beyond the four voting tiers, the Council draws on{" "}
-            <strong>Technical Partners</strong> — veterinarians, animal-control
-            departments, and shelters — who contribute frontline data and
-            opinions but do not vote, and an{" "}
+            <strong className="text-ink">Advisors.</strong>{" "}
+            Beyond the voting tiers, the Council draws on an{" "}
             <Link href="/about" className="text-clay hover:underline">
               Advisory Board
             </Link>{" "}
@@ -206,7 +203,7 @@ export default function CharterPage() {
               <RoleDetails
                 variant="light"
                 center
-                text="As Founder and Convener, Tobin Wazzan started the Council and stewards its process — bringing the four tiers (residents, municipalities, experts, and partners) to one table, keeping the dialogue open and respectful, and drawing out the full range of perspectives. The Convener doesn't override the Council; the role is to keep the work moving, fair, and accountable to results — guiding it from first concern toward a concrete, evidence-based plan, ensuring a fair way to settle a deadlock, and handing ongoing maintenance to the municipalities once the goals are met."
+                text="As Founder and Convener, Tobin Wazzan started the Council and stewards its process — bringing the tiers (residents, municipalities, and experts & professionals) to one table, keeping the dialogue open and respectful, and drawing out the full range of perspectives. The Convener doesn't override the Council; the role is to keep the work moving, fair, and accountable to results — guiding it from first concern toward a concrete, evidence-based plan, ensuring a fair way to settle a deadlock, and handing ongoing maintenance to the municipalities once the goals are met."
               />
             </div>
           </Reveal>
@@ -261,36 +258,6 @@ export default function CharterPage() {
                   <p className="mt-1 text-xs text-ink/50">
                     Seated by invitation
                   </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Technical partners */}
-          <Reveal>
-            <h3 className="mt-12 text-center text-lg font-semibold text-heading">
-              Technical Partners
-            </h3>
-            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-ink/60">
-              Veterinarians, animal-control departments, and shelters — they
-              advise and inform, without a vote.
-            </p>
-            <RoleDetails
-              variant="light"
-              center
-              text="Technical Partners — veterinarians, animal-control departments, and shelters — contribute frontline data and operational reality: the injuries treated, the incidents logged, the pets lost and found. They advise and inform the Council with on-the-ground insight, but they do not vote."
-            />
-          </Reveal>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {[
-              "A veterinary clinic",
-              "An animal-control department",
-              "An animal shelter or rescue",
-            ].map((label, i) => (
-              <Reveal key={label} delay={i * 80} className="h-full">
-                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-line/40 p-6 text-center">
-                  <p className="font-semibold text-ink/80">{label}</p>
-                  <p className="mt-1 text-xs text-ink/50">Seat open</p>
                 </div>
               </Reveal>
             ))}

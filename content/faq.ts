@@ -57,6 +57,6 @@ export const FAQS: FaqItem[] = [
   },
   {
     q: "What is the Coyote Coexistence Council, and how do I join?",
-    a: "The Coyote Coexistence Council is a facilitated forum bringing Orange County residents, municipal officials, and wildlife experts together to build and implement evidence-based, non-lethal coexistence plans. Residents can join for $19 a year at livingwithcoyotes.org/join; municipal representatives, experts, and partner organizations are appointed or nominated by their cities. Membership gives you a say in your city's plan, plain-language guidance, and updates as the Council takes shape.",
+    a: "The Coyote Coexistence Council is a facilitated forum bringing Orange County residents, municipal officials, and wildlife experts together to build and implement evidence-based, non-lethal coexistence plans. Residents can join for $19 a year at livingwithcoyotes.org/join; municipal representatives and experts are appointed or nominated by their cities. Membership gives you a say in your city's plan, plain-language guidance, and updates as the Council takes shape.",
   },
 ];

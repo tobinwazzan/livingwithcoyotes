@@ -13,8 +13,8 @@ const tiers = [
     body: "City staff and officials who set policy and put plans into practice.",
   },
   {
-    title: "Experts",
-    body: "Wildlife biologists and specialists grounding decisions in evidence.",
+    title: "Experts & professionals",
+    body: "Wildlife biologists, vets, animal-control, and shelter staff — grounding decisions in evidence and frontline data.",
   },
   {
     title: "Stewards",

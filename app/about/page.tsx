@@ -3,7 +3,6 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import { ADVISORY_SEATS } from "@/content/board";
-import { TECH_PARTNERS } from "@/content/partners";
 
 export const metadata: Metadata = {
   title: "About",
@@ -21,8 +20,8 @@ const tiers = [
     body: "City staff and officials who set policy and put plans into practice.",
   },
   {
-    title: "Experts",
-    body: "Wildlife biologists and specialists grounding decisions in evidence.",
+    title: "Experts & professionals",
+    body: "Wildlife biologists, vets, animal-control, and shelter staff — grounding decisions in evidence and frontline data.",
   },
   {
     title: "Stewards",
@@ -159,35 +158,6 @@ export default function AboutPage() {
             </Link>
           </p>
         </Reveal>
-      </section>
-
-      {/* Technical Partners */}
-      <section className="bg-card/50 py-16">
-        <div className="mx-auto max-w-5xl px-6">
-          <Reveal>
-            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
-              Technical Partners
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-ink/70">
-              Veterinarians, animal-control departments, and animal shelters —
-              the operational frontline. They bring important opinions and the
-              data that lives in their records. They advise and inform the
-              Council, but they don't vote; the four tiers do.
-            </p>
-          </Reveal>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {TECH_PARTNERS.map((p, i) => (
-              <Reveal key={p.title} delay={i * 100} className="h-full">
-                <div className="h-full rounded-xl border border-clay/20 bg-card p-6 shadow-sm">
-                  <h3 className="font-semibold text-clay">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/80">
-                    {p.body}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* Board of advisors */}
