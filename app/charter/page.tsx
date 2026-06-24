@@ -167,24 +167,18 @@ export default function CharterPage() {
         </ol>
       </div>
 
-      {/* Ease the light→dark transition so the Founding Council band doesn't
-          read as the page footer arriving early. */}
-      <div
-        aria-hidden="true"
-        className="h-24 bg-gradient-to-b from-surface to-dusk"
-      />
-
-      {/* Founding Council / Signatories — the prominent named section */}
-      <section className="bg-dusk pb-20 pt-10 text-sand">
+      {/* Founding Council / Signatories — a light feature band (the dark
+          contrast is reserved for the page header and footer). */}
+      <section className="bg-panel py-20">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
             <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-clay">
               Founding Council
             </p>
-            <h2 className="mt-3 text-center text-2xl font-bold sm:text-3xl">
+            <h2 className="mt-3 text-center text-2xl font-bold text-heading sm:text-3xl">
               Charter Signatories
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-sand/75">
+            <p className="mx-auto mt-4 max-w-2xl text-center text-ink/70">
               The people and cities who put their names to this Charter. We're a
               new Council — these seats are filling now, and there is room at the
               table for your city.
@@ -193,7 +187,7 @@ export default function CharterPage() {
 
           {/* Founder / Admin */}
           <Reveal>
-            <div className="mx-auto mt-12 max-w-md rounded-xl border border-clay/40 bg-sand/5 p-6 text-center">
+            <div className="mx-auto mt-12 max-w-md rounded-xl border border-clay/40 bg-card p-6 text-center shadow-sm">
               <Image
                 src="/founder-tobin.png"
                 alt="Tobin Wazzan"
@@ -204,12 +198,12 @@ export default function CharterPage() {
               <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-clay">
                 Founder &amp; Steward
               </p>
-              <p className="mt-2 text-xl font-bold text-sand">Tobin Wazzan</p>
-              <p className="mt-1 text-sm text-sand/70">
+              <p className="mt-2 text-xl font-bold text-ink">Tobin Wazzan</p>
+              <p className="mt-1 text-sm text-ink/70">
                 Convener, Coyote Coexistence Council
               </p>
               <RoleDetails
-                variant="dark"
+                variant="light"
                 center
                 text="As Founder and Convener, Tobin Wazzan started the Council and stewards its process — bringing the four tiers (residents, municipalities, experts, and partners) to one table, keeping the dialogue open and respectful, and drawing out the full range of perspectives. The Convener doesn't override the Council; the role is to keep the work moving, fair, and accountable to results — guiding it from first concern toward a concrete, evidence-based plan, ensuring a fair way to settle a deadlock, and handing ongoing maintenance to the municipalities once the goals are met."
               />
@@ -218,15 +212,15 @@ export default function CharterPage() {
 
           {/* Municipal representatives */}
           <Reveal>
-            <h3 className="mt-14 text-center text-lg font-semibold text-sand">
+            <h3 className="mt-14 text-center text-lg font-semibold text-heading">
               Municipal Representatives
             </h3>
-            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-ink/60">
               Cities that have committed to bringing Council plans to their
               communities.
             </p>
             <RoleDetails
-              variant="dark"
+              variant="light"
               center
               text="A Municipal Representative commits their city to the Council's table — bringing Council plans to their city for consideration and approval, sharing local data and constraints, and helping carry approved plans into implementation. Signing the Charter signals a city's intent to participate, not a binding obligation to adopt any particular plan."
             />
@@ -234,9 +228,9 @@ export default function CharterPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <Reveal key={i} delay={i * 80} className="h-full">
-                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-sand/25 p-6 text-center">
-                  <p className="font-semibold text-sand/80">Your city here</p>
-                  <p className="mt-1 text-xs text-sand/50">
+                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-line/40 p-6 text-center">
+                  <p className="font-semibold text-ink/80">Your city here</p>
+                  <p className="mt-1 text-xs text-ink/50">
                     Be a founding signatory
                   </p>
                 </div>
@@ -246,14 +240,14 @@ export default function CharterPage() {
 
           {/* Council members */}
           <Reveal>
-            <h3 className="mt-12 text-center text-lg font-semibold text-sand">
+            <h3 className="mt-12 text-center text-lg font-semibold text-heading">
               Council Members
             </h3>
-            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-ink/60">
               Experts and community leaders seated on the Council.
             </p>
             <RoleDetails
-              variant="dark"
+              variant="light"
               center
               text="Council Members are seated experts and community leaders who deliberate on plans, weigh the evidence and the perspectives in the room, and vote. They serve voluntarily, engage honestly, update their positions as the data warrants, and uphold the Council's operating principles."
             />
@@ -261,9 +255,9 @@ export default function CharterPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <Reveal key={i} delay={i * 80} className="h-full">
-                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-sand/25 p-6 text-center">
-                  <p className="font-semibold text-sand/80">Open seat</p>
-                  <p className="mt-1 text-xs text-sand/50">
+                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-line/40 p-6 text-center">
+                  <p className="font-semibold text-ink/80">Open seat</p>
+                  <p className="mt-1 text-xs text-ink/50">
                     Invited members join with a code
                   </p>
                 </div>
@@ -273,15 +267,15 @@ export default function CharterPage() {
 
           {/* Technical partners */}
           <Reveal>
-            <h3 className="mt-12 text-center text-lg font-semibold text-sand">
+            <h3 className="mt-12 text-center text-lg font-semibold text-heading">
               Technical Partners
             </h3>
-            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-ink/60">
               Veterinarians, animal-control departments, and shelters — they
               advise and inform, without a vote.
             </p>
             <RoleDetails
-              variant="dark"
+              variant="light"
               center
               text="Technical Partners — veterinarians, animal-control departments, and shelters — contribute frontline data and operational reality: the injuries treated, the incidents logged, the pets lost and found. They advise and inform the Council with on-the-ground insight, but they do not vote."
             />
@@ -293,9 +287,9 @@ export default function CharterPage() {
               "An animal shelter or rescue",
             ].map((label, i) => (
               <Reveal key={label} delay={i * 80} className="h-full">
-                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-sand/25 p-6 text-center">
-                  <p className="font-semibold text-sand/80">{label}</p>
-                  <p className="mt-1 text-xs text-sand/50">Seat open</p>
+                <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-line/40 p-6 text-center">
+                  <p className="font-semibold text-ink/80">{label}</p>
+                  <p className="mt-1 text-xs text-ink/50">Seat open</p>
                 </div>
               </Reveal>
             ))}
@@ -303,13 +297,13 @@ export default function CharterPage() {
 
           {/* Advisory board names */}
           <Reveal>
-            <h3 className="mt-14 text-center text-lg font-semibold text-sand">
+            <h3 className="mt-14 text-center text-lg font-semibold text-heading">
               Advisory Board
             </h3>
-            <p className="mt-1 text-center text-sm text-sand/55">
+            <p className="mt-1 text-center text-sm text-ink/55">
               nine expertise seats
             </p>
-            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-sand/60">
+            <p className="mx-auto mt-2 max-w-xl text-center text-sm text-ink/60">
               Each seat is modeled on the published work of leading authorities
               in that discipline. See{" "}
               <Link href="/about" className="text-clay hover:underline">
@@ -322,7 +316,7 @@ export default function CharterPage() {
             {ADVISORY_SEATS.map((s) => (
               <span
                 key={s.discipline}
-                className="rounded-full border border-sand/20 bg-sand/5 px-4 py-2 text-sm font-medium text-sand/85"
+                className="rounded-full border border-line/25 bg-card px-4 py-2 text-sm font-medium text-ink/85"
               >
                 {s.discipline}
               </span>
@@ -342,7 +336,7 @@ export default function CharterPage() {
         </div>
       </section>
 
-      <p className="bg-dusk pb-10 text-center text-xs text-sand/40">
+      <p className="bg-panel pb-10 text-center text-xs text-ink/45">
         Charter last updated June 21, 2026.
       </p>
     </main>

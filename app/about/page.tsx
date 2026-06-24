@@ -191,13 +191,13 @@ export default function AboutPage() {
       </section>
 
       {/* Board of advisors */}
-      <section className="bg-dusk py-16 text-sand">
+      <section className="py-16">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold sm:text-3xl">
+            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
               Our Board of Advisors
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-sand/75">
+            <p className="mx-auto mt-4 max-w-2xl text-center text-ink/70">
               We didn't want this Council's positions to be one person's
               opinions. So we began with an advisory board spanning the
               disciplines this work requires — urban coyote science, field
@@ -209,9 +209,9 @@ export default function AboutPage() {
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ADVISORY_SEATS.map((s, i) => (
               <Reveal key={s.discipline} delay={i * 60} className="h-full">
-                <div className="h-full rounded-xl border border-sand/15 bg-sand/5 p-5">
+                <div className="h-full rounded-xl border border-line/15 bg-card p-5 shadow-sm">
                   <h3 className="font-semibold text-clay">{s.discipline}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-sand/75">
+                  <p className="mt-1 text-sm leading-relaxed text-ink/70">
                     {s.focus}
                   </p>
                 </div>
@@ -219,9 +219,9 @@ export default function AboutPage() {
             ))}
           </div>
           <Reveal>
-            <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-sand/60">
+            <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-ink/65">
               In full transparency: these are{" "}
-              <strong className="text-sand/80">nine expertise seats</strong>,
+              <strong className="text-ink">nine expertise seats</strong>,
               each modeled on the published work of leading authorities in that
               discipline. It is a way to pressure-test every claim on this site
               against the best of what each field knows, and to argue with our
