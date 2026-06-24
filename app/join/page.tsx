@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import SignupForm from "@/components/SignupForm";
 
 export const metadata: Metadata = {
-  title: "Join the Council",
+  title: "Join",
   description:
     "Join the Coyote Coexistence Council. Membership is $25 a year — free for invited municipal representatives, experts, and Council members with a code.",
 };

@@ -5,7 +5,7 @@ import Reveal from "@/components/Reveal";
 import { RESOURCE_GROUPS, RESOURCE_INTRO } from "@/content/resources";
 
 export const metadata: Metadata = {
-  title: "Resources for Learning",
+  title: "Resources",
   description:
     "A short, well-rounded, video-forward starter kit to get any member up to speed on living with coyotes — every link from a credible source and verified working.",
 };
