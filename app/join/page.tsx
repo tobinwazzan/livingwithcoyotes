@@ -30,7 +30,7 @@ export default function JoinPage() {
       <PageHeader
         eyebrow="Join"
         title="Be part of the plan"
-        subtitle="Membership is $19 a year. Tell us your city and how you'd like to help — your info is saved either way."
+        subtitle="Membership is $19 a year. Tell us your city and how you'd like to help."
       />
 
       {/* Why join */}

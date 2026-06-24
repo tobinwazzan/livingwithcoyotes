@@ -128,7 +128,7 @@ export default function MembershipPage() {
               "Membership is $19 per year.",
               "Pay by card, Venmo, or Zelle — card adds a small processing fee so the Council nets the full $19.",
               "Paying by Venmo or Zelle? Upload a receipt and you're in.",
-              "Your information is saved either way — you can join now or decide later and stay on the list.",
+              "Join now, or decide later and stay on the list.",
             ].map((line) => (
               <li key={line} className="flex items-start gap-3">
                 <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-clay" />

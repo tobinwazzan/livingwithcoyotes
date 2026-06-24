@@ -18,7 +18,7 @@ const APPS = [
 ];
 
 const inputCls =
-  "w-full rounded-lg border border-line/20 bg-card/80 px-4 py-3 outline-none focus:border-clay focus:ring-2 focus:ring-clay/30";
+  "w-full rounded-lg border border-line/20 bg-card px-4 py-3 outline-none focus:border-clay focus:ring-2 focus:ring-clay/30";
 
 // Display phone as (xxx) xxx-xxxx while the member types digits only.
 function formatPhone(value: string) {
@@ -30,7 +30,7 @@ function formatPhone(value: string) {
 }
 
 // Gamified progress: the three steps shown on a straight line above the form.
-const STEPS = ["Your details", "Membership", "Done"];
+const STEPS = ["Contact information", "Payment", "Done"];
 function Stepper({ current }: { current: 1 | 2 | 3 }) {
   return (
     <ol className="mb-8 flex items-center justify-center gap-2 sm:gap-3" aria-label="Progress">
@@ -305,8 +305,7 @@ export default function SignupForm() {
         Tell us about you
       </h2>
       <p className="mx-auto mb-8 mt-3 max-w-md text-balance text-center text-ink/75">
-        First, a little about yourself — your details are saved either way, even
-        if you choose to finish joining later.
+        First, a little about yourself.
       </p>
 
       <form action={formAction} className="space-y-4">
