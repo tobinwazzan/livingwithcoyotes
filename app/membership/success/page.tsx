@@ -21,6 +21,7 @@ export default async function MembershipSuccess({
         await supabase.rpc("activate_stripe_membership", {
           p_signup_id: session.metadata.signupId,
           p_amount_cents: session.amount_total ?? 0,
+          p_stripe_session_id: session.id,
         });
         activated = true;
         amount = session.amount_total ?? 0;

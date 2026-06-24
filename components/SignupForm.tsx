@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {
   submitLead, redeemCode, recordManual, startCheckout, type LeadState,
@@ -36,6 +36,29 @@ function ContinueButton() {
 export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
   const [role, setRole] = useState("");
+
+  // Attribution — capture which channel sent them (UTM / ref) and the landing
+  // context, so the recruitment plan can see what's working. Best-effort only.
+  const [attr, setAttr] = useState({ source: "", referrer: "", meta: "{}" });
+  useEffect(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const source = p.get("utm_source") || p.get("ref") || p.get("source") || "";
+      const meta: Record<string, string> = {};
+      for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "ref"]) {
+        const v = p.get(k);
+        if (v) meta[k] = v;
+      }
+      meta.landing_path = window.location.pathname;
+      setAttr({
+        source,
+        referrer: document.referrer || "",
+        meta: JSON.stringify(meta),
+      });
+    } catch {
+      /* leave defaults */
+    }
+  }, []);
 
   // membership-phase state
   const [method, setMethod] = useState<"" | "card" | "venmo" | "zelle" | "code">("");
@@ -221,6 +244,20 @@ export default function SignupForm() {
   // ---------- PHASE 1: the info form ----------
   return (
     <form action={formAction} className="space-y-4">
+      {/* Attribution (filled client-side) — invisible to the user. */}
+      <input type="hidden" name="source" value={attr.source} />
+      <input type="hidden" name="referrer" value={attr.referrer} />
+      <input type="hidden" name="meta" value={attr.meta} />
+      {/* Honeypot — hidden from humans; bots fill it and get silently dropped. */}
+      <input
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
       <div>
         <label className="mb-1 block text-sm font-medium text-ink/80">
           I&apos;m joining as <span className="text-clay">*</span>

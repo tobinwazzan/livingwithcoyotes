@@ -20,11 +20,19 @@ const FREE_EMAIL_DOMAINS = new Set([
   "att.net", "verizon.net", "cox.net", "pacbell.net",
 ]);
 
-const VALID_ROLES = new Set(["resident", "municipality", "expert", "other"]);
+const VALID_ROLES = new Set([
+  "resident", "municipality", "expert", "partner", "other",
+]);
 const digits = (s: string) => s.replace(/\D/g, "");
 
 // Step 1 — always capture the lead (so an abandoned payment still reaches us).
 export async function submitLead(_prev: LeadState, formData: FormData): Promise<LeadState> {
+  // Honeypot: a hidden field real users never see. Bots fill everything, so a
+  // non-empty value means a bot — silently drop it (no row, no progression).
+  if (String(formData.get("company") ?? "").trim() !== "") {
+    return { status: "idle", message: "" };
+  }
+
   const role = String(formData.get("role") ?? "").trim();
   const fullName = String(formData.get("full_name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
@@ -32,6 +40,21 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   const city = String(formData.get("city") ?? "").trim();
   const linkedin = String(formData.get("linkedin") ?? "").trim();
   const apps = formData.getAll("apps").map((a) => String(a));
+
+  // Attribution — which channel sent them, where they landed from.
+  const source = String(formData.get("source") ?? "").trim().slice(0, 120);
+  const referrer = String(formData.get("referrer") ?? "").trim().slice(0, 500);
+  let meta: Record<string, string> = {};
+  try {
+    const raw = JSON.parse(String(formData.get("meta") ?? "{}"));
+    if (raw && typeof raw === "object") {
+      for (const [k, v] of Object.entries(raw)) {
+        if (typeof v === "string" && v) meta[String(k).slice(0, 40)] = v.slice(0, 200);
+      }
+    }
+  } catch {
+    meta = {};
+  }
 
   const err = (message: string): LeadState => ({ status: "error", message });
 
@@ -60,6 +83,7 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   const { data, error } = await supabase.rpc("create_membership_lead", {
     p_role: role, p_full_name: fullName, p_phone: phone, p_email: email,
     p_city: city, p_linkedin: linkedin, p_apps: apps,
+    p_source: source || null, p_referrer: referrer || null, p_meta: meta,
   });
   if (error || !data) return err("Something went wrong. Please try again in a moment.");
 
