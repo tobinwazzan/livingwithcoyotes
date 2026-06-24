@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Get in touch with the Coyote Coexistence Council — whether you're a resident, a city official, a wildlife expert, or want to help steward the conversation.",
 };
 
-const CONTACT_EMAIL = "hello@livingwithcoyotes.org";
+const CONTACT_EMAIL = "members@livingwithcoyotes.org";
 
 const paths = [
   {
