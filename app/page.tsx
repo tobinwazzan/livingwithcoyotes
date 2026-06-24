@@ -82,7 +82,7 @@ export default function Home() {
             width={384}
             height={384}
             priority
-            className="hero-anim hero-anim-1 mx-auto mb-5 h-36 w-36 sm:hidden"
+            className="hero-anim hero-anim-1 mx-auto mb-5 h-[216px] w-[216px] sm:hidden"
           />
           <p className="hero-anim hero-anim-2 mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-clay sm:text-base">
             Welcome to the
