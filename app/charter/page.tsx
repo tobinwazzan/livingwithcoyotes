@@ -150,7 +150,8 @@ export default function CharterPage() {
           <h2 className="mt-14 text-2xl font-bold text-heading">How we work</h2>
           <p className="mt-2 text-ink/70">
             The cycle every Council effort follows, from first concern to
-            handoff.
+            handoff. The framework and standards are shared across every city;
+            the plan it produces is each community's own.
           </p>
         </Reveal>
         <ol className="mt-6 space-y-3">
