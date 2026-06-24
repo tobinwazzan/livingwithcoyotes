@@ -16,6 +16,7 @@ export default function PageHeader({
 }) {
   return (
     <section
+      data-sticky-header={sticky ? "" : undefined}
       className={`overflow-hidden bg-dusk text-sand ${
         sticky ? "sticky top-0 z-40" : "relative"
       }`}

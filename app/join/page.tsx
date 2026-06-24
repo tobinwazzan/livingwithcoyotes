@@ -53,9 +53,7 @@ export default function JoinPage() {
       {/* The form */}
       <section id="form" className="border-y border-line/20 bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6">
-          <Reveal>
-            <SignupForm />
-          </Reveal>
+          <SignupForm />
         </div>
       </section>
     </main>

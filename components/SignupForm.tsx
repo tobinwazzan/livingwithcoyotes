@@ -33,7 +33,7 @@ function formatPhone(value: string) {
 const STEPS = ["Contact information", "Payment", "Done"];
 function Stepper({ current }: { current: 1 | 2 | 3 }) {
   return (
-    <ol className="mb-8 flex items-center justify-center gap-2 sm:gap-3" aria-label="Progress">
+    <ol className="flex items-center justify-center gap-2 sm:gap-3" aria-label="Progress">
       {STEPS.map((label, i) => {
         const n = i + 1;
         const done = current > n;
@@ -72,6 +72,19 @@ function Stepper({ current }: { current: 1 | 2 | 3 }) {
   );
 }
 
+// The progress line pinned just beneath the sticky dark header (top = its height,
+// measured at runtime). bg-panel matches the form section so content scrolls under.
+function StickySteps({ current, top }: { current: 1 | 2 | 3; top: number }) {
+  return (
+    <div
+      className="sticky z-30 -mx-6 mb-6 border-b border-line/10 bg-panel px-6 py-3"
+      style={{ top }}
+    >
+      <Stepper current={current} />
+    </div>
+  );
+}
+
 function ContinueButton() {
   const { pending } = useFormStatus();
   return (
@@ -89,6 +102,18 @@ export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
   const [role, setRole] = useState("");
   const [phone, setPhone] = useState("");
+
+  // Measure the sticky dark header so the progress line can pin right beneath it.
+  const [headerH, setHeaderH] = useState(0);
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>("[data-sticky-header]");
+    if (!el) return;
+    const update = () => setHeaderH(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Attribution — capture which channel sent them (UTM / ref) and the landing
   // context, so the recruitment plan can see what's working. Best-effort only.
@@ -124,7 +149,7 @@ export default function SignupForm() {
   if (done) {
     return (
       <div>
-        <Stepper current={3} />
+        <StickySteps current={3} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
           <p className="text-lg font-semibold text-heading">Welcome aboard.</p>
           <p className="mt-1 text-ink/80">{done}</p>
@@ -180,7 +205,7 @@ export default function SignupForm() {
 
     return (
       <div className="space-y-5">
-        <Stepper current={2} />
+        <StickySteps current={2} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re on the list. ✅</p>
           <p className="mt-1 text-ink/80">
@@ -300,7 +325,7 @@ export default function SignupForm() {
   // ---------- PHASE 1: the info form ----------
   return (
     <div>
-      <Stepper current={1} />
+      <StickySteps current={1} top={headerH} />
       <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
         Tell us about you
       </h2>
