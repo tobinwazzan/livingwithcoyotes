@@ -60,6 +60,16 @@ export default function MembershipPage() {
         subtitle="Coexistence doesn't happen in a viral thread. It takes a funded, organized effort — and $19 a year is how a volunteer council becomes a real one."
       />
 
+      {/* Top CTA — join without scrolling */}
+      <div className="mx-auto max-w-5xl px-6 pt-8 text-center">
+        <Link
+          href="/join"
+          className="inline-block rounded-lg bg-clay px-7 py-3 font-semibold text-sand transition hover:bg-bark"
+        >
+          Join the Council — $19/yr
+        </Link>
+      </div>
+
       {/* Why it matters */}
       <section className="mx-auto max-w-5xl px-6 py-16">
         <Reveal>

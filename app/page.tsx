@@ -281,9 +281,8 @@ export default function Home() {
               Be part of the plan
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-ink/75">
-              Membership is $19 a year — and free for invited municipal
-              representatives, experts, and Council members with a code. Tell us
-              your city and how you'd like to help.
+              Membership is $19 a year. Tell us your city and how you'd like to
+              help.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link

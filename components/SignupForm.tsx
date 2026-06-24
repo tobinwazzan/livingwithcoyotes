@@ -20,6 +20,58 @@ const APPS = [
 const inputCls =
   "w-full rounded-lg border border-line/20 bg-card/80 px-4 py-3 outline-none focus:border-clay focus:ring-2 focus:ring-clay/30";
 
+// Display phone as (xxx) xxx-xxxx while the member types digits only.
+function formatPhone(value: string) {
+  const d = value.replace(/\D/g, "").slice(0, 10);
+  if (d.length > 6) return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+  if (d.length > 3) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+  if (d.length > 0) return `(${d}`;
+  return "";
+}
+
+// Gamified progress: the three steps shown on a straight line above the form.
+const STEPS = ["Your details", "Membership", "Done"];
+function Stepper({ current }: { current: 1 | 2 | 3 }) {
+  return (
+    <ol className="mb-8 flex items-center justify-center gap-2 sm:gap-3" aria-label="Progress">
+      {STEPS.map((label, i) => {
+        const n = i + 1;
+        const done = current > n;
+        const active = current === n;
+        return (
+          <li key={label} className="flex items-center gap-2 sm:gap-3">
+            <span
+              aria-current={active ? "step" : undefined}
+              className={`flex h-8 w-8 items-center justify-center rounded-full border text-sm font-bold transition ${
+                active
+                  ? "border-clay bg-clay text-sand"
+                  : done
+                    ? "border-clay bg-clay/15 text-clay"
+                    : "border-line/40 bg-card text-ink/40"
+              }`}
+            >
+              {done ? "✓" : n}
+            </span>
+            <span
+              className={`hidden text-sm font-medium sm:inline ${
+                active || done ? "text-heading" : "text-ink/40"
+              }`}
+            >
+              {label}
+            </span>
+            {n < STEPS.length && (
+              <span
+                aria-hidden="true"
+                className={`h-px w-6 sm:w-10 ${done ? "bg-clay" : "bg-line/30"}`}
+              />
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 function ContinueButton() {
   const { pending } = useFormStatus();
   return (
@@ -36,6 +88,7 @@ function ContinueButton() {
 export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
   const [role, setRole] = useState("");
+  const [phone, setPhone] = useState("");
 
   // Attribution — capture which channel sent them (UTM / ref) and the landing
   // context, so the recruitment plan can see what's working. Best-effort only.
@@ -70,9 +123,12 @@ export default function SignupForm() {
   // ---------- PHASE 3: done ----------
   if (done) {
     return (
-      <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
-        <p className="text-lg font-semibold text-heading">Welcome aboard.</p>
-        <p className="mt-1 text-ink/80">{done}</p>
+      <div>
+        <Stepper current={3} />
+        <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
+          <p className="text-lg font-semibold text-heading">Welcome aboard.</p>
+          <p className="mt-1 text-ink/80">{done}</p>
+        </div>
       </div>
     );
   }
@@ -124,11 +180,11 @@ export default function SignupForm() {
 
     return (
       <div className="space-y-5">
+        <Stepper current={2} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re on the list. ✅</p>
           <p className="mt-1 text-ink/80">
-            Make it official — <strong>annual membership is $19</strong>. Invited
-            municipal &amp; expert representatives and Council members join free with a code.
+            Make it official — <strong>annual membership is $19</strong> for the year.
           </p>
         </div>
 
@@ -243,98 +299,102 @@ export default function SignupForm() {
 
   // ---------- PHASE 1: the info form ----------
   return (
-    <form action={formAction} className="space-y-4">
-      {/* Attribution (filled client-side) — invisible to the user. */}
-      <input type="hidden" name="source" value={attr.source} />
-      <input type="hidden" name="referrer" value={attr.referrer} />
-      <input type="hidden" name="meta" value={attr.meta} />
-      {/* Honeypot — hidden from humans; bots fill it and get silently dropped. */}
-      <input
-        type="text"
-        name="company"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute left-[-9999px] h-0 w-0 opacity-0"
-      />
+    <div>
+      <Stepper current={1} />
+      <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
+        Tell us about you
+      </h2>
+      <p className="mx-auto mb-8 mt-3 max-w-md text-balance text-center text-ink/75">
+        First, a little about yourself — your details are saved either way, even
+        if you choose to finish joining later.
+      </p>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-ink/80">
-          I&apos;m joining as <span className="text-clay">*</span>
-        </label>
-        <select
-          name="role" required value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className={inputCls + " text-ink/90"}
-        >
-          <option value="" disabled>Choose one …</option>
-          <option value="resident">A resident / citizen</option>
-          <option value="municipality">A municipality / city official</option>
-          <option value="expert">An expert / professional</option>
-          <option value="partner">A vet, animal-control, or shelter</option>
-          <option value="other">Other / just interested</option>
-        </select>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" className={inputCls} />
-        <input type="tel" name="phone" required placeholder="Phone number *" aria-label="Phone number" className={inputCls} />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
+      <form action={formAction} className="space-y-4">
+        {/* Attribution (filled client-side) — invisible to the user. */}
+        <input type="hidden" name="source" value={attr.source} />
+        <input type="hidden" name="referrer" value={attr.referrer} />
+        <input type="hidden" name="meta" value={attr.meta} />
+        {/* Honeypot — hidden from humans; bots fill it and get silently dropped. */}
         <input
-          type="email" name="email" required
-          placeholder={role === "municipality" ? "Official government email *" : "Email *"}
-          aria-label="Email address" className={inputCls}
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="absolute left-[-9999px] h-0 w-0 opacity-0"
         />
-        <input type="text" name="city" required placeholder="City *" aria-label="City of residence" className={inputCls} />
-      </div>
 
-      {role === "municipality" && (
-        <p className="-mt-1 text-xs text-ink/60">
-          Use your official city/government email (e.g., name@cityofirvine.org) so we can verify your role.
-        </p>
-      )}
-
-      {role === "expert" && (
-        <input
-          type="url" name="linkedin" required
-          placeholder="LinkedIn profile URL * (linkedin.com/in/…)"
-          aria-label="LinkedIn profile URL" className={inputCls}
-        />
-      )}
-
-      {role === "partner" && (
-        <p className="-mt-1 text-xs text-ink/60">
-          Technical Partners (veterinarians, animal-control departments, and
-          shelters) contribute frontline data and opinions to the Council. Put
-          your organization's city above; we'll follow up about your role.
-        </p>
-      )}
-
-      <fieldset className="rounded-lg border border-line/15 bg-card/40 p-4">
-        <legend className="px-1 text-sm font-medium text-ink/80">
-          Which of these do you use? (select all that apply)
-        </legend>
-        <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
-          {APPS.map((app) => (
-            <label key={app} className="flex items-center gap-2 text-sm text-ink/80">
-              <input type="checkbox" name="apps" value={app} className="h-4 w-4 accent-clay" />
-              {app}
-            </label>
-          ))}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-ink/80">
+            I&apos;m joining as <span className="text-clay">*</span>
+          </label>
+          <select
+            name="role" required value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className={inputCls + " text-ink/90"}
+          >
+            <option value="" disabled>Choose one …</option>
+            <option value="resident">Resident / citizen</option>
+            <option value="municipality">Municipality / city official</option>
+            <option value="expert">Expert / Industry Professional</option>
+            <option value="other">Other / Just interested</option>
+          </select>
         </div>
-      </fieldset>
 
-      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-        <ContinueButton />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" className={inputCls} />
+          <input
+            type="tel" name="phone" required value={phone}
+            onChange={(e) => setPhone(formatPhone(e.target.value))}
+            inputMode="numeric" maxLength={14}
+            placeholder="(555) 555-5555 *" aria-label="Phone number" className={inputCls}
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <input
+            type="email" name="email" required
+            placeholder={role === "municipality" ? "Official government email *" : "Email *"}
+            aria-label="Email address" className={inputCls}
+          />
+          <input type="text" name="city" required placeholder="City *" aria-label="City of residence" className={inputCls} />
+        </div>
+
+        {role === "municipality" && (
+          <p className="-mt-1 text-xs text-ink/60">
+            Use your official city/government email (e.g., name@cityofirvine.org) so we can verify your role.
+          </p>
+        )}
+
+        {role === "expert" && (
+          <input
+            type="url" name="linkedin" required
+            placeholder="LinkedIn or professional website *"
+            aria-label="LinkedIn or professional website" className={inputCls}
+          />
+        )}
+
+        <fieldset className="rounded-lg border border-line/15 bg-card/40 p-4">
+          <legend className="px-1 text-sm font-medium text-ink/80">
+            Which of these do you use? (select all that apply)
+          </legend>
+          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+            {APPS.map((app) => (
+              <label key={app} className="flex items-center gap-2 text-sm text-ink/80">
+                <input type="checkbox" name="apps" value={app} className="h-4 w-4 accent-clay" />
+                {app}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
         {state.status === "error" && (
           <p className="text-sm text-clay" role="alert">{state.message}</p>
         )}
-      </div>
-      <p className="text-center text-xs text-ink/50">
-        Next: choose membership ($19/yr) or enter a free code. Your info is saved either way.
-      </p>
-    </form>
+        <div className="flex justify-end">
+          <ContinueButton />
+        </div>
+      </form>
+    </div>
   );
 }

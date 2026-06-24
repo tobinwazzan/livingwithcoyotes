@@ -259,7 +259,7 @@ export default function CharterPage() {
                 <div className="flex h-full min-h-[7rem] flex-col items-center justify-center rounded-xl border border-dashed border-line/40 p-6 text-center">
                   <p className="font-semibold text-ink/80">Open seat</p>
                   <p className="mt-1 text-xs text-ink/50">
-                    Invited members join with a code
+                    Seated by invitation
                   </p>
                 </div>
               </Reveal>

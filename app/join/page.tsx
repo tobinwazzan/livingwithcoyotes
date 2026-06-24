@@ -6,7 +6,7 @@ import SignupForm from "@/components/SignupForm";
 export const metadata: Metadata = {
   title: "Join",
   description:
-    "Join the Coyote Coexistence Council. Membership is $19 a year — free for invited municipal representatives, experts, and Council members with a code.",
+    "Join the Coyote Coexistence Council. Membership is $19 a year — tell us your city and how you'd like to help.",
 };
 
 const reasons = [
@@ -30,7 +30,7 @@ export default function JoinPage() {
       <PageHeader
         eyebrow="Join"
         title="Be part of the plan"
-        subtitle="Membership is $19 a year — and free for invited municipal representatives, experts, and Council members with a code. Either way, tell us your city and how you'd like to help."
+        subtitle="Membership is $19 a year. Tell us your city and how you'd like to help — your info is saved either way."
       />
 
       {/* Why join */}
@@ -53,23 +53,7 @@ export default function JoinPage() {
       <section id="form" className="border-y border-line/20 bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
-              Join in two steps
-            </h2>
-            <p className="mx-auto mt-3 mb-8 max-w-lg text-center text-ink/75">
-              First tell us about yourself — your info is saved either way. Then
-              choose how to become a member: card, Venmo, Zelle, or a free code.
-            </p>
             <SignupForm />
-          </Reveal>
-
-          <Reveal>
-            <p className="mt-6 text-center text-xs leading-relaxed text-ink/55">
-              Card payments are processed securely by Stripe (a small processing
-              fee is added so the Council nets the full $19). Venmo and Zelle
-              members upload a receipt. Invited municipal, expert, and Council
-              members join free with a single-use code.
-            </p>
           </Reveal>
         </div>
       </section>

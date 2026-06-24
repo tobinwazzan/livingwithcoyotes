@@ -76,8 +76,8 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
       return err(`Please use your official ${city} government email so we can verify your role (e.g., name@cityof${citySlug}.org).`);
     }
   }
-  if (role === "expert" && !/linkedin\.com\/(in|company)\//i.test(linkedin)) {
-    return err("Please provide a valid LinkedIn profile URL (e.g., https://www.linkedin.com/in/yourname).");
+  if (role === "expert" && !/^https?:\/\/.+\..+/i.test(linkedin)) {
+    return err("Please add a link to your LinkedIn or professional website (starting with https://).");
   }
 
   const { data, error } = await supabase.rpc("create_membership_lead", {
