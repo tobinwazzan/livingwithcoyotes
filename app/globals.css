@@ -10,7 +10,7 @@
   --clay: 181 118 79; /* #b5764f */
   --surface: 244 240 230; /* #f4f0e6 sand */
   --card: 255 255 255; /* #ffffff */
-  --panel: 235 230 216; /* #ebe6d8 warm tint */
+  --panel: 231 225 209; /* warm greige band, distinct from the surface */
   --ink: 61 53 42; /* #3d352a bark */
   --heading: 90 107 74; /* #5a6b4a moss */
   --line: 90 107 74; /* moss, used at low alpha */
@@ -23,7 +23,7 @@
   --clay: 205 138 95; /* #cd8a5f — brightened for contrast on dark */
   --surface: 21 25 17; /* #151911 deep warm green-black */
   --card: 32 38 28; /* #20261c raised */
-  --panel: 27 32 22; /* #1b2016 */
+  --panel: 31 37 26; /* raised band, distinct from the dark surface */
   --ink: 233 228 214; /* #e9e4d6 warm off-white */
   --heading: 165 186 138; /* #a5ba8a light sage */
   --line: 233 228 214; /* light, used at low alpha */

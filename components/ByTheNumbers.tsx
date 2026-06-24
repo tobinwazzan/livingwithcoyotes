@@ -3,7 +3,7 @@ import { STATS, STATS_SOURCE, STATS_CAVEAT } from "@/content/stats";
 
 export default function ByTheNumbers() {
   return (
-    <section className="bg-panel py-16 sm:py-20">
+    <section className="border-y border-line/20 bg-panel py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-6">
         <Reveal>
           <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-clay">

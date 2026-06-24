@@ -265,7 +265,7 @@ export default function Home() {
       </section>
 
       {/* Join CTA */}
-      <section id="join" className="bg-panel py-20">
+      <section id="join" className="border-y border-line/20 bg-panel py-20">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <Reveal>
             <h2 className="text-2xl font-bold text-heading sm:text-3xl">

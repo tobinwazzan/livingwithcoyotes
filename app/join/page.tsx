@@ -50,7 +50,7 @@ export default function JoinPage() {
       </section>
 
       {/* The form */}
-      <section id="form" className="bg-panel py-16">
+      <section id="form" className="border-y border-line/20 bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6">
           <Reveal>
             <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">

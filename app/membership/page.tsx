@@ -131,7 +131,7 @@ export default function MembershipPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-panel py-16">
+      <section className="border-y border-line/20 bg-panel py-16">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <Reveal>
             <h2 className="text-2xl font-bold text-heading sm:text-3xl">
