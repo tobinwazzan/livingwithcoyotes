@@ -305,7 +305,7 @@ export default function SignupForm() {
         Tell us about you
       </h2>
       <p className="mx-auto mb-8 mt-3 max-w-md text-balance text-center text-ink/75">
-        First, a little about yourself.
+        So we can stay in touch.
       </p>
 
       <form action={formAction} className="space-y-4">

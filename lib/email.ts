@@ -115,7 +115,7 @@ export async function sendWelcomeEmail(member: WelcomeMember) {
         </p>
         ${receiptBlock}
         <p style="margin:18px 0 16px;color:${INK};font-size:15px;line-height:1.6;">
-          Your $19 funds plain-language guidance, the yard-proofing checklist, pet-safety
+          Your membership funds plain-language guidance, the yard-proofing checklist, pet-safety
           protocols, and the sightings map — free for every resident in your city, member or not.
         </p>
         <table role="presentation" style="margin:8px 0 4px;"><tr><td style="border-radius:8px;background:${CLAY};">
@@ -136,7 +136,7 @@ export async function sendWelcomeEmail(member: WelcomeMember) {
 
 Thank you for joining the Coyote Coexistence Council — your membership is active for one year.${paid ? `\n\nMembership: ${paid} (${methodLabel(member.membership_method)})` : ""}${expires ? `\nActive through: ${expires}` : ""}
 
-Your $19 funds plain-language guidance, the yard-proofing checklist, pet-safety protocols, and the sightings map — free for every resident in your city.
+Your membership funds plain-language guidance, the yard-proofing checklist, pet-safety protocols, and the sightings map — free for every resident in your city.
 
 Explore the resources: ${SITE}/resources
 

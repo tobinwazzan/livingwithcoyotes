@@ -6,7 +6,7 @@ import SignupForm from "@/components/SignupForm";
 export const metadata: Metadata = {
   title: "Join",
   description:
-    "Join the Coyote Coexistence Council. Membership is $19 a year — tell us your city and how you'd like to help.",
+    "Join the Coyote Coexistence Council. Tell us your city and how you'd like to help shape your neighborhood's coyote plan.",
 };
 
 const reasons = [
@@ -31,7 +31,7 @@ export default function JoinPage() {
         sticky
         eyebrow="Join"
         title="Be part of the plan"
-        subtitle="Membership is $19 a year. Tell us your city and how you'd like to help."
+        subtitle="Tell us your city and how you'd like to help shape your neighborhood's coyote plan."
       />
 
       {/* Why join */}

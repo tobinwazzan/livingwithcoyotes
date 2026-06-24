@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 export const metadata: Metadata = {
   title: "Membership",
   description:
-    "Why membership matters and what it offers. Coexistence takes a funded, organized, accountable effort — $19 a year is how a volunteer council becomes a real one.",
+    "Why join the Coyote Coexistence Council — help shape your city's coyote plan and stand with neighbors turning worry into a coordinated, evidence-first response.",
 };
 
 const why = [
@@ -56,8 +56,8 @@ export default function MembershipPage() {
     <main>
       <PageHeader
         eyebrow="Membership"
-        title="Why join the Council"
-        subtitle="Coexistence doesn't happen in a viral thread. It takes a funded, organized effort — and $19 a year is how a volunteer council becomes a real one."
+        title="Help shape the plan"
+        subtitle="Be proactive, not reactive — stand with the neighbors turning worry into a coordinated, evidence-first response, before the next scare instead of after."
       />
 
       {/* Top CTA — join without scrolling */}
@@ -66,7 +66,7 @@ export default function MembershipPage() {
           href="/join"
           className="inline-block rounded-lg bg-clay px-7 py-3 font-semibold text-sand transition hover:bg-bark"
         >
-          Join the Council — $19/yr
+          Join the Council
         </Link>
       </div>
 
@@ -99,7 +99,7 @@ export default function MembershipPage() {
               What your membership offers
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
-              For $19 a year.
+              Everything you get when you stand up for your neighborhood.
             </p>
           </Reveal>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -115,28 +115,6 @@ export default function MembershipPage() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* How it works */}
-      <section className="mx-auto max-w-3xl px-6 py-16">
-        <Reveal>
-          <h2 className="text-2xl font-bold text-heading sm:text-3xl">
-            How membership works
-          </h2>
-          <ul className="mt-6 space-y-3">
-            {[
-              "Membership is $19 per year.",
-              "Pay by card, Venmo, or Zelle — card adds a small processing fee so the Council nets the full $19.",
-              "Paying by Venmo or Zelle? Upload a receipt and you're in.",
-              "Join now, or decide later and stay on the list.",
-            ].map((line) => (
-              <li key={line} className="flex items-start gap-3">
-                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-clay" />
-                <span className="text-ink/85">{line}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
       </section>
 
       {/* CTA */}

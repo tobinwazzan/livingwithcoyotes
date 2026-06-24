@@ -35,7 +35,7 @@ export default function ChecklistPage() {
 
         <div className="mt-14 rounded-xl border-y border-line/20 bg-panel p-8 text-center print:hidden">
           <p className="text-ink/80">
-            Your $19 keeps tools like this free for everyone in your city.
+            Your membership keeps tools like this free for everyone in your city.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-4">
             <Link
