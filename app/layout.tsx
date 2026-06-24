@@ -13,7 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     default: "Coyote Coexistence Council — Living With Coyotes",
-    template: "%s — Coyote Coexistence Council",
+    template: "%s — CCC",
   },
   description:
     "A facilitated forum bringing residents, municipal officials, and wildlife experts together to build evidence-based coyote safety plans that protect communities while preserving ecological balance.",
