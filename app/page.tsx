@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden text-sand">
+      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-dusk text-sand">
         {/* Layered hero: background street, dusk overlay, then action characters on top */}
         <Image
           src="/hero-bg-street.png"
@@ -45,7 +45,7 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-bottom"
+          className="object-contain object-bottom sm:object-cover"
         />
         <div className="absolute inset-0 bg-dusk/65" />
         <Image
@@ -54,16 +54,16 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-bottom"
+          className="object-contain object-bottom sm:object-cover"
         />
-        {/* Logo — top-left, 1.5x size */}
+        {/* Logo — desktop only, top-left */}
         <Image
           src="/logo-ccc.png"
           alt="Coyote Coexistence Council logo"
           width={384}
           height={384}
           priority
-          className="hero-anim hero-anim-1 absolute left-4 top-4 z-20 h-20 w-20 sm:left-8 sm:top-8 sm:h-[168px] sm:w-[168px] lg:h-[192px] lg:w-[192px]"
+          className="hero-anim hero-anim-1 absolute left-4 top-4 z-20 hidden h-20 w-20 sm:left-8 sm:top-8 sm:block sm:h-[168px] sm:w-[168px] lg:h-[192px] lg:w-[192px]"
         />
         {/* Scrim: pools dark behind the centered text, fades out at the edges
             so the corner characters stay vivid. Keeps text clearly on top. */}
@@ -75,6 +75,15 @@ export default function Home() {
           }}
         />
         <div className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-32 hero-text">
+          {/* Logo — mobile only, centered & larger */}
+          <Image
+            src="/logo-ccc.png"
+            alt="Coyote Coexistence Council logo"
+            width={384}
+            height={384}
+            priority
+            className="hero-anim hero-anim-1 mx-auto mb-5 h-32 w-32 sm:hidden"
+          />
           <p className="hero-anim hero-anim-2 mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-clay sm:text-base">
             Welcome to the
           </p>
