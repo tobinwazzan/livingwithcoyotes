@@ -2,6 +2,7 @@ import Link from "next/link";
 import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 import { dollars } from "@/lib/membership";
+import { sendWelcomeIfClaimed } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,7 @@ export default async function MembershipSuccess({
           p_amount_cents: session.amount_total ?? 0,
           p_stripe_session_id: session.id,
         });
+        await sendWelcomeIfClaimed(session.metadata.signupId);
         activated = true;
         amount = session.amount_total ?? 0;
       }

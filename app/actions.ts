@@ -3,6 +3,7 @@
 import { supabase } from "@/lib/supabase";
 import { stripe } from "@/lib/stripe";
 import { MEMBERSHIP_CENTS, cardTotalCents } from "@/lib/membership";
+import { sendWelcomeIfClaimed } from "@/lib/email";
 
 export type LeadState = {
   status: "idle" | "error" | "lead";
@@ -96,6 +97,7 @@ export async function redeemCode(signupId: string, code: string): Promise<{ ok: 
   if (!code.trim()) return { ok: false, message: "Enter your code." };
   const { error } = await supabase.rpc("redeem_membership_code", { p_code: code, p_signup_id: signupId });
   if (error) return { ok: false, message: "That code isn't valid or has already been used." };
+  await sendWelcomeIfClaimed(signupId);
   return { ok: true, message: "Code accepted — your membership is active. Welcome aboard!" };
 }
 
@@ -108,6 +110,7 @@ export async function recordManual(
     p_signup_id: signupId, p_method: method, p_receipt_path: receiptPath,
   });
   if (error) return { ok: false, message: "We couldn't record that. Please try again." };
+  await sendWelcomeIfClaimed(signupId);
   return { ok: true, message: "Thank you — your membership is active." };
 }
 
