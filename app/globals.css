@@ -32,10 +32,15 @@
 
 html {
   scroll-behavior: smooth;
+  /* Paint the full viewport canvas with the theme surface so a dark-OS
+     browser never shows its dark fallback behind/around the body. */
+  background-color: rgb(var(--surface));
+  min-height: 100%;
 }
 
 body {
   @apply bg-surface text-ink antialiased;
+  min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
