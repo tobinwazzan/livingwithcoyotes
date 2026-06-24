@@ -167,8 +167,15 @@ export default function CharterPage() {
         </ol>
       </div>
 
+      {/* Ease the light→dark transition so the Founding Council band doesn't
+          read as the page footer arriving early. */}
+      <div
+        aria-hidden="true"
+        className="h-24 bg-gradient-to-b from-surface to-dusk"
+      />
+
       {/* Founding Council / Signatories — the prominent named section */}
-      <section className="bg-dusk py-20 text-sand">
+      <section className="bg-dusk pb-20 pt-10 text-sand">
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
             <p className="text-center text-sm font-semibold uppercase tracking-[0.25em] text-clay">
