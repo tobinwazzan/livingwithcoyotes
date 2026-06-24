@@ -46,8 +46,8 @@ const offers = [
     body: "You're funding coexistence and attractant management — not culling, not panic, not removal that just resets the cycle.",
   },
   {
-    title: "Free for invited partners",
-    body: "Municipal representatives, experts, and Council members join free with a single-use code.",
+    title: "A founding member",
+    body: "Join now and you're on the ground floor — part of the Council's founding membership, before coexistence was the easy choice.",
   },
 ];
 
@@ -118,7 +118,6 @@ export default function MembershipPage() {
               "Membership is $25 per year.",
               "Pay by card, Venmo, or Zelle — card adds a small processing fee so the Council nets the full $25.",
               "Paying by Venmo or Zelle? Upload a receipt and you're in.",
-              "Invited municipal representatives, experts, and Council members join free with a single-use code.",
               "Your information is saved either way — you can join now or decide later and stay on the list.",
             ].map((line) => (
               <li key={line} className="flex items-start gap-3">
