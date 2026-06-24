@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 export const metadata: Metadata = {
   title: "Membership",
   description:
-    "Why membership matters and what it offers. Coexistence takes a funded, organized, accountable effort — $25 a year is how a volunteer council becomes a real one.",
+    "Why membership matters and what it offers. Coexistence takes a funded, organized, accountable effort — $19 a year is how a volunteer council becomes a real one.",
 };
 
 const why = [
@@ -57,7 +57,7 @@ export default function MembershipPage() {
       <PageHeader
         eyebrow="Membership"
         title="Why join the Council"
-        subtitle="Coexistence doesn't happen in a viral thread. It takes a funded, organized, accountable effort — and $25 a year is how a volunteer council becomes a real one."
+        subtitle="Coexistence doesn't happen in a viral thread. It takes a funded, organized, accountable effort — and $19 a year is how a volunteer council becomes a real one."
       />
 
       {/* Why it matters */}
@@ -89,7 +89,7 @@ export default function MembershipPage() {
               What your membership offers
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
-              For $25 a year — the price of a couple of coffees a month.
+              For $19 a year.
             </p>
           </Reveal>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -115,8 +115,8 @@ export default function MembershipPage() {
           </h2>
           <ul className="mt-6 space-y-3">
             {[
-              "Membership is $25 per year.",
-              "Pay by card, Venmo, or Zelle — card adds a small processing fee so the Council nets the full $25.",
+              "Membership is $19 per year.",
+              "Pay by card, Venmo, or Zelle — card adds a small processing fee so the Council nets the full $19.",
               "Paying by Venmo or Zelle? Upload a receipt and you're in.",
               "Your information is saved either way — you can join now or decide later and stay on the list.",
             ].map((line) => (

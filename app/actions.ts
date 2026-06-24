@@ -87,7 +87,7 @@ export async function recordManual(
   return { ok: true, message: "Thank you — your membership is active." };
 }
 
-// Step 2c — start a Stripe Checkout session ($25 + card fee). Returns a URL.
+// Step 2c — start a Stripe Checkout session ($19 + card fee). Returns a URL.
 export async function startCheckout(signupId: string, email: string): Promise<{ url?: string; error?: string }> {
   if (!stripe) return { error: "Card payments aren't set up yet — please use Venmo, Zelle, or a code." };
   if (!signupId) return { error: "Please complete the form first." };

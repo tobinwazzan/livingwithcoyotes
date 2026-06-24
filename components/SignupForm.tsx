@@ -104,7 +104,7 @@ export default function SignupForm() {
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re on the list. ✅</p>
           <p className="mt-1 text-ink/80">
-            Make it official — <strong>annual membership is $25</strong>. Invited
+            Make it official — <strong>annual membership is $19</strong>. Invited
             municipal &amp; expert representatives and Council members join free with a code.
           </p>
         </div>
@@ -130,8 +130,8 @@ export default function SignupForm() {
         {method === "card" && (
           <div className="rounded-lg border border-line/15 bg-card/50 p-4">
             <p className="text-sm text-ink/75">
-              You&apos;ll pay <strong>{dollars(cardTotal)}</strong> — that&apos;s the $25 membership
-              plus the card processing fee, so the Council nets the full $25.
+              You&apos;ll pay <strong>{dollars(cardTotal)}</strong> — that&apos;s the $19 membership
+              plus the card processing fee, so the Council nets the full $19.
             </p>
             <button
               type="button" onClick={payCard} disabled={busy}
@@ -296,7 +296,7 @@ export default function SignupForm() {
         )}
       </div>
       <p className="text-center text-xs text-ink/50">
-        Next: choose membership ($25/yr) or enter a free code. Your info is saved either way.
+        Next: choose membership ($19/yr) or enter a free code. Your info is saved either way.
       </p>
     </form>
   );

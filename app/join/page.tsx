@@ -6,7 +6,7 @@ import SignupForm from "@/components/SignupForm";
 export const metadata: Metadata = {
   title: "Join",
   description:
-    "Join the Coyote Coexistence Council. Membership is $25 a year — free for invited municipal representatives, experts, and Council members with a code.",
+    "Join the Coyote Coexistence Council. Membership is $19 a year — free for invited municipal representatives, experts, and Council members with a code.",
 };
 
 const reasons = [
@@ -30,7 +30,7 @@ export default function JoinPage() {
       <PageHeader
         eyebrow="Join"
         title="Be part of the plan"
-        subtitle="Membership is $25 a year — and free for invited municipal representatives, experts, and Council members with a code. Either way, tell us your city and how you'd like to help."
+        subtitle="Membership is $19 a year — and free for invited municipal representatives, experts, and Council members with a code. Either way, tell us your city and how you'd like to help."
       />
 
       {/* Why join */}
@@ -66,7 +66,7 @@ export default function JoinPage() {
           <Reveal>
             <p className="mt-6 text-center text-xs leading-relaxed text-ink/55">
               Card payments are processed securely by Stripe (a small processing
-              fee is added so the Council nets the full $25). Venmo and Zelle
+              fee is added so the Council nets the full $19). Venmo and Zelle
               members upload a receipt. Invited municipal, expert, and Council
               members join free with a single-use code.
             </p>
