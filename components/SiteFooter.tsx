@@ -39,6 +39,12 @@ export default function SiteFooter() {
               </Link>
             ))}
             <Link
+              href="/faq"
+              className="text-sm text-sand/80 transition-colors hover:text-sand"
+            >
+              FAQ
+            </Link>
+            <Link
               href={JOIN_HREF}
               className="text-sm font-semibold text-clay transition-colors hover:text-sand"
             >
