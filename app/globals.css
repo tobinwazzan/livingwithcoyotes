@@ -93,3 +93,19 @@ body {
     transition: none;
   }
 }
+
+/* Clean printouts (e.g. the coyote-proofing checklist): drop the site chrome
+   and force a readable light style regardless of theme. */
+@media print {
+  header,
+  footer {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  * {
+    color: #1a1a1a !important;
+  }
+}

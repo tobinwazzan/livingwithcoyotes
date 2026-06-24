@@ -45,6 +45,12 @@ export default function SiteFooter() {
               FAQ
             </Link>
             <Link
+              href="/checklist"
+              className="text-sm text-sand/80 transition-colors hover:text-sand"
+            >
+              Yard checklist
+            </Link>
+            <Link
               href={JOIN_HREF}
               className="text-sm font-semibold text-clay transition-colors hover:text-sand"
             >

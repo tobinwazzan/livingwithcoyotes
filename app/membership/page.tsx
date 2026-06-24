@@ -30,8 +30,8 @@ const offers = [
     body: "Grouped by your city, your experience and concerns feed directly into the plans your city considers.",
   },
   {
-    title: "Plain-language resources",
-    body: "Our curated, credible Resources for Learning library — built for watching, not just reading.",
+    title: "You keep it free for everyone",
+    body: "Your dues fund the guidance, videos, and tools the Council gives away — free for every resident in your city, member or not.",
   },
   {
     title: "Tools as they launch",

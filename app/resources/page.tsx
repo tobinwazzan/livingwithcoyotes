@@ -27,6 +27,22 @@ export default function ResourcesPage() {
         </Reveal>
 
         <Reveal>
+          <Link
+            href="/checklist"
+            className="mt-8 flex items-center justify-between gap-3 rounded-xl border border-clay/30 bg-clay/5 p-5 transition hover:border-clay/60"
+          >
+            <span>
+              <span className="font-semibold text-clay">
+                Coyote-proof your yard →
+              </span>{" "}
+              <span className="text-sm text-ink/70">
+                our free, printable checklist
+              </span>
+            </span>
+          </Link>
+        </Reveal>
+
+        <Reveal>
           <section className="mt-12 rounded-2xl border border-clay/30 bg-clay/5 p-6 sm:p-8">
             <div className="flex items-baseline gap-3">
               <span className="rounded-full bg-clay px-3 py-1 text-xs font-bold uppercase tracking-wide text-sand">
