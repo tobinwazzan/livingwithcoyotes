@@ -5,14 +5,21 @@ export default function PageHeader({
   title,
   subtitle,
   children,
+  sticky = false,
 }: {
   eyebrow?: string;
   title: string;
   subtitle?: string;
   children?: ReactNode;
+  /** Pin the header to the top so content scrolls up beneath it. */
+  sticky?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden bg-dusk text-sand">
+    <section
+      className={`overflow-hidden bg-dusk text-sand ${
+        sticky ? "sticky top-0 z-40" : "relative"
+      }`}
+    >
       {/* Soft moss glow so interior headers feel related to the home hero */}
       <div
         className="pointer-events-none absolute inset-0 opacity-70"

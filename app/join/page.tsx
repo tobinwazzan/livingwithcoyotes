@@ -28,6 +28,7 @@ export default function JoinPage() {
   return (
     <main>
       <PageHeader
+        sticky
         eyebrow="Join"
         title="Be part of the plan"
         subtitle="Membership is $19 a year. Tell us your city and how you'd like to help."
