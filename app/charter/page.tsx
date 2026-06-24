@@ -74,7 +74,7 @@ export default function CharterPage() {
             evidence-based safety plans that protect our communities while
             preserving the natural ecological balance we share with coyotes.
             Through open, respectful dialogue and a commitment to including every
-            perspective, we work toward practical solutions and stay accountable
+            human perspective, we work toward practical solutions and stay accountable
             to them — measuring results, adapting our approach, and continuing
             until our safety and stewardship goals are met.
           </p>
