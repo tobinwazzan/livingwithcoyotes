@@ -51,6 +51,12 @@ export default function SiteFooter() {
               Yard checklist
             </Link>
             <Link
+              href="/supporters"
+              className="text-sm text-sand/80 transition-colors hover:text-sand"
+            >
+              Supporters
+            </Link>
+            <Link
               href={JOIN_HREF}
               className="text-sm font-semibold text-clay transition-colors hover:text-sand"
             >

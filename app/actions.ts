@@ -30,6 +30,10 @@ const VALID_ROLES = new Set([
 ]);
 const digits = (s: string) => s.replace(/\D/g, "");
 
+// A contribution is at least $19 (the membership) and at most $10,000 (sanity cap).
+const clampAmount = (cents: number) =>
+  Math.max(MEMBERSHIP_CENTS, Math.min(Math.round(cents) || MEMBERSHIP_CENTS, 1_000_000));
+
 // Prefer the service-role client so the public anon RPC grants can be revoked.
 const db = supabaseAdmin ?? supabase;
 
@@ -124,6 +128,13 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   }
 
   const signupId = String(data);
+
+  // Supporters-wall consent (opt-in; default hidden). Stored separately so the
+  // lead RPC signature stays put. Never published without an explicit choice.
+  const wallRaw = String(formData.get("wall_display") ?? "hidden");
+  const wallDisplay = wallRaw === "first" || wallRaw === "full" ? wallRaw : "hidden";
+  await db.from("signups").update({ wall_display: wallDisplay }).eq("id", signupId);
+
   // Already a member? Don't send them to the payment step — prevents a re-charge.
   const { data: existing } = await db
     .from("signups")
@@ -157,11 +168,13 @@ export async function redeemCode(signupId: string, code: string): Promise<{ ok: 
 // Step 2b — record a Venmo/Zelle payment after the receipt is uploaded.
 export async function recordManual(
   signupId: string, method: "venmo" | "zelle", receiptPath: string,
+  amountCents: number = MEMBERSHIP_CENTS,
 ): Promise<{ ok: boolean; message: string }> {
   if (!signupId) return { ok: false, message: "Please complete the form first." };
   await logFunnel("payment_started", { signupId, meta: { method } });
   const { data: result, error } = await db.rpc("record_manual_payment", {
     p_signup_id: signupId, p_method: method, p_receipt_path: receiptPath,
+    p_amount_cents: clampAmount(amountCents),
   });
   if (error) {
     await logFunnel("invalid", { signupId, meta: { reason: "record_manual_rpc", method } });
@@ -225,9 +238,13 @@ export async function foundingStatus(): Promise<{ count: number; cap: number; re
 }
 
 // Step 2c — start a Stripe Checkout session ($19 + card fee). Returns a URL.
-export async function startCheckout(signupId: string, email: string): Promise<{ url?: string; error?: string }> {
+export async function startCheckout(
+  signupId: string, email: string, amountCents: number = MEMBERSHIP_CENTS,
+): Promise<{ url?: string; error?: string }> {
   if (!stripe) return { error: "Card payments aren't set up yet — please use Venmo, Zelle, or a code." };
   if (!signupId) return { error: "Please complete the form first." };
+  const base = clampAmount(amountCents);
+  const isPatron = base >= 5000;
   const origin = process.env.NEXT_PUBLIC_SITE_URL
     || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
   try {
@@ -238,14 +255,16 @@ export async function startCheckout(signupId: string, email: string): Promise<{ 
         quantity: 1,
         price_data: {
           currency: "usd",
-          unit_amount: cardTotalCents(),
+          unit_amount: cardTotalCents(base),
           product_data: {
-            name: "Coyote Coexistence Council — Annual Membership",
+            name: isPatron
+              ? "Coyote Coexistence Council — Annual Membership (Founding Patron)"
+              : "Coyote Coexistence Council — Annual Membership",
             description: "1 year · includes card processing fee",
           },
         },
       }],
-      metadata: { signupId, base_cents: String(MEMBERSHIP_CENTS) },
+      metadata: { signupId, base_cents: String(base) },
       success_url: `${origin}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?canceled=1#join`,
     });

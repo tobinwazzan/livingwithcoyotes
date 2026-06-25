@@ -142,6 +142,8 @@ export default function SignupForm() {
 
   // membership-phase state
   const [method, setMethod] = useState<"" | "card" | "venmo" | "zelle" | "code">("");
+  const [amountCents, setAmountCents] = useState(MEMBERSHIP_CENTS); // contribution
+  const [customAmt, setCustomAmt] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState("");
@@ -191,13 +193,22 @@ export default function SignupForm() {
   if (state.status === "lead" && state.signupId) {
     const signupId = state.signupId;
     const email = state.email || "";
-    const cardTotal = cardTotalCents();
+    const cardTotal = cardTotalCents(amountCents);
+    const isPatron = amountCents >= 5000;
 
     const choose = (m: typeof method) => { setMethod(m); setNote(""); };
 
+    const pickAmount = (c: number) => { setAmountCents(c); setCustomAmt(""); };
+    const onCustom = (v: string) => {
+      const clean = v.replace(/[^\d]/g, "").slice(0, 5);
+      setCustomAmt(clean);
+      const dollarsNum = parseInt(clean || "0", 10);
+      setAmountCents(Math.max(MEMBERSHIP_CENTS, dollarsNum * 100));
+    };
+
     const payCard = async () => {
       setBusy(true); setNote("");
-      const r = await startCheckout(signupId, email);
+      const r = await startCheckout(signupId, email, amountCents);
       if (r.url) { window.location.href = r.url; return; }
       setBusy(false); setNote(r.error || "Card checkout is unavailable right now.");
     };
@@ -230,7 +241,7 @@ export default function SignupForm() {
         const path = `${signupId}/${Date.now()}-${safe}`;
         const { error } = await supabase.storage.from("receipts").upload(path, file, { upsert: false });
         if (error) throw error;
-        const r = await recordManual(signupId, m, path);
+        const r = await recordManual(signupId, m, path, amountCents);
         setBusy(false);
         r.ok ? setDone(r.message) : setNote(r.message);
       } catch {
@@ -280,18 +291,53 @@ export default function SignupForm() {
         )}
 
         <p className="text-center text-sm font-medium text-ink/70">
-          {founding?.open ? "Or become a member for $19:" : "How would you like to join?"}
+          {founding?.open ? "Or become a member:" : "How would you like to join?"}
         </p>
+
+        {/* Contribution amount — $19 base; $50+ earns a Founding Patron badge. */}
+        <div className="rounded-xl border border-line/15 bg-card/40 p-4">
+          <p className="text-center text-sm font-medium text-ink/80">Choose your contribution</p>
+          <div className="mt-3 grid grid-cols-4 gap-2">
+            {[1900, 5000, 10000].map((c) => (
+              <button
+                key={c} type="button" onClick={() => pickAmount(c)}
+                className={`rounded-lg border px-2 py-2 text-sm font-semibold transition ${
+                  amountCents === c && !customAmt
+                    ? "border-clay bg-clay/10 text-ink"
+                    : "border-line/20 bg-card/70 text-ink/80 hover:border-clay/50"
+                }`}
+              >
+                {dollars(c).replace(".00", "")}
+              </button>
+            ))}
+            <div className={`flex items-center rounded-lg border px-2 transition ${
+              customAmt ? "border-clay bg-clay/10" : "border-line/20 bg-card/70"
+            }`}>
+              <span className="text-sm text-ink/60">$</span>
+              <input
+                type="text" inputMode="numeric" value={customAmt}
+                onChange={(e) => onCustom(e.target.value)}
+                placeholder="Other" aria-label="Other amount"
+                className="w-full bg-transparent px-1 py-2 text-sm outline-none placeholder:text-ink/40"
+              />
+            </div>
+          </div>
+          <p className="mt-2 text-center text-xs text-ink/60">
+            {isPatron
+              ? "🌟 You'll be a Founding Patron on our Supporters wall."
+              : "Give $50 or more to become a Founding Patron on our Supporters wall."}
+          </p>
+        </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <button type="button" className={optionCls("card")} onClick={() => choose("card")}>
             💳 Card<span className="block text-xs font-normal text-ink/55">{dollars(cardTotal)}</span>
           </button>
           <button type="button" className={optionCls("venmo")} onClick={() => choose("venmo")}>
-            Venmo<span className="block text-xs font-normal text-ink/55">{dollars(MEMBERSHIP_CENTS)}</span>
+            Venmo<span className="block text-xs font-normal text-ink/55">{dollars(amountCents)}</span>
           </button>
           <button type="button" className={optionCls("zelle")} onClick={() => choose("zelle")}>
-            Zelle<span className="block text-xs font-normal text-ink/55">{dollars(MEMBERSHIP_CENTS)}</span>
+            Zelle<span className="block text-xs font-normal text-ink/55">{dollars(amountCents)}</span>
           </button>
           <button type="button" className={optionCls("code")} onClick={() => choose("code")}>
             I have a code<span className="block text-xs font-normal text-ink/55">Free</span>
@@ -302,8 +348,9 @@ export default function SignupForm() {
         {method === "card" && (
           <div className="rounded-lg border border-line/15 bg-card/50 p-4">
             <p className="text-sm text-ink/75">
-              You&apos;ll pay <strong>{dollars(cardTotal)}</strong> — that&apos;s the $19 membership
-              plus the card processing fee, so the Council nets the full $19.
+              You&apos;ll pay <strong>{dollars(cardTotal)}</strong> — your {dollars(amountCents)} contribution
+              plus the card processing fee, so the Council nets the full {dollars(amountCents)}.
+              {isPatron && " You'll be listed as a Founding Patron."}
             </p>
             <button
               type="button" onClick={payCard} disabled={busy}
@@ -320,7 +367,7 @@ export default function SignupForm() {
             {VENMO_HANDLE ? (
               <>
                 <p className="text-sm text-ink/75">
-                  Send <strong>{dollars(MEMBERSHIP_CENTS)}</strong> on Venmo to{" "}
+                  Send <strong>{dollars(amountCents)}</strong> on Venmo to{" "}
                   <strong>{VENMO_HANDLE}</strong> — please put your name in the note. Then upload a screenshot of your receipt:
                 </p>
                 <input
@@ -341,7 +388,7 @@ export default function SignupForm() {
             {ZELLE_HANDLE ? (
               <>
                 <p className="text-sm text-ink/75">
-                  Send <strong>{dollars(MEMBERSHIP_CENTS)}</strong> via Zelle to{" "}
+                  Send <strong>{dollars(amountCents)}</strong> via Zelle to{" "}
                   <strong>{ZELLE_HANDLE}</strong> — please put your name in the memo. Then upload a screenshot of your receipt:
                 </p>
                 <input
@@ -483,6 +530,20 @@ export default function SignupForm() {
             ))}
           </div>
         </fieldset>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-ink/80">
+            Show me on the public Supporters wall?
+          </label>
+          <select name="wall_display" defaultValue="hidden" className={inputCls + " text-ink/90"}>
+            <option value="hidden">No — keep me anonymous</option>
+            <option value="first">Yes — first name + city</option>
+            <option value="full">Yes — full name + city</option>
+          </select>
+          <p className="mt-1 text-xs text-ink/55">
+            Optional. We never show your email, phone, or amount — and you can change this anytime.
+          </p>
+        </div>
 
         {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />

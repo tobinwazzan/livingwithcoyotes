@@ -21,11 +21,14 @@ export default async function MembershipSuccess({
     try {
       const session = await stripe.checkout.sessions.retrieve(sid);
       const signupId = session.metadata?.signupId;
+      // Record the contribution (base), not the fee-inclusive total — so the
+      // Founding Patron badge ($50+) and the receipt reflect what they gave.
+      const baseCents = Number(session.metadata?.base_cents) || session.amount_total || 0;
       if (session.payment_status === "paid" && signupId) {
         const db = supabaseAdmin ?? supabase;
         const { data: result } = await db.rpc("activate_stripe_membership", {
           p_signup_id: signupId,
-          p_amount_cents: session.amount_total ?? 0,
+          p_amount_cents: baseCents,
           p_stripe_session_id: session.id,
         });
         if (result === "activated") {
@@ -33,11 +36,11 @@ export default async function MembershipSuccess({
           await logFunnel("activated", { signupId, meta: { method: "stripe" } });
           await sendWelcomeIfClaimed(signupId);
           activated = true;
-          amount = session.amount_total ?? 0;
+          amount = baseCents;
         } else if (result === "already_active") {
           // A refresh of an already-active member — no new event, no double count.
           activated = true;
-          amount = session.amount_total ?? 0;
+          amount = baseCents;
         } else {
           // Paid at Stripe but no matching signup to activate — must be visible.
           await logFunnel("invalid", { signupId, meta: { reason: "stripe_activate_not_found" } });
