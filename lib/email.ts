@@ -100,7 +100,17 @@ export async function sendWelcomeEmail(member: WelcomeMember) {
        </table>`
     : "";
 
+  const isFounding = member.membership_method === "founding";
+  const subject = isFounding
+    ? `Welcome aboard, ${first} — you're one of the first 🐾`
+    : `Welcome aboard, ${first} 🐾`;
+  // Hidden preheader controls the inbox preview snippet (so it isn't the masthead).
+  const preheader = isFounding
+    ? "You're a Founding Member — here's what your membership unlocks, and what's next."
+    : "Your membership funds your city's coyote plan — here's what you get, and what's next.";
+
   const html = `<!doctype html><html><body style="margin:0;background:${SAND};font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
   <table role="presentation" width="100%" style="background:${SAND};padding:24px 0;"><tr><td align="center">
     <table role="presentation" width="560" style="max-width:560px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid rgba(90,107,74,.15);">
       <tr><td style="background:${DUSK};padding:28px 32px;text-align:center;">
@@ -146,7 +156,7 @@ Coyote Coexistence Council · livingwithcoyotes.org`;
 
   return sendEmail({
     to: member.email,
-    subject: "Welcome to the Coyote Coexistence Council 🐾",
+    subject,
     html,
     text,
   });
