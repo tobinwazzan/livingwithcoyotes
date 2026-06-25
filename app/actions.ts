@@ -1,6 +1,7 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { stripe } from "@/lib/stripe";
 import { MEMBERSHIP_CENTS, cardTotalCents, FOUNDING_CAP } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
@@ -28,6 +29,9 @@ const VALID_ROLES = new Set([
   "resident", "municipality", "expert", "partner", "other",
 ]);
 const digits = (s: string) => s.replace(/\D/g, "");
+
+// Prefer the service-role client so the public anon RPC grants can be revoked.
+const db = supabaseAdmin ?? supabase;
 
 // Step 1 — always capture the lead (so an abandoned payment still reaches us).
 export async function submitLead(_prev: LeadState, formData: FormData): Promise<LeadState> {
@@ -109,7 +113,7 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     return invalid("expert_url", "Please add a link to your LinkedIn or professional website (starting with https://).");
   }
 
-  const { data, error } = await supabase.rpc("create_membership_lead", {
+  const { data, error } = await db.rpc("create_membership_lead", {
     p_role: role, p_full_name: fullName, p_phone: phone, p_email: email,
     p_city: city, p_linkedin: linkedin, p_apps: apps,
     p_source: source || null, p_referrer: referrer || null, p_meta: meta,
@@ -128,7 +132,7 @@ export async function redeemCode(signupId: string, code: string): Promise<{ ok: 
   if (!signupId) return { ok: false, message: "Please complete the form first." };
   if (!code.trim()) return { ok: false, message: "Enter your code." };
   await logFunnel("payment_started", { signupId, meta: { method: "code" } });
-  const { error } = await supabase.rpc("redeem_membership_code", { p_code: code, p_signup_id: signupId });
+  const { error } = await db.rpc("redeem_membership_code", { p_code: code, p_signup_id: signupId });
   if (error) {
     await logFunnel("invalid", { signupId, meta: { reason: "bad_code" } });
     return { ok: false, message: "That code isn't valid or has already been used." };
@@ -144,7 +148,7 @@ export async function recordManual(
 ): Promise<{ ok: boolean; message: string }> {
   if (!signupId) return { ok: false, message: "Please complete the form first." };
   await logFunnel("payment_started", { signupId, meta: { method } });
-  const { data: result, error } = await supabase.rpc("record_manual_payment", {
+  const { data: result, error } = await db.rpc("record_manual_payment", {
     p_signup_id: signupId, p_method: method, p_receipt_path: receiptPath,
   });
   if (error) {
@@ -174,7 +178,7 @@ export async function claimFounding(
 ): Promise<{ ok: boolean; status: string; message: string }> {
   if (!signupId) return { ok: false, status: "no_signup", message: "Please complete the form first." };
   await logFunnel("payment_started", { signupId, meta: { method: "founding" } });
-  const { data: result, error } = await supabase.rpc("claim_founding_membership", {
+  const { data: result, error } = await db.rpc("claim_founding_membership", {
     p_signup_id: signupId,
   });
   if (error) {
@@ -202,7 +206,7 @@ export async function claimFounding(
 
 // Live founding count for the "X of 100 claimed" badge.
 export async function foundingStatus(): Promise<{ count: number; cap: number; remaining: number; open: boolean }> {
-  const { data } = await supabase.rpc("founding_count");
+  const { data } = await db.rpc("founding_count");
   const count = typeof data === "number" ? data : 0;
   const remaining = Math.max(0, FOUNDING_CAP - count);
   return { count, cap: FOUNDING_CAP, remaining, open: remaining > 0 };

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { dollars } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
 import { logFunnel } from "@/lib/funnel";
@@ -21,7 +22,8 @@ export default async function MembershipSuccess({
       const session = await stripe.checkout.sessions.retrieve(sid);
       const signupId = session.metadata?.signupId;
       if (session.payment_status === "paid" && signupId) {
-        const { data: result } = await supabase.rpc("activate_stripe_membership", {
+        const db = supabaseAdmin ?? supabase;
+        const { data: result } = await db.rpc("activate_stripe_membership", {
           p_signup_id: signupId,
           p_amount_cents: session.amount_total ?? 0,
           p_stripe_session_id: session.id,

@@ -2,7 +2,10 @@ import "server-only";
 import nodemailer from "nodemailer";
 import { dollars } from "./membership";
 import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabaseAdmin";
 import { logFunnel } from "./funnel";
+
+const db = supabaseAdmin ?? supabase;
 
 // ── Provider ────────────────────────────────────────────────────────────────
 // Today: Google Workspace SMTP. To switch to Resend later, only this transport
@@ -156,7 +159,7 @@ Coyote Coexistence Council · livingwithcoyotes.org`;
 // Claim-and-send: idempotent across all join paths and page refreshes. Returns
 // member details only to the first caller, so the email goes out exactly once.
 export async function sendWelcomeIfClaimed(signupId: string) {
-  const { data, error } = await supabase.rpc("claim_welcome_email", {
+  const { data, error } = await db.rpc("claim_welcome_email", {
     p_signup_id: signupId,
   });
   if (error || !Array.isArray(data) || data.length === 0) return { sent: false };

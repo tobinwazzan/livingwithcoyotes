@@ -1,5 +1,9 @@
 import "server-only";
 import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabaseAdmin";
+
+// Prefer the service-role client so the public anon RPC grants can be revoked.
+const db = supabaseAdmin ?? supabase;
 
 export type FunnelEvent =
   | "continue_clicked"
@@ -21,7 +25,7 @@ export async function logFunnel(
   opts?: { signupId?: string | null; isBot?: boolean; meta?: Record<string, unknown> },
 ): Promise<void> {
   try {
-    await supabase.rpc("log_funnel_event", {
+    await db.rpc("log_funnel_event", {
       p_event: event,
       p_signup_id: opts?.signupId ?? null,
       p_is_bot: opts?.isBot ?? false,
