@@ -10,10 +10,21 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const logoData = readFileSync(join(process.cwd(), "public/logo-ccc.png"));
-const logoSrc = `data:image/png;base64,${logoData.toString("base64")}`;
+// Load the logo lazily + safely. At build time (static routes) the file is
+// present; at request time on serverless (dynamic routes like /admin) it may not
+// be — in which case we render the card without the logo instead of crashing the
+// whole page's metadata resolution.
+function loadLogo(): string | null {
+  try {
+    const data = readFileSync(join(process.cwd(), "public/logo-ccc.png"));
+    return `data:image/png;base64,${data.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
 
 export default function OpengraphImage() {
+  const logoSrc = loadLogo();
   return new ImageResponse(
     (
       <div
@@ -30,7 +41,7 @@ export default function OpengraphImage() {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logoSrc} width={144} height={144} alt="" />
+        {logoSrc && <img src={logoSrc} width={144} height={144} alt="" />}
         <div
           style={{
             fontSize: 66,

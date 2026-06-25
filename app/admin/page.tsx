@@ -5,6 +5,7 @@ import { adminLogout } from "./actions";
 import AdminLogin from "./AdminLogin";
 
 export const dynamic = "force-dynamic";
+export const metadata = { robots: { index: false, follow: false } };
 
 type Member = {
   full_name: string | null;
