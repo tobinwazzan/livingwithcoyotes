@@ -48,6 +48,8 @@ const PAGE = `<!doctype html>
 export function middleware(req: NextRequest) {
   if (!MAINTENANCE) return NextResponse.next();
   if (ALLOW.has(req.nextUrl.pathname)) return NextResponse.next();
+  // The admin tool is reachable during maintenance — it has its own password gate.
+  if (req.nextUrl.pathname.startsWith("/admin")) return NextResponse.next();
 
   // Already-bypassed browser (cookie set) — let every request through, including
   // server-action POSTs (which carry the cookie).
