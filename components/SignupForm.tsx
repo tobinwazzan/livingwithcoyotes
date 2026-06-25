@@ -7,8 +7,9 @@ import {
   claimFounding, foundingStatus, type LeadState,
 } from "@/app/actions";
 import { supabase } from "@/lib/supabase";
+import Script from "next/script";
 import {
-  cardTotalCents, dollars, MEMBERSHIP_CENTS, VENMO_HANDLE, ZELLE_HANDLE,
+  cardTotalCents, dollars, MEMBERSHIP_CENTS, VENMO_HANDLE, ZELLE_HANDLE, TURNSTILE_SITE_KEY,
 } from "@/lib/membership";
 
 const initialState: LeadState = { status: "idle", message: "" };
@@ -466,6 +467,12 @@ export default function SignupForm() {
             ))}
           </div>
         </fieldset>
+
+        {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}
+        <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+        <div className="flex justify-center">
+          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
+        </div>
 
         {state.status === "error" && (
           <p className="text-sm text-clay" role="alert">{state.message}</p>

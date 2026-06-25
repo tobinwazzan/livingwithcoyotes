@@ -5,6 +5,8 @@ import { stripe } from "@/lib/stripe";
 import { MEMBERSHIP_CENTS, cardTotalCents, FOUNDING_CAP } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
 import { logFunnel } from "@/lib/funnel";
+import { verifyTurnstile } from "@/lib/turnstile";
+import { cookies } from "next/headers";
 
 export type LeadState = {
   status: "idle" | "error" | "lead";
@@ -40,6 +42,20 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   if (String(formData.get("hp_token") ?? "").trim() !== "") {
     await logFunnel("dropped_bot", { isBot: true, meta: { reason: "honeypot" } });
     return { status: "idle", message: "" };
+  }
+
+  // Human verification (Cloudflare Turnstile). A scripted form/RPC abuser has no
+  // valid token, so this blocks the founding-spot-burning attack. Skipped for
+  // trusted testers behind the maintenance wall (the ?preview cookie) so the
+  // E2E suite still runs.
+  const isPreview = cookies().get("ccc_preview")?.value === "coyote-preview-2026";
+  if (!isPreview) {
+    const tsToken = formData.get("cf-turnstile-response");
+    const passed = await verifyTurnstile(typeof tsToken === "string" ? tsToken : null);
+    if (!passed) {
+      await logFunnel("dropped_bot", { isBot: true, meta: { reason: "turnstile" } });
+      return { status: "error", message: "Please complete the verification check and try again." };
+    }
   }
 
   const role = String(formData.get("role") ?? "").trim();
