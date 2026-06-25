@@ -10,7 +10,7 @@ import { verifyTurnstile } from "@/lib/turnstile";
 import { cookies } from "next/headers";
 
 export type LeadState = {
-  status: "idle" | "error" | "lead";
+  status: "idle" | "error" | "lead" | "already_member";
   message: string;
   signupId?: string;
   email?: string;
@@ -123,8 +123,20 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     return { status: "error", message: "Something went wrong. Please try again in a moment." };
   }
 
-  await logFunnel("lead_created", { signupId: String(data), meta: { role, source: source || "(none)" } });
-  return { status: "lead", message: "", signupId: String(data), email };
+  const signupId = String(data);
+  // Already a member? Don't send them to the payment step — prevents a re-charge.
+  const { data: existing } = await db
+    .from("signups")
+    .select("membership_status")
+    .eq("id", signupId)
+    .limit(1);
+  if (existing?.[0]?.membership_status === "active") {
+    await logFunnel("invalid", { signupId, meta: { reason: "already_member" } });
+    return { status: "already_member", message: "", signupId, email };
+  }
+
+  await logFunnel("lead_created", { signupId, meta: { role, source: source || "(none)" } });
+  return { status: "lead", message: "", signupId, email };
 }
 
 // Step 2a — redeem a free honorary/council code.

@@ -171,6 +171,22 @@ export default function SignupForm() {
     );
   }
 
+  // ---------- Already a member (skip payment, avoid a re-charge) ----------
+  if (state.status === "already_member") {
+    return (
+      <div>
+        <StickySteps current={3} top={headerH} />
+        <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
+          <p className="text-lg font-semibold text-heading">You&apos;re already a member 🎉</p>
+          <p className="mt-1 text-ink/80">
+            {state.email} is already on the Council — no need to join again. Check
+            your inbox for your welcome note, or just reply to it if you need anything.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // ---------- PHASE 2: membership ----------
   if (state.status === "lead" && state.signupId) {
     const signupId = state.signupId;
