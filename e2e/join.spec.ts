@@ -13,7 +13,9 @@ async function fillContact(page: Page, { email }: { email: string }) {
 
 test.describe("join funnel", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/join");
+    // ?preview=<token> sets a cookie that bypasses maintenance mode, so the
+    // suite can reach the real form while the public sees "under construction".
+    await page.goto("/join?preview=coyote-preview-2026");
   });
 
   // THE REGRESSION GUARD. The launch bug was a honeypot named "company" — a
@@ -49,6 +51,16 @@ test.describe("join funnel", () => {
 
     await expect(page.getByText("You're on the list")).toBeVisible();
     await expect(page.getByRole("button", { name: /Card/ })).toBeVisible();
+  });
+
+  // Founding offer: while spots remain, a member can claim a free membership.
+  test("a resident can claim a free founding membership", async ({ page }) => {
+    await fillContact(page, { email: tag() });
+    await page.getByRole("button", { name: "Continue" }).click();
+
+    await expect(page.getByText("The first 100 join free")).toBeVisible();
+    await page.getByRole("button", { name: /Claim my free Founding Membership/ }).click();
+    await expect(page.getByText(/Founding Member/i)).toBeVisible();
   });
 
   // Server-side validation must SURFACE an error — never silently drop.

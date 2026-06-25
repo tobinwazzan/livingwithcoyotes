@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { stripe } from "@/lib/stripe";
-import { MEMBERSHIP_CENTS, cardTotalCents } from "@/lib/membership";
+import { MEMBERSHIP_CENTS, cardTotalCents, FOUNDING_CAP } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
 import { logFunnel } from "@/lib/funnel";
 
@@ -150,6 +150,41 @@ export async function recordManual(
 // before any RPC ran) so even those leave a trace in the funnel.
 export async function logClientIssue(signupId: string, reason: string): Promise<void> {
   await logFunnel("invalid", { signupId: signupId || null, meta: { reason: `client_${reason}` } });
+}
+
+// Step 2d — claim a free Founding membership (first 100). Race-safe in the RPC.
+export async function claimFounding(
+  signupId: string,
+): Promise<{ ok: boolean; status: string; message: string }> {
+  if (!signupId) return { ok: false, status: "no_signup", message: "Please complete the form first." };
+  await logFunnel("payment_started", { signupId, meta: { method: "founding" } });
+  const { data: result, error } = await supabase.rpc("claim_founding_membership", {
+    p_signup_id: signupId,
+  });
+  if (error) {
+    await logFunnel("invalid", { signupId, meta: { reason: "founding_rpc" } });
+    return { ok: false, status: "error", message: "Something went wrong. Please try again." };
+  }
+  if (result === "full") {
+    return { ok: false, status: "full", message: "All founding spots are taken — you can still join for $19." };
+  }
+  if (result === "not_found") {
+    await logFunnel("invalid", { signupId, meta: { reason: "founding_not_found" } });
+    return { ok: false, status: "not_found", message: "We couldn't find your signup — please start again." };
+  }
+  if (result === "claimed") {
+    await logFunnel("activated", { signupId, meta: { method: "founding" } });
+  }
+  await sendWelcomeIfClaimed(signupId);
+  return { ok: true, status: String(result), message: "You're a Founding Member — welcome aboard!" };
+}
+
+// Live founding count for the "X of 100 claimed" badge.
+export async function foundingStatus(): Promise<{ count: number; cap: number; remaining: number; open: boolean }> {
+  const { data } = await supabase.rpc("founding_count");
+  const count = typeof data === "number" ? data : 0;
+  const remaining = Math.max(0, FOUNDING_CAP - count);
+  return { count, cap: FOUNDING_CAP, remaining, open: remaining > 0 };
 }
 
 // Step 2c — start a Stripe Checkout session ($19 + card fee). Returns a URL.

@@ -7,6 +7,10 @@ const MAINTENANCE = true;
 // Assets the maintenance page itself needs are allowed through.
 const ALLOW = new Set(["/logo-ccc.png", "/favicon.ico"]);
 
+// Preview bypass: visiting any URL with ?preview=<token> sets a cookie that lets
+// that browser through the wall (so we can build/test while the public stays down).
+const PREVIEW_TOKEN = "coyote-preview-2026";
+
 const PAGE = `<!doctype html>
 <html lang="en">
 <head>
@@ -44,6 +48,17 @@ const PAGE = `<!doctype html>
 export function middleware(req: NextRequest) {
   if (!MAINTENANCE) return NextResponse.next();
   if (ALLOW.has(req.nextUrl.pathname)) return NextResponse.next();
+
+  // Already-bypassed browser (cookie set) — let every request through, including
+  // server-action POSTs (which carry the cookie).
+  if (req.cookies.get("ccc_preview")?.value === PREVIEW_TOKEN) return NextResponse.next();
+  // First visit with the token — set the cookie and let it through.
+  if (req.nextUrl.searchParams.get("preview") === PREVIEW_TOKEN) {
+    const res = NextResponse.next();
+    res.cookies.set("ccc_preview", PREVIEW_TOKEN, { httpOnly: true, path: "/", maxAge: 60 * 60 * 8 });
+    return res;
+  }
+
   return new NextResponse(PAGE, {
     status: 503,
     headers: {

@@ -1,6 +1,9 @@
 // Membership pricing & payment config.
 export const MEMBERSHIP_CENTS = 1900; // $19 / year, the amount CCC nets.
 
+// Founding offer: the first 100 members join free. After the cap, $19 resumes.
+export const FOUNDING_CAP = 100;
+
 // Card payments pass Stripe's processing fee to the member so CCC still nets $19.
 // Stripe US card: 2.9% + 30¢. Gross up: total = (base + flat) / (1 - pct).
 export function cardTotalCents(base = MEMBERSHIP_CENTS): number {

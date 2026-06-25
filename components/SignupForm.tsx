@@ -3,7 +3,8 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {
-  submitLead, redeemCode, recordManual, startCheckout, logClientIssue, type LeadState,
+  submitLead, redeemCode, recordManual, startCheckout, logClientIssue,
+  claimFounding, foundingStatus, type LeadState,
 } from "@/app/actions";
 import { supabase } from "@/lib/supabase";
 import {
@@ -145,6 +146,17 @@ export default function SignupForm() {
   const [note, setNote] = useState("");
   const [done, setDone] = useState<string | null>(null);
 
+  // Founding offer status (first 100 free) — fetched once when we reach Phase 2.
+  type Founding = { count: number; cap: number; remaining: number; open: boolean };
+  const [founding, setFounding] = useState<Founding | null>(null);
+  useEffect(() => {
+    if (state.status === "lead" && state.signupId && founding === null) {
+      foundingStatus()
+        .then(setFounding)
+        .catch(() => setFounding({ count: 0, cap: 100, remaining: 0, open: false }));
+    }
+  }, [state.status, state.signupId, founding]);
+
   // ---------- PHASE 3: done ----------
   if (done) {
     return (
@@ -180,6 +192,18 @@ export default function SignupForm() {
       r.ok ? setDone(r.message) : setNote(r.message);
     };
 
+    const claimFoundingNow = async () => {
+      setBusy(true); setNote("");
+      const r = await claimFounding(signupId);
+      setBusy(false);
+      if (r.ok) { setDone(r.message); return; }
+      // Spots just filled — close the offer and fall back to the $19 options.
+      if (r.status === "full") {
+        setFounding({ count: founding?.cap ?? 100, cap: founding?.cap ?? 100, remaining: 0, open: false });
+      }
+      setNote(r.message);
+    };
+
     const onReceipt = async (e: ChangeEvent<HTMLInputElement>, m: "venmo" | "zelle") => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -212,11 +236,35 @@ export default function SignupForm() {
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re on the list. ✅</p>
           <p className="mt-1 text-ink/80">
-            Make it official — <strong>annual membership is $19</strong> for the year.
+            {founding?.open
+              ? "You're early — claim a free Founding Membership below, while spots last."
+              : <>Make it official — <strong>annual membership is $19</strong> for the year.</>}
           </p>
         </div>
 
-        <p className="text-center text-sm font-medium text-ink/70">How would you like to join?</p>
+        {/* Founding offer — first 100 free */}
+        {founding?.open && (
+          <div className="rounded-xl border-2 border-clay/50 bg-clay/5 p-5 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-clay">
+              Founding Members
+            </p>
+            <p className="mt-1 text-lg font-bold text-heading">The first 100 join free</p>
+            <p className="mt-1 text-sm text-ink/75">
+              <strong>{founding.count} of {founding.cap}</strong> claimed
+              {" · "}{founding.remaining} {founding.remaining === 1 ? "spot" : "spots"} left
+            </p>
+            <button
+              type="button" onClick={claimFoundingNow} disabled={busy}
+              className="mt-4 w-full rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark disabled:opacity-60 sm:w-auto"
+            >
+              {busy ? "Claiming…" : "Claim my free Founding Membership"}
+            </button>
+          </div>
+        )}
+
+        <p className="text-center text-sm font-medium text-ink/70">
+          {founding?.open ? "Or become a member for $19:" : "How would you like to join?"}
+        </p>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <button type="button" className={optionCls("card")} onClick={() => choose("card")}>
