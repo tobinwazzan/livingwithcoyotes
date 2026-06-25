@@ -166,11 +166,16 @@ export async function claimFounding(
     return { ok: false, status: "error", message: "Something went wrong. Please try again." };
   }
   if (result === "full") {
+    await logFunnel("invalid", { signupId, meta: { reason: "founding_full" } });
     return { ok: false, status: "full", message: "All founding spots are taken — you can still join for $19." };
   }
   if (result === "not_found") {
     await logFunnel("invalid", { signupId, meta: { reason: "founding_not_found" } });
     return { ok: false, status: "not_found", message: "We couldn't find your signup — please start again." };
+  }
+  if (result === "already_active") {
+    // Already a member by some other method — don't mislabel them a founder.
+    return { ok: true, status: "already_active", message: "You're already a member — check your email for your welcome note." };
   }
   if (result === "claimed") {
     await logFunnel("activated", { signupId, meta: { method: "founding" } });
