@@ -3,7 +3,7 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {
-  submitLead, redeemCode, recordManual, startCheckout, type LeadState,
+  submitLead, redeemCode, recordManual, startCheckout, logClientIssue, type LeadState,
 } from "@/app/actions";
 import { supabase } from "@/lib/supabase";
 import {
@@ -195,6 +195,9 @@ export default function SignupForm() {
       } catch {
         setBusy(false);
         setNote("That upload didn't go through. Try a different file, or pay by card or code.");
+        // A member who chose Venmo/Zelle and whose receipt upload failed used to
+        // leave zero trace — log it so it's visible in the funnel.
+        logClientIssue(signupId, "receipt_upload");
       }
     };
 

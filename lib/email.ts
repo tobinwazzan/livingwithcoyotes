@@ -2,6 +2,7 @@ import "server-only";
 import nodemailer from "nodemailer";
 import { dollars } from "./membership";
 import { supabase } from "./supabase";
+import { logFunnel } from "./funnel";
 
 // ── Provider ────────────────────────────────────────────────────────────────
 // Today: Google Workspace SMTP. To switch to Resend later, only this transport
@@ -159,5 +160,11 @@ export async function sendWelcomeIfClaimed(signupId: string) {
     p_signup_id: signupId,
   });
   if (error || !Array.isArray(data) || data.length === 0) return { sent: false };
-  return sendWelcomeEmail(data[0] as WelcomeMember);
+  const member = data[0] as WelcomeMember;
+  const res = await sendWelcomeEmail(member);
+  await logFunnel(res.sent ? "email_sent" : "email_failed", {
+    signupId,
+    meta: { method: member.membership_method ?? "" },
+  });
+  return res;
 }

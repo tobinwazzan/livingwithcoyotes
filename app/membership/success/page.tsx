@@ -3,6 +3,7 @@ import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 import { dollars } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
+import { logFunnel } from "@/lib/funnel";
 
 export const dynamic = "force-dynamic";
 
@@ -18,18 +19,39 @@ export default async function MembershipSuccess({
   if (stripe && sid) {
     try {
       const session = await stripe.checkout.sessions.retrieve(sid);
-      if (session.payment_status === "paid" && session.metadata?.signupId) {
-        await supabase.rpc("activate_stripe_membership", {
-          p_signup_id: session.metadata.signupId,
+      const signupId = session.metadata?.signupId;
+      if (session.payment_status === "paid" && signupId) {
+        const { data: result } = await supabase.rpc("activate_stripe_membership", {
+          p_signup_id: signupId,
           p_amount_cents: session.amount_total ?? 0,
           p_stripe_session_id: session.id,
         });
-        await sendWelcomeIfClaimed(session.metadata.signupId);
-        activated = true;
-        amount = session.amount_total ?? 0;
+        if (result === "activated") {
+          // Newly activated — log it ONCE and send the welcome email.
+          await logFunnel("activated", { signupId, meta: { method: "stripe" } });
+          await sendWelcomeIfClaimed(signupId);
+          activated = true;
+          amount = session.amount_total ?? 0;
+        } else if (result === "already_active") {
+          // A refresh of an already-active member — no new event, no double count.
+          activated = true;
+          amount = session.amount_total ?? 0;
+        } else {
+          // Paid at Stripe but no matching signup to activate — must be visible.
+          await logFunnel("invalid", { signupId, meta: { reason: "stripe_activate_not_found" } });
+        }
+      } else {
+        // Paid-but-not-activated is exactly the kind of thing that used to vanish.
+        // Log it so it's visible; the Stripe webhook (Wave 3) is the hard backstop.
+        await logFunnel("invalid", {
+          signupId: signupId ?? null,
+          meta: { reason: "stripe_not_paid", payment_status: session.payment_status ?? "unknown" },
+        });
       }
-    } catch {
-      /* fall through to the graceful message below */
+    } catch (e) {
+      await logFunnel("invalid", {
+        meta: { reason: "stripe_success_error", detail: e instanceof Error ? e.message : "unknown" },
+      });
     }
   }
 

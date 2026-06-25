@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { stripe } from "@/lib/stripe";
 import { MEMBERSHIP_CENTS, cardTotalCents } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
+import { logFunnel } from "@/lib/funnel";
 
 export type LeadState = {
   status: "idle" | "error" | "lead";
@@ -28,11 +29,16 @@ const digits = (s: string) => s.replace(/\D/g, "");
 
 // Step 1 — always capture the lead (so an abandoned payment still reaches us).
 export async function submitLead(_prev: LeadState, formData: FormData): Promise<LeadState> {
+  // Every Continue click is logged — humans AND bots — so "attempts vs leads"
+  // is always visible. This is the signal that was missing when the form broke.
+  await logFunnel("continue_clicked");
+
   // Honeypot: a hidden field real users never see. Bots fill everything, so a
   // non-empty value means a bot — silently drop it (no row, no progression).
   // NB: field is named "hp_token" (not an autofill keyword) so real members'
   // browser autofill / password managers don't accidentally trip it.
   if (String(formData.get("hp_token") ?? "").trim() !== "") {
+    await logFunnel("dropped_bot", { isBot: true, meta: { reason: "honeypot" } });
     return { status: "idle", message: "" };
   }
 
@@ -59,28 +65,32 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     meta = {};
   }
 
-  const err = (message: string): LeadState => ({ status: "error", message });
+  // Log the drop reason so we can see *where* people fall off, then show the error.
+  const invalid = async (reason: string, message: string): Promise<LeadState> => {
+    await logFunnel("invalid", { meta: { reason } });
+    return { status: "error", message };
+  };
 
-  if (!VALID_ROLES.has(role)) return err("Please tell us how you're joining.");
-  if (fullName.length < 2) return err("Please enter your full name.");
-  if (digits(phone).length < 10) return err("Please enter a valid phone number.");
-  if (!EMAIL_RE.test(email)) return err("Please enter a valid email address.");
-  if (city.length < 2) return err("Please enter your city.");
+  if (!VALID_ROLES.has(role)) return invalid("role", "Please tell us how you're joining.");
+  if (fullName.length < 2) return invalid("name", "Please enter your full name.");
+  if (digits(phone).length < 10) return invalid("phone", "Please enter a valid phone number.");
+  if (!EMAIL_RE.test(email)) return invalid("email", "Please enter a valid email address.");
+  if (city.length < 2) return invalid("city", "Please enter your city.");
 
   const domain = email.split("@")[1]?.toLowerCase() ?? "";
   if (role === "municipality") {
     if (FREE_EMAIL_DOMAINS.has(domain)) {
-      return err("City officials must sign up with an official government email (e.g., name@cityofirvine.org), not a personal address.");
+      return invalid("muni_free_email", "City officials must sign up with an official government email (e.g., name@cityofirvine.org), not a personal address.");
     }
     const citySlug = city.toLowerCase().replace(/[^a-z]/g, "");
     const domainCore = domain.replace(/\.[a-z.]+$/, "");
     const looksGov = domain.endsWith(".gov") || domainCore.includes(citySlug);
     if (!looksGov) {
-      return err(`Please use your official ${city} government email so we can verify your role (e.g., name@cityof${citySlug}.org).`);
+      return invalid("muni_not_gov", `Please use your official ${city} government email so we can verify your role (e.g., name@cityof${citySlug}.org).`);
     }
   }
   if (role === "expert" && !/^https?:\/\/.+\..+/i.test(linkedin)) {
-    return err("Please add a link to your LinkedIn or professional website (starting with https://).");
+    return invalid("expert_url", "Please add a link to your LinkedIn or professional website (starting with https://).");
   }
 
   const { data, error } = await supabase.rpc("create_membership_lead", {
@@ -88,8 +98,12 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     p_city: city, p_linkedin: linkedin, p_apps: apps,
     p_source: source || null, p_referrer: referrer || null, p_meta: meta,
   });
-  if (error || !data) return err("Something went wrong. Please try again in a moment.");
+  if (error || !data) {
+    await logFunnel("invalid", { meta: { reason: "rpc_error", detail: error?.message ?? "no_data" } });
+    return { status: "error", message: "Something went wrong. Please try again in a moment." };
+  }
 
+  await logFunnel("lead_created", { signupId: String(data), meta: { role, source: source || "(none)" } });
   return { status: "lead", message: "", signupId: String(data), email };
 }
 
@@ -97,8 +111,13 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
 export async function redeemCode(signupId: string, code: string): Promise<{ ok: boolean; message: string }> {
   if (!signupId) return { ok: false, message: "Please complete the form first." };
   if (!code.trim()) return { ok: false, message: "Enter your code." };
+  await logFunnel("payment_started", { signupId, meta: { method: "code" } });
   const { error } = await supabase.rpc("redeem_membership_code", { p_code: code, p_signup_id: signupId });
-  if (error) return { ok: false, message: "That code isn't valid or has already been used." };
+  if (error) {
+    await logFunnel("invalid", { signupId, meta: { reason: "bad_code" } });
+    return { ok: false, message: "That code isn't valid or has already been used." };
+  }
+  await logFunnel("activated", { signupId, meta: { method: "code" } });
   await sendWelcomeIfClaimed(signupId);
   return { ok: true, message: "Code accepted — your membership is active. Welcome aboard!" };
 }
@@ -108,12 +127,29 @@ export async function recordManual(
   signupId: string, method: "venmo" | "zelle", receiptPath: string,
 ): Promise<{ ok: boolean; message: string }> {
   if (!signupId) return { ok: false, message: "Please complete the form first." };
-  const { error } = await supabase.rpc("record_manual_payment", {
+  await logFunnel("payment_started", { signupId, meta: { method } });
+  const { data: result, error } = await supabase.rpc("record_manual_payment", {
     p_signup_id: signupId, p_method: method, p_receipt_path: receiptPath,
   });
-  if (error) return { ok: false, message: "We couldn't record that. Please try again." };
+  if (error) {
+    await logFunnel("invalid", { signupId, meta: { reason: "record_manual_rpc", method } });
+    return { ok: false, message: "We couldn't record that. Please try again." };
+  }
+  if (result === "not_found") {
+    await logFunnel("invalid", { signupId, meta: { reason: "record_manual_not_found", method } });
+    return { ok: false, message: "We couldn't find your signup — please start again." };
+  }
+  if (result === "activated") {
+    await logFunnel("activated", { signupId, meta: { method } });
+  }
   await sendWelcomeIfClaimed(signupId);
   return { ok: true, message: "Thank you — your membership is active." };
+}
+
+// Log a client-side failure (e.g. a receipt upload that failed in the browser
+// before any RPC ran) so even those leave a trace in the funnel.
+export async function logClientIssue(signupId: string, reason: string): Promise<void> {
+  await logFunnel("invalid", { signupId: signupId || null, meta: { reason: `client_${reason}` } });
 }
 
 // Step 2c — start a Stripe Checkout session ($19 + card fee). Returns a URL.
@@ -141,8 +177,10 @@ export async function startCheckout(signupId: string, email: string): Promise<{ 
       success_url: `${origin}/membership/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?canceled=1#join`,
     });
+    await logFunnel("payment_started", { signupId, meta: { method: "card" } });
     return { url: session.url ?? undefined };
-  } catch {
+  } catch (e) {
+    await logFunnel("invalid", { signupId, meta: { reason: "stripe_session_create", detail: e instanceof Error ? e.message : "unknown" } });
     return { error: "We couldn't start the card checkout. Please try again, or use Venmo/Zelle." };
   }
 }
