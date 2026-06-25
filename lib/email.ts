@@ -7,7 +7,10 @@ import { logFunnel } from "./funnel";
 const db = supabaseAdmin ?? supabase;
 
 // ── Provider: Resend (HTTPS API, no SMTP) ────────────────────────────────────
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RAW_RESEND_KEY = process.env.RESEND_API_KEY;
+// .trim() defends against a stray newline/space from a terminal paste — the most
+// common cause of a "valid" key that Resend rejects as invalid.
+const RESEND_API_KEY = RAW_RESEND_KEY?.trim();
 const EMAIL_FROM =
   process.env.EMAIL_FROM ||
   "Coyote Coexistence Council <members@livingwithcoyotes.org>";
@@ -39,7 +42,9 @@ export async function sendEmail(opts: {
     });
     if (!res.ok) {
       const body = await res.text();
-      return { sent: false, error: `resend_${res.status}: ${body.slice(0, 200)}` };
+      // Key-shape diagnostics (no secret leaked): reveals whitespace/truncation/wrong-key.
+      const diag = `[rawlen=${RAW_RESEND_KEY?.length ?? 0} trimlen=${RESEND_API_KEY?.length ?? 0} prefix=${RESEND_API_KEY?.slice(0, 3) ?? ""} hadWS=${RAW_RESEND_KEY ? /\s/.test(RAW_RESEND_KEY) : "?"} from=${EMAIL_FROM}]`;
+      return { sent: false, error: `resend_${res.status}: ${body.slice(0, 140)} ${diag}` };
     }
     return { sent: true };
   } catch (e) {
