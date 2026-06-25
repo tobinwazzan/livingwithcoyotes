@@ -1,5 +1,4 @@
 import "server-only";
-import nodemailer from "nodemailer";
 import { dollars } from "./membership";
 import { supabase } from "./supabase";
 import { supabaseAdmin } from "./supabaseAdmin";
@@ -7,28 +6,11 @@ import { logFunnel } from "./funnel";
 
 const db = supabaseAdmin ?? supabase;
 
-// ── Provider ────────────────────────────────────────────────────────────────
-// Today: Google Workspace SMTP. To switch to Resend later, only this transport
-// block changes — sendEmail() and the templates below stay the same.
-const SMTP_USER = process.env.SMTP_USER; // the Workspace login, e.g. admin@livingwithcoyotes.org
-const SMTP_PASS = process.env.SMTP_PASS; // a Google App Password (not the account password)
+// ── Provider: Resend (HTTPS API, no SMTP) ────────────────────────────────────
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const EMAIL_FROM =
   process.env.EMAIL_FROM ||
   "Coyote Coexistence Council <members@livingwithcoyotes.org>";
-
-let transporter: nodemailer.Transporter | null = null;
-function getTransport() {
-  if (!SMTP_USER || !SMTP_PASS) return null; // not configured yet → emails no-op
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
-    });
-  }
-  return transporter;
-}
 
 export async function sendEmail(opts: {
   to: string;
@@ -36,23 +18,32 @@ export async function sendEmail(opts: {
   html: string;
   text?: string;
 }): Promise<{ sent: boolean; error?: string }> {
-  const t = getTransport();
-  if (!t) {
-    console.warn("[email] SMTP not configured — skipping send to", opts.to);
-    return { sent: false, error: "smtp_not_configured" };
+  if (!RESEND_API_KEY) {
+    console.warn("[email] RESEND_API_KEY not configured — skipping send to", opts.to);
+    return { sent: false, error: "resend_not_configured" };
   }
   try {
-    await t.sendMail({
-      from: EMAIL_FROM,
-      to: opts.to,
-      subject: opts.subject,
-      html: opts.html,
-      text: opts.text,
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: EMAIL_FROM,
+        to: opts.to,
+        subject: opts.subject,
+        html: opts.html,
+        text: opts.text,
+      }),
     });
+    if (!res.ok) {
+      const body = await res.text();
+      return { sent: false, error: `resend_${res.status}: ${body.slice(0, 200)}` };
+    }
     return { sent: true };
   } catch (e) {
     // Never let an email failure break the join flow — the member is already saved.
-    console.error("[email] send failed:", e);
     return { sent: false, error: (e instanceof Error ? e.message : String(e)).slice(0, 300) };
   }
 }
