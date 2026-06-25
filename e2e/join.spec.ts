@@ -60,7 +60,9 @@ test.describe("join funnel", () => {
 
     await expect(page.getByText("The first 100 join free")).toBeVisible();
     await page.getByRole("button", { name: /Claim my free Founding Membership/ }).click();
-    await expect(page.getByText(/Founding Member/i)).toBeVisible();
+    // The done state (unique heading) confirms the claim actually succeeded.
+    await expect(page.getByText("Welcome aboard.", { exact: true })).toBeVisible();
+    await expect(page.getByText(/You're a Founding Member/i)).toBeVisible();
   });
 
   // Server-side validation must SURFACE an error — never silently drop.
