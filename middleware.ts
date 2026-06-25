@@ -46,6 +46,17 @@ const PAGE = `<!doctype html>
 </html>`;
 
 export function middleware(req: NextRequest) {
+  // Admin subdomain: admin.livingwithcoyotes.org serves the /admin app at its
+  // root (its own password gate handles security; not subject to maintenance).
+  const hostname = (req.headers.get("host") ?? "").split(":")[0].replace(/^www\./, "");
+  if (hostname === "admin.livingwithcoyotes.org") {
+    const p = req.nextUrl.pathname;
+    if (ALLOW.has(p) || p.startsWith("/admin")) return NextResponse.next();
+    const url = req.nextUrl.clone();
+    url.pathname = "/admin";
+    return NextResponse.rewrite(url);
+  }
+
   if (!MAINTENANCE) return NextResponse.next();
   if (ALLOW.has(req.nextUrl.pathname)) return NextResponse.next();
   // The admin tool is reachable during maintenance — it has its own password gate.

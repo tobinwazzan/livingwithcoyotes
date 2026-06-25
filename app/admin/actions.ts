@@ -17,7 +17,7 @@ export async function adminLogin(_prev: LoginState, formData: FormData): Promise
       httpOnly: true,
       secure: true,
       sameSite: "lax",
-      path: "/admin",
+      path: "/", // works at /admin on the main domain AND at the admin subdomain root
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
   }
@@ -25,6 +25,6 @@ export async function adminLogin(_prev: LoginState, formData: FormData): Promise
 }
 
 export async function adminLogout(): Promise<void> {
-  cookies().delete({ name: ADMIN_COOKIE, path: "/admin" });
+  cookies().delete({ name: ADMIN_COOKIE, path: "/" });
   redirect("/admin");
 }
