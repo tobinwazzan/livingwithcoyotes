@@ -35,11 +35,11 @@ export async function sendEmail(opts: {
   subject: string;
   html: string;
   text?: string;
-}): Promise<{ sent: boolean }> {
+}): Promise<{ sent: boolean; error?: string }> {
   const t = getTransport();
   if (!t) {
     console.warn("[email] SMTP not configured — skipping send to", opts.to);
-    return { sent: false };
+    return { sent: false, error: "smtp_not_configured" };
   }
   try {
     await t.sendMail({
@@ -53,7 +53,7 @@ export async function sendEmail(opts: {
   } catch (e) {
     // Never let an email failure break the join flow — the member is already saved.
     console.error("[email] send failed:", e);
-    return { sent: false };
+    return { sent: false, error: (e instanceof Error ? e.message : String(e)).slice(0, 300) };
   }
 }
 
@@ -167,7 +167,7 @@ export async function sendWelcomeIfClaimed(signupId: string) {
   const res = await sendWelcomeEmail(member);
   await logFunnel(res.sent ? "email_sent" : "email_failed", {
     signupId,
-    meta: { method: member.membership_method ?? "" },
+    meta: { method: member.membership_method ?? "", error: res.sent ? undefined : res.error },
   });
   return res;
 }
