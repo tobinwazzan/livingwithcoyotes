@@ -87,7 +87,9 @@ export default function Home() {
           <p className="hero-anim hero-anim-2 mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-clay sm:text-base">
             Welcome to the
           </p>
-          <h1 className="hero-anim hero-anim-2 whitespace-nowrap font-extrabold leading-[1.1] text-[clamp(1.4rem,5vw,4.5rem)]">
+          {/* Sized to hold one confident line on phones ≥360px; wraps (never
+              clips) on very narrow screens since whitespace-nowrap is gone. */}
+          <h1 className="hero-anim hero-anim-2 text-balance font-extrabold leading-[1.1] text-[clamp(1.375rem,6vw,4.5rem)]">
             Coyote Coexistence Council
           </h1>
           <p className="hero-anim hero-anim-3 mx-auto mt-6 max-w-2xl text-base text-sand/75 sm:text-lg">

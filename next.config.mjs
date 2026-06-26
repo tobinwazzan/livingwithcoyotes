@@ -5,6 +5,11 @@
 //   bootstrap and our inline style props (Reveal transition-delay, hero bg)
 //   are inlined without a nonce. A nonce-based strict CSP is a future upgrade.
 // - connect-src allows the browser to reach Supabase directly if ever needed.
+// Next's dev-mode Fast Refresh (react-refresh) evaluates code via eval(),
+// which a strict CSP blocks — breaking HMR and client hydration locally.
+// Allow 'unsafe-eval' in development ONLY; production stays locked down.
+const devEval = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
+
 const csp = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -16,7 +21,7 @@ const csp = [
   "font-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   // Cloudflare Turnstile loads its widget script (challenges.cloudflare.com).
-  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+  `script-src 'self' 'unsafe-inline'${devEval} https://challenges.cloudflare.com`,
   // Turnstile renders inside an iframe from the same origin.
   "frame-src https://challenges.cloudflare.com",
   "connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com",
