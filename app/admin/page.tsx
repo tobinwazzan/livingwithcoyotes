@@ -19,13 +19,32 @@ type Member = {
   created_at: string;
 };
 type FunnelEvent = { event: string; is_bot: boolean };
+type Report = {
+  category: string;
+  city: string | null;
+  area: string | null;
+  behavior: string | null;
+  pet_involved: string | null;
+  attractants: string[] | null;
+  note: string | null;
+  reporter_name: string | null;
+  reporter_email: string | null;
+  contact_ok: boolean;
+  status: string;
+  created_at: string;
+};
+
+const REPORT_CAT_LABEL: Record<string, string> = {
+  sighting: "Sighting", encounter: "Encounter", pet_chase: "Pet chased",
+  pet_attack: "Pet attack", person: "Aggressive to person", other: "Other",
+};
 
 const ROLE_LABEL: Record<string, string> = {
   resident: "Residents", municipality: "Municipalities",
   expert: "Experts & pros", partner: "Experts & pros (partner)", other: "Other",
 };
 
-function tally(rows: Member[], key: (m: Member) => string) {
+function tally<T>(rows: T[], key: (row: T) => string) {
   const m = new Map<string, number>();
   for (const r of rows) { const k = key(r) || "(none)"; m.set(k, (m.get(k) ?? 0) + 1); }
   return [...m.entries()].sort((a, b) => b[1] - a[1]);
@@ -69,16 +88,24 @@ export default async function AdminPage() {
     );
   }
 
-  const [{ data: membersRaw }, { data: eventsRaw }] = await Promise.all([
+  const [{ data: membersRaw }, { data: eventsRaw }, { data: reportsRaw }] = await Promise.all([
     supabaseAdmin
       .from("signups")
       .select("full_name, email, role, city, source, membership_status, membership_method, paid_amount_cents, created_at")
       .order("created_at", { ascending: false }),
     supabaseAdmin.from("funnel_events").select("event, is_bot"),
+    supabaseAdmin
+      .from("coyote_reports")
+      .select("category, city, area, behavior, pet_involved, attractants, note, reporter_name, reporter_email, contact_ok, status, created_at")
+      .order("created_at", { ascending: false }),
   ]);
 
   const members = (membersRaw ?? []) as Member[];
   const events = (eventsRaw ?? []) as FunnelEvent[];
+  const reports = (reportsRaw ?? []) as Report[];
+  const urgentReports = reports.filter(
+    (r) => r.category === "pet_attack" || r.category === "person",
+  );
   const fev = (e: string) => ({
     humans: events.filter((x) => x.event === e && !x.is_bot).length,
     bots: events.filter((x) => x.event === e && x.is_bot).length,
@@ -146,6 +173,53 @@ export default async function AdminPage() {
             ))}
             {members.length === 0 && (
               <tr><td colSpan={6} className="px-3 py-6 text-center text-ink/50">No signups yet.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Coyote reports */}
+      <h2 className="mt-10 text-sm font-semibold uppercase tracking-wide text-clay">Coyote reports</h2>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label="Total reports" value={reports.length} />
+        <Stat label="Urgent (attack / person)" value={urgentReports.length} sub="pet attack or aggressive-to-person" />
+        <Stat label="With contact" value={reports.filter((r) => r.contact_ok && r.reporter_email).length} sub="opted in to follow-up" />
+        <Stat label="New / unreviewed" value={reports.filter((r) => r.status === "new").length} />
+      </div>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Breakdown title="By type" rows={tally(reports, (r) => REPORT_CAT_LABEL[r.category] ?? r.category)} />
+        <Breakdown title="By city" rows={tally(reports, (r) => r.city ?? "(none)")} />
+      </div>
+
+      <div className="mt-4 overflow-x-auto rounded-xl border border-line/15">
+        <table className="w-full text-sm">
+          <thead className="bg-card text-left text-xs uppercase tracking-wide text-ink/50">
+            <tr>
+              <th className="px-3 py-2">Type</th><th className="px-3 py-2">City / area</th>
+              <th className="px-3 py-2">Pet</th><th className="px-3 py-2">Attractants</th>
+              <th className="px-3 py-2">Contact</th><th className="px-3 py-2">When</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reports.slice(0, 40).map((r, i) => {
+              const urgent = r.category === "pet_attack" || r.category === "person";
+              return (
+                <tr key={i} className={`border-t border-line/10 ${urgent ? "bg-clay/5" : ""}`}>
+                  <td className="px-3 py-2 font-medium text-ink/85">
+                    {urgent && <span aria-hidden className="mr-1 text-clay">●</span>}
+                    {REPORT_CAT_LABEL[r.category] ?? r.category}
+                  </td>
+                  <td className="px-3 py-2 text-ink/70">{r.city}{r.area ? ` · ${r.area}` : ""}</td>
+                  <td className="px-3 py-2 text-ink/70">{r.pet_involved ?? "—"}</td>
+                  <td className="px-3 py-2 text-ink/60">{r.attractants?.length ? r.attractants.join(", ") : "—"}</td>
+                  <td className="px-3 py-2 text-ink/70">{r.contact_ok && r.reporter_email ? r.reporter_email : "—"}</td>
+                  <td className="px-3 py-2 text-ink/55">{new Date(r.created_at).toLocaleDateString()}</td>
+                </tr>
+              );
+            })}
+            {reports.length === 0 && (
+              <tr><td colSpan={6} className="px-3 py-6 text-center text-ink/50">No reports yet.</td></tr>
             )}
           </tbody>
         </table>

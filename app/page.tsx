@@ -167,6 +167,12 @@ export default function Home() {
                 Get answers →
               </Link>
               <Link
+                href="/report"
+                className="rounded-lg border border-line/30 px-6 py-3 font-semibold text-heading transition hover:bg-card"
+              >
+                Report a coyote
+              </Link>
+              <Link
                 href="/checklist"
                 className="rounded-lg border border-line/30 px-6 py-3 font-semibold text-heading transition hover:bg-card"
               >
