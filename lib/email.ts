@@ -61,6 +61,7 @@ const CLAY = "#b5764f";
 const INK = "#3d352a";
 
 export type WelcomeMember = {
+  id: string;
   email: string;
   full_name: string | null;
   paid_amount_cents: number | null;
@@ -124,6 +125,9 @@ export async function sendWelcomeEmail(member: WelcomeMember) {
           You're now part of a founding effort to keep our neighborhoods safe and our coyotes wild.
         </p>
         ${receiptBlock}
+        <table role="presentation" style="margin:16px 0 6px;"><tr><td style="border-radius:8px;background:${DUSK};">
+          <a href="${SITE}/certificate/${member.id}" style="display:inline-block;padding:12px 22px;color:${SAND};font-size:15px;font-weight:600;text-decoration:none;">🎓 View your membership certificate →</a>
+        </td></tr></table>
         <p style="margin:18px 0 16px;color:${INK};font-size:15px;line-height:1.6;">
           Your membership funds plain-language guidance, the yard-proofing checklist, pet-safety
           protocols, and the sightings map — free for every resident in your city, member or not.
@@ -145,6 +149,8 @@ export async function sendWelcomeEmail(member: WelcomeMember) {
   const text = `Welcome aboard, ${first}.
 
 Thank you for joining the Coyote Coexistence Council — your membership is active for one year.${paid ? `\n\nMembership: ${paid} (${methodLabel(member.membership_method)})` : ""}${expires ? `\nActive through: ${expires}` : ""}
+
+Your certificate: ${SITE}/certificate/${member.id}
 
 Your membership funds plain-language guidance, the yard-proofing checklist, pet-safety protocols, and the sightings map — free for every resident in your city.
 
