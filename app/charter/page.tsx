@@ -69,14 +69,11 @@ export default function CharterPage() {
         <Reveal>
           <h2 className="text-2xl font-bold text-heading">Mission</h2>
           <p className="mt-4 text-lg leading-relaxed text-ink/85">
-            The Coyote Coexistence Council brings together residents, municipal
-            officials, and wildlife experts to develop, implement, and refine
-            evidence-based safety plans that protect our communities while
-            preserving the natural ecological balance we share with coyotes.
-            Through open, respectful dialogue and a commitment to including every
-            human perspective, we work toward practical solutions and stay accountable
-            to them — measuring results, adapting our approach, and continuing
-            until our safety and stewardship goals are met.
+            In Orange County, California, the Coyote Coexistence Council brings
+            residents, city officials, and wildlife experts to one table.
+            Together we build evidence-based safety plans that keep neighborhoods
+            safe and coyotes wild — and we hold ourselves accountable to the
+            results.
           </p>
         </Reveal>
 
