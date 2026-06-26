@@ -105,6 +105,29 @@ export default function SignupForm() {
   const [role, setRole] = useState("");
   const [phone, setPhone] = useState("");
 
+  // Supporters-wall opt-in + optional photo (uploaded to the public avatars bucket).
+  const [wallChoice, setWallChoice] = useState("hidden");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const onPhoto = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoBusy(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").replace(/[^a-z0-9]/gi, "").slice(0, 5);
+      const path = `wall/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      setPhotoUrl(supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl);
+    } catch {
+      setPhotoUrl("");
+    } finally {
+      setPhotoBusy(false);
+    }
+  };
+
   // Measure the sticky dark header so the progress line can pin right beneath it.
   const [headerH, setHeaderH] = useState(0);
   useEffect(() => {
@@ -535,7 +558,11 @@ export default function SignupForm() {
           <label className="mb-1 block text-sm font-medium text-ink/80">
             Show me on the public Supporters wall?
           </label>
-          <select name="wall_display" defaultValue="hidden" className={inputCls + " text-ink/90"}>
+          <select
+            name="wall_display" value={wallChoice}
+            onChange={(e) => setWallChoice(e.target.value)}
+            className={inputCls + " text-ink/90"}
+          >
             <option value="hidden">No — keep me anonymous</option>
             <option value="first">Yes — first name + city</option>
             <option value="full">Yes — full name + city</option>
@@ -543,6 +570,27 @@ export default function SignupForm() {
           <p className="mt-1 text-xs text-ink/55">
             Optional. We never show your email, phone, or amount — and you can change this anytime.
           </p>
+
+          {wallChoice !== "hidden" && (
+            <div className="mt-3 flex items-center gap-3">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line/30 bg-card">
+                {photoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={photoUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <span className="text-[10px] text-ink/40">Photo</span>
+                )}
+              </div>
+              <label className="cursor-pointer text-sm font-medium text-clay underline-offset-2 hover:underline">
+                {photoBusy ? "Uploading…" : photoUrl ? "Change photo" : "Add a photo (optional)"}
+                <input
+                  type="file" accept="image/png,image/jpeg,image/webp"
+                  className="hidden" disabled={photoBusy} onChange={onPhoto}
+                />
+              </label>
+            </div>
+          )}
+          <input type="hidden" name="wall_photo_url" value={photoUrl} />
         </div>
 
         {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}

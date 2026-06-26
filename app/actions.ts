@@ -133,7 +133,16 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   // lead RPC signature stays put. Never published without an explicit choice.
   const wallRaw = String(formData.get("wall_display") ?? "hidden");
   const wallDisplay = wallRaw === "first" || wallRaw === "full" ? wallRaw : "hidden";
-  await db.from("signups").update({ wall_display: wallDisplay }).eq("id", signupId);
+  // Optional wall photo — only accept a URL that really points at our avatars
+  // bucket (so a tampered form can't inject an arbitrary external image).
+  const photoRaw = String(formData.get("wall_photo_url") ?? "").trim();
+  const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const photoUrl =
+    photoRaw && supaUrl &&
+    photoRaw.startsWith(`${supaUrl}/storage/v1/object/public/avatars/`)
+      ? photoRaw.slice(0, 500)
+      : null;
+  await db.from("signups").update({ wall_display: wallDisplay, photo_url: photoUrl }).eq("id", signupId);
 
   // Already a member? Don't send them to the payment step — prevents a re-charge.
   const { data: existing } = await db
