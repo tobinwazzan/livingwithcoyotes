@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 // MAINTENANCE MODE — every route serves an "under construction" page.
-// To bring the site back, delete this file (or flip MAINTENANCE to false) and redeploy.
-const MAINTENANCE = true;
+// To take the site DOWN again, flip MAINTENANCE back to true and redeploy.
+const MAINTENANCE = false;
 
 // Assets the maintenance page itself needs are allowed through.
 const ALLOW = new Set(["/logo-ccc.png", "/favicon.ico"]);
