@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const metadata: Metadata = {
   title: "Supporters",
@@ -24,7 +25,10 @@ function nameLine(s: Supporter) {
 
 export default async function SupportersPage() {
   // Public, sanitized read — opt-in rows only, no email/phone/amount ever.
-  const { data } = await supabase.rpc("public_supporters");
+  // Server-side render via the service-role client for reliability; the RPC
+  // itself already strips everything but name/city/patron-flag.
+  const db = supabaseAdmin ?? supabase;
+  const { data } = await db.rpc("public_supporters");
   const list: Supporter[] = Array.isArray(data) ? data.filter((s) => s.display) : [];
   const patrons = list.filter((s) => s.is_patron);
   const members = list.filter((s) => !s.is_patron);
