@@ -267,7 +267,7 @@ export async function startCheckout(
           unit_amount: cardTotalCents(base),
           product_data: {
             name: isPatron
-              ? "Coyote Coexistence Council — Annual Membership (Founding Patron)"
+              ? "Coyote Coexistence Council — Annual Membership (Pack Leader)"
               : "Coyote Coexistence Council — Annual Membership",
             description: "1 year · includes card processing fee",
           },

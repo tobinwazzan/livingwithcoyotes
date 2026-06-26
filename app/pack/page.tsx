@@ -5,9 +5,9 @@ import { supabase } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export const metadata: Metadata = {
-  title: "Supporters",
+  title: "The Pack",
   description:
-    "The residents, experts, and patrons whose memberships fund our cities' coyote plans. Every name here chose to be listed.",
+    "The Pack — the residents, experts, and Pack Leaders whose memberships fund our cities' coyote plans. Every name here chose to be listed.",
 };
 
 // Always reflect the live member list — never serve a cached copy of the wall.
@@ -69,7 +69,7 @@ function Stat({ n, label }: { n: number; label: string }) {
   );
 }
 
-export default async function SupportersPage() {
+export default async function PackPage() {
   // Public, sanitized read — opt-in rows only, no email/phone/amount ever.
   const db = supabaseAdmin ?? supabase;
   const { data } = await db.rpc("public_supporters");
@@ -81,21 +81,21 @@ export default async function SupportersPage() {
   return (
     <main>
       <PageHeader
-        eyebrow="Wall of Supporters"
-        title="The people funding the plan"
-        subtitle="Every name here chose to be listed. Their memberships pay for plain-language guidance, the yard-proofing checklist, pet-safety protocols, and the sightings map — free for every resident in their city, member or not."
+        eyebrow="🐾 The Pack"
+        title="The people behind the plan"
+        subtitle="Coyotes run in packs — so do we. Everyone here chose to be listed. Their memberships pay for plain-language guidance, the yard-proofing checklist, pet-safety protocols, and the sightings map — free for every resident in their city, member or not."
       />
 
       <div className="mx-auto max-w-5xl px-6 py-16">
         {list.length === 0 ? (
           <div className="mx-auto max-w-lg rounded-2xl border border-clay/30 bg-clay/5 p-10 text-center">
             <div className="text-4xl">🐾</div>
-            <p className="mt-4 text-lg text-ink/80">The wall is just getting started.</p>
+            <p className="mt-4 text-lg text-ink/80">The Pack is just getting started.</p>
             <Link
               href="/join"
               className="mt-5 inline-block rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark"
             >
-              Be the first name on it →
+              Be the first to join →
             </Link>
           </div>
         ) : (
@@ -104,15 +104,17 @@ export default async function SupportersPage() {
             <div className="mb-14 flex items-center justify-center divide-x divide-line/20">
               <Stat n={list.length} label={list.length === 1 ? "Supporter" : "Supporters"} />
               <Stat n={cities} label={cities === 1 ? "City" : "Cities"} />
-              {patrons.length > 0 && <Stat n={patrons.length} label="Patrons" />}
+              {patrons.length > 0 && (
+                <Stat n={patrons.length} label={patrons.length === 1 ? "Pack Leader" : "Pack Leaders"} />
+              )}
             </div>
 
-            {/* Founding Patrons — featured */}
+            {/* Pack Leaders — featured */}
             {patrons.length > 0 && (
               <section className="mb-16">
                 <div className="mb-7 text-center">
                   <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-clay">
-                    ★ Founding Patrons
+                    ★ Pack Leaders
                   </h2>
                   <p className="mt-1 text-sm text-ink/60">
                     Members who gave $50 or more to get the Council off the ground.
@@ -130,7 +132,7 @@ export default async function SupportersPage() {
                         <div className="font-bold text-heading">{s.display}</div>
                         {s.city && <div className="text-sm text-ink/60">{s.city}</div>}
                         <div className="mt-2 inline-block rounded-full bg-clay/15 px-3 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-clay">
-                          Founding Patron
+                          Pack Leader
                         </div>
                       </div>
                     </div>
@@ -168,7 +170,7 @@ export default async function SupportersPage() {
 
             {/* CTA */}
             <div className="mt-16 rounded-2xl border border-line/20 bg-dusk px-8 py-10 text-center text-sand">
-              <p className="text-lg font-semibold">Want your name on the wall?</p>
+              <p className="text-lg font-semibold">Want in on the Pack?</p>
               <p className="mx-auto mt-2 max-w-md text-sand/70">
                 Join the Council, choose how you appear, and add your photo — it takes a minute.
               </p>
@@ -176,7 +178,7 @@ export default async function SupportersPage() {
                 href="/join"
                 className="mt-6 inline-block rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark"
               >
-                Join the Council →
+                Join the Pack →
               </Link>
             </div>
           </>

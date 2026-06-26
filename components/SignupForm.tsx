@@ -317,7 +317,7 @@ export default function SignupForm() {
           {founding?.open ? "Or become a member:" : "How would you like to join?"}
         </p>
 
-        {/* Contribution amount — $19 base; $50+ earns a Founding Patron badge. */}
+        {/* Contribution amount — $19 base; $50+ earns a Pack Leader badge. */}
         <div className="rounded-xl border border-line/15 bg-card/40 p-4">
           <p className="text-center text-sm font-medium text-ink/80">Choose your contribution</p>
           <div className="mt-3 grid grid-cols-4 gap-2">
@@ -347,8 +347,8 @@ export default function SignupForm() {
           </div>
           <p className="mt-2 text-center text-xs text-ink/60">
             {isPatron
-              ? "🌟 You'll be a Founding Patron on our Supporters wall."
-              : "Give $50 or more to become a Founding Patron on our Supporters wall."}
+              ? "🌟 You'll be a Pack Leader on The Pack — our wall of supporters."
+              : "Give $50 or more to become a Pack Leader on The Pack — our wall of supporters."}
           </p>
         </div>
 
@@ -373,7 +373,7 @@ export default function SignupForm() {
             <p className="text-sm text-ink/75">
               You&apos;ll pay <strong>{dollars(cardTotal)}</strong> — your {dollars(amountCents)} contribution
               plus the card processing fee, so the Council nets the full {dollars(amountCents)}.
-              {isPatron && " You'll be listed as a Founding Patron."}
+              {isPatron && " You'll be listed as a Pack Leader on The Pack."}
             </p>
             <button
               type="button" onClick={payCard} disabled={busy}
@@ -556,7 +556,7 @@ export default function SignupForm() {
 
         <div>
           <label className="mb-1 block text-sm font-medium text-ink/80">
-            Show me on the public Supporters wall?
+            Add me to The Pack (our public wall of supporters)?
           </label>
           <select
             name="wall_display" value={wallChoice}
