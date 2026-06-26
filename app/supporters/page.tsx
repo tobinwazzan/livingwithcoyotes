@@ -10,7 +10,10 @@ export const metadata: Metadata = {
     "The residents, experts, and patrons whose memberships fund our cities' coyote plans. Every name here chose to be listed.",
 };
 
+// Always reflect the live member list — never serve a cached copy of the wall.
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 type Supporter = {
   display: string | null;
