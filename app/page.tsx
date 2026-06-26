@@ -146,6 +146,37 @@ export default function Home() {
         </Reveal>
       </section>
 
+      {/* Worried-now on-ramp — the fast path to plain answers for someone who
+          just saw a coyote. Sits high so the authoritative layer is the first
+          thing a panicked visitor reaches. */}
+      <section className="border-y border-line/20 bg-panel py-14">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <Reveal>
+            <h2 className="text-2xl font-bold text-heading sm:text-3xl">
+              Worried about a coyote right now?
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-ink/75">
+              Saw one in the yard? Followed on a walk? Get plain, evidence-based
+              answers — what's normal, what isn't, and what to actually do.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/faq"
+                className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark"
+              >
+                Get answers →
+              </Link>
+              <Link
+                href="/checklist"
+                className="rounded-lg border border-line/30 px-6 py-3 font-semibold text-heading transition hover:bg-card"
+              >
+                Coyote-proof your yard
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Tiers */}
       <section className="bg-card/50 py-20">
         <div className="mx-auto max-w-5xl px-6">

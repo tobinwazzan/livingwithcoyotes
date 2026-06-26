@@ -2,19 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
-import { FAQS, FAQ_INTRO } from "@/content/faq";
+import {
+  FAQS,
+  FAQ_INTRO,
+  NEIGHBORS_ASKING,
+  NEIGHBORS_INTRO,
+  NEIGHBORS_UPDATED,
+} from "@/content/faq";
 
 export const metadata: Metadata = {
-  title: "FAQ",
+  title: "Coyote Q&A",
   description:
-    "Plain answers to the questions Orange County residents ask about coyotes — is it dangerous, how to haze, what attracts them, pet safety, why removal doesn't work, and where to report.",
+    "Plain, evidence-based answers to what Orange County neighbors actually ask about coyotes — is it dangerous, are they getting bolder, why removal doesn't work, pet and cat safety, how to haze, and where to report.",
 };
 
-// FAQPage structured data — built from the same source as the visible Q&A.
+// FAQPage structured data — built from the same source as the visible Q&A
+// (the living "neighbors are asking" set plus the evergreen basics).
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: FAQS.map((f) => ({
+  mainEntity: [...NEIGHBORS_ASKING, ...FAQS].map((f) => ({
     "@type": "Question",
     name: f.q,
     acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -30,21 +37,54 @@ export default function FaqPage() {
       />
 
       <PageHeader
-        eyebrow="FAQ"
+        eyebrow="Coyote Q&A"
         title="Coyote questions, answered"
         subtitle="Plain, evidence-based answers — what's normal, what isn't, and what to actually do."
       />
 
       <div className="mx-auto max-w-3xl px-6 py-16">
+        {/* Living layer: what neighbors are asking right now. Visually set apart
+            from the evergreen basics, with an "updated" stamp so it reads as
+            current and responsive rather than a static page. */}
         <Reveal>
-          <p className="text-lg leading-relaxed text-ink/85">{FAQ_INTRO}</p>
+          <section className="rounded-2xl border border-clay/25 bg-card/60 p-6 sm:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-clay">
+                What neighbors are asking now
+              </p>
+              <span className="rounded-full bg-panel px-3 py-1 text-xs font-medium text-ink/70">
+                Updated {NEIGHBORS_UPDATED}
+              </span>
+            </div>
+            <p className="mt-3 leading-relaxed text-ink/80">{NEIGHBORS_INTRO}</p>
+
+            <div className="mt-8 space-y-8">
+              {NEIGHBORS_ASKING.map((f) => (
+                <div
+                  key={f.q}
+                  className="border-t border-line/15 pt-6 first:border-t-0 first:pt-0"
+                >
+                  <h2 className="text-lg font-bold text-heading">{f.q}</h2>
+                  <p className="mt-2 leading-relaxed text-ink/80">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         </Reveal>
 
-        <div className="mt-12 space-y-8">
+        {/* Evergreen basics */}
+        <Reveal>
+          <h2 className="mt-16 text-sm font-semibold uppercase tracking-[0.2em] text-clay">
+            The basics, answered
+          </h2>
+          <p className="mt-3 text-lg leading-relaxed text-ink/85">{FAQ_INTRO}</p>
+        </Reveal>
+
+        <div className="mt-10 space-y-8">
           {FAQS.map((f, i) => (
             <Reveal key={f.q} delay={(i % 4) * 60}>
               <div className="border-b border-line/15 pb-8">
-                <h2 className="text-lg font-bold text-heading">{f.q}</h2>
+                <h3 className="text-lg font-bold text-heading">{f.q}</h3>
                 <p className="mt-2 leading-relaxed text-ink/80">{f.a}</p>
               </div>
             </Reveal>

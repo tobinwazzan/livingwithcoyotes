@@ -6,6 +6,35 @@ export type FaqItem = { q: string; a: string };
 export const FAQ_INTRO =
   "Plain answers to the questions Orange County residents actually ask about coyotes — what's normal, what isn't, and what to do. If you remember one thing: a sighting isn't an incident, and the fix usually starts in your own yard.";
 
+// "What neighbors are asking right now" — the living layer of the page. We read
+// the local conversation (Nextdoor, neighborhood threads, meetings) and answer
+// the questions that keep recurring, in an "even-though" frame: validate the
+// real fear first, then meet it with the evidence. Bump NEIGHBORS_UPDATED
+// whenever this list changes so the page reads as current, not stale.
+export const NEIGHBORS_UPDATED = "June 2026";
+
+export const NEIGHBORS_INTRO =
+  "We read the local conversation — Nextdoor, neighborhood threads, what comes up at meetings — and answer the questions that keep recurring. The fear behind these is real; our job is to meet it honestly, not wave it away.";
+
+export const NEIGHBORS_ASKING: FaqItem[] = [
+  {
+    q: "“A coyote took a dog on our street — are they getting bolder?”",
+    a: "Losing a pet this way is genuinely awful, and we won't pretend otherwise. But a single attack — even a few in one season — isn't proof that coyotes as a whole are escalating. What usually concentrates conflict on one block is a local food source (an unsecured trash run, someone feeding, fallen fruit, an unmanaged cat colony) plus off-leash or unsupervised pets at dawn and dusk. The honest read is almost always 'a specific, fixable situation here,' not 'the coyotes have changed.' Secure the attractants on your street, keep small pets leashed and close, and haze any coyote that lingers.",
+  },
+  {
+    q: "“Why don't we just trap and remove them?”",
+    a: "It's the most common ask, and it feels decisive — which is exactly why it's worth being straight about. Coyotes removed from good habitat are typically replaced within weeks, often by animals that breed faster to fill the gap, so the relief is temporary and the problem returns. Cities that lean on removal don't stay coyote-free; they stay on a treadmill. That's why the Council puts attractant control, hazing, and pet safety first — they actually lower conflict — while keeping a transparent, last-resort path for a genuinely dangerous, food-conditioned individual. Removal as a strategy fails; removal as a rare exception has its place.",
+  },
+  {
+    q: "“They're out in the daytime now — isn't that a sign something's wrong?”",
+    a: "Not by itself. Daytime activity rises in late spring and early summer when adults are feeding pups, and urban coyotes shift their hours to match quiet streets — a coyote trotting through at 9am is usually just a coyote with somewhere to be. What does warrant attention is a coyote that approaches people, follows without leaving when hazed, or shows no wariness at all. That's a behavior worth reporting, not a time of day.",
+  },
+  {
+    q: "“Is it safe to let my cat out, or walk my small dog at dusk?”",
+    a: "Here's the part we won't soften: free-roaming cats and unattended small dogs are the pets most at risk, and cats are among the most common mammals found in local coyote-diet studies. That isn't said to frighten you — it's the single clearest lever you have. Keep cats indoors or in a 'catio,' walk small dogs on a short (non-retractable) leash, avoid the dawn and dusk window in known-active areas, and don't leave pets unattended in an unfenced yard. Do that and you've removed most of the real risk.",
+  },
+];
+
 export const FAQS: FaqItem[] = [
   {
     q: "Is a coyote in my yard dangerous?",

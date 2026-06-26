@@ -8,6 +8,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Charter", href: "/charter" },
   { label: "Membership", href: "/membership" },
   { label: "The Pack", href: "/pack" },
+  { label: "Coyote Q&A", href: "/faq" },
   { label: "Resources", href: "/resources" },
   { label: "Contact", href: "/contact" },
 ];
