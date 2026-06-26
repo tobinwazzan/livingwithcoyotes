@@ -11,11 +11,15 @@ const csp = [
   "form-action 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
-  "img-src 'self' data: blob:",
+  // Supabase Storage serves member wall photos; data:/blob: for inline/preview.
+  "img-src 'self' data: blob: https://*.supabase.co",
   "font-src 'self'",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline'",
-  "connect-src 'self' https://*.supabase.co",
+  // Cloudflare Turnstile loads its widget script (challenges.cloudflare.com).
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+  // Turnstile renders inside an iframe from the same origin.
+  "frame-src https://challenges.cloudflare.com",
+  "connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com",
   "upgrade-insecure-requests",
 ].join("; ");
 
