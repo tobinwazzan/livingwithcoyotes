@@ -121,7 +121,7 @@ export async function GET(
               }}
             >
               {valid
-                ? `is a recognized ${tier} of the Coyote Coexistence Council, in support of evidence-first, non-lethal coexistence with the coyotes of our neighborhoods.`
+                ? `is a recognized ${tier} of the Coyote Coexistence Council, in support of evidence-first coexistence with the coyotes of our neighborhoods.`
                 : "This certificate link is not valid. If you're a member, use the link in your welcome email."}
             </div>
             {valid && (

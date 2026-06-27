@@ -20,7 +20,7 @@ const why = [
   },
   {
     title: "Accountable, not just well-meaning",
-    body: "Your dues fund an evidence-first, non-lethal-first effort that measures whether conflicts actually go down — and says so when they don't.",
+    body: "Your dues fund an evidence-first effort that measures whether conflict actually goes down — and says so when it doesn't.",
   },
 ];
 
@@ -42,12 +42,12 @@ const offers = [
     body: "Where the Council is heading, what's working, and a voice in shaping the plan as it takes form.",
   },
   {
-    title: "Non-lethal by conviction",
-    body: "You're funding coexistence and attractant management — not culling, not panic, not removal that just resets the cycle.",
+    title: "Evidence, not heat",
+    body: "You're funding calm, evidence-led work — plain facts about what is and isn't dangerous, so choices come from understanding rather than fear.",
   },
   {
     title: "A founding member",
-    body: "Join now and you're on the ground floor — part of the Council's founding membership, before coexistence was the easy choice.",
+    body: "Join now and you're on the ground floor — part of the Council's founding membership, here before it was the easy thing to build.",
   },
 ];
 

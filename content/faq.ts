@@ -23,7 +23,7 @@ export const NEIGHBORS_ASKING: FaqItem[] = [
   },
   {
     q: "“Why don't we just trap and remove them?”",
-    a: "It's the most common ask, and it feels decisive — which is exactly why it's worth being straight about. Coyotes removed from good habitat are typically replaced within weeks, often by animals that breed faster to fill the gap, so the relief is temporary and the problem returns. Cities that lean on removal don't stay coyote-free; they stay on a treadmill. That's why the Council puts attractant control, hazing, and pet safety first — they actually lower conflict — while keeping a transparent, last-resort path for a genuinely dangerous, food-conditioned individual. Removal as a strategy fails; removal as a rare exception has its place.",
+    a: "It's the most common ask, and it feels decisive — which is exactly why it's worth being straight about. Coyotes removed from good habitat are typically replaced within weeks, often by animals that breed faster to fill the gap, so the relief is temporary and the problem returns. Cities that lean on removal don't stay coyote-free; they stay on a treadmill. That's why wildlife agencies and researchers lead with attractant control, hazing, and pet safety — they actually lower conflict — while keeping a transparent, last-resort path for a genuinely dangerous, food-conditioned individual. Removal as a strategy fails; removal as a rare exception has its place.",
   },
   {
     q: "“They're out in the daytime now — isn't that a sign something's wrong?”",
@@ -66,7 +66,7 @@ export const FAQS: FaqItem[] = [
   },
   {
     q: "Can't the city just remove or kill the coyotes?",
-    a: "Removal feels decisive but rarely works for long. A coyote removed from good habitat is typically replaced within weeks — often by animals that breed faster to fill the gap — so the problem returns. That's why the wildlife science, and this Council, put non-lethal tools first: securing attractants, hazing, and pet safety actually reduce conflict, while indiscriminate removal mostly resets the clock. A credible plan keeps a transparent, last-resort option for a genuinely dangerous, food-conditioned individual — but that's the exception, not the strategy.",
+    a: "Removal feels decisive but rarely works for long. A coyote removed from good habitat is typically replaced within weeks — often by animals that breed faster to fill the gap — so the problem returns. That's why wildlife agencies and researchers generally reach for non-lethal tools first: securing attractants, hazing, and pet safety actually reduce conflict, while indiscriminate removal mostly resets the clock. A credible plan keeps a transparent, last-resort option for a genuinely dangerous, food-conditioned individual — but that's the exception, not the strategy.",
   },
   {
     q: "A coyote followed or approached me — what do I do?",
@@ -86,6 +86,6 @@ export const FAQS: FaqItem[] = [
   },
   {
     q: "What is the Coyote Coexistence Council, and how do I join?",
-    a: "The Coyote Coexistence Council is a facilitated forum bringing Orange County residents, municipal officials, and wildlife experts together to build and implement evidence-based, non-lethal coexistence plans. Residents can join at livingwithcoyotes.org/join; municipal representatives and experts are appointed or nominated by their cities. Membership gives you a say in your city's plan, plain-language guidance, and updates as the Council takes shape.",
+    a: "The Coyote Coexistence Council is a facilitated forum bringing Orange County residents, municipal officials, and wildlife experts together to build and implement evidence-based coexistence plans. Residents can join at livingwithcoyotes.org/join; municipal representatives and experts are appointed or nominated by their cities. Membership gives you a say in your city's plan, plain-language guidance, and updates as the Council takes shape.",
   },
 ];

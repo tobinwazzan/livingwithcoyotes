@@ -45,7 +45,7 @@ const siteJsonLd = {
       url: "https://livingwithcoyotes.org",
       logo: "https://livingwithcoyotes.org/logo-ccc.png",
       description:
-        "A facilitated forum bringing Orange County residents, municipal officials, and wildlife experts together to build evidence-based, non-lethal coyote coexistence plans.",
+        "A facilitated forum bringing Orange County residents, municipal officials, and wildlife experts together to build evidence-based coyote coexistence plans.",
       areaServed: {
         "@type": "AdministrativeArea",
         name: "Orange County, California",

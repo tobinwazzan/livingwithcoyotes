@@ -20,7 +20,7 @@ const reasons = [
   },
   {
     title: "Accountable to results",
-    body: "We measure whether conflicts actually go down, and we say so when they don't. Your membership funds an evidence-first, non-lethal-first effort.",
+    body: "We measure whether conflict actually goes down, and we say so when it doesn't. Your membership funds an evidence-first effort.",
   },
 ];
 

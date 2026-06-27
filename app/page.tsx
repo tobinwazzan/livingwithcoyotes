@@ -191,7 +191,7 @@ export default function Home() {
               A seat for every voice
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
-              Coexistence works when everyone affected is at the table.
+              The conversation works when everyone affected is at the table.
             </p>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
