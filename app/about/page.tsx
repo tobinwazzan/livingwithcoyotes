@@ -54,7 +54,7 @@ export default function AboutPage() {
       <PageHeader
         eyebrow="About"
         title="A conversation, not a verdict."
-        subtitle="Coyotes are a growing part of daily life in Orange County, and the stakes are rising — more pets going missing, and real grief with each. What we should prioritize is for this community to shape together — a pack working toward the priorities we come to share: one neighbor weighs their way of life and the pets they love, another the environmental equilibrium we all depend on. What we want — and how to get there — will take a real discussion, and an open invitation to the experts and municipal leaders who belong at the table. No time to waste. Let's begin."
+        subtitle="Coyotes are a growing part of daily life in Orange County, and the stakes are rising — more pets going missing, and real grief with each. This Council is where the grieving, the environmentalist, the expert, and the executive trade feelings and information. The ultimate goal: a solution everyone can live with. No time to waste. Let's begin."
       />
 
       {/* Why we exist */}
