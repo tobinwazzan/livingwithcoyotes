@@ -1,0 +1,156 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
+import { getSupabaseServer } from "@/lib/supabaseServer";
+import { supabase as anon } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { signOut } from "./actions";
+
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Your account",
+  robots: { index: false, follow: false },
+};
+
+const db = supabaseAdmin ?? anon;
+
+function Card({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-line/15 bg-card/60 p-6">
+      <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-clay">
+        {title}
+      </h2>
+      <div className="mt-3 text-ink/80">{children}</div>
+    </div>
+  );
+}
+
+export default async function AccountPage() {
+  const supabase = getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const email = (user.email ?? "").trim();
+
+  const { data: su } = await db
+    .from("signups")
+    .select("id, full_name, membership_status, created_at")
+    .ilike("email", email)
+    .order("created_at", { ascending: false })
+    .limit(1);
+  const member = su?.[0] ?? null;
+  const isMember = member?.membership_status === "active";
+
+  let reflectionToken: string | null = null;
+  let hasReflection = false;
+  if (member) {
+    const { data: refs } = await db
+      .from("member_reflections")
+      .select("round, revisit_token")
+      .eq("signup_id", member.id);
+    const r1 = refs?.find((r) => r.round === 1);
+    reflectionToken = (r1?.revisit_token as string) ?? null;
+    hasReflection = !!r1;
+  }
+
+  const first = (member?.full_name ?? "").trim().split(/\s+/)[0];
+
+  return (
+    <main>
+      <PageHeader
+        eyebrow="Your account"
+        title={first ? `Welcome back, ${first}` : "Your account"}
+        subtitle={`Signed in as ${email}.`}
+      />
+
+      <section className="mx-auto max-w-2xl space-y-5 px-6 py-14">
+        <Card title="Membership">
+          {isMember ? (
+            <div>
+              <p>
+                Your membership is <strong className="text-ink">active</strong>.
+                Thank you for keeping this work going.
+              </p>
+              <Link
+                href={`/certificate/${member!.id}`}
+                className="mt-3 inline-block font-semibold text-clay hover:text-ink"
+              >
+                View your certificate →
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <p>
+                You&apos;re signed in, but we don&apos;t see an active membership
+                under this email yet.
+              </p>
+              <Link
+                href="/join"
+                className="mt-3 inline-block rounded-lg bg-clay px-5 py-2.5 font-semibold text-sand transition hover:bg-bark"
+              >
+                Join the Council
+              </Link>
+            </div>
+          )}
+        </Card>
+
+        {member && (
+          <Card title="Your reflection">
+            {hasReflection && reflectionToken ? (
+              <div>
+                <p>
+                  Your Steelman Mirror — where you stood, and where you&apos;re
+                  growing.
+                </p>
+                <Link
+                  href={`/reflection/${reflectionToken}`}
+                  className="mt-3 inline-block font-semibold text-clay hover:text-ink"
+                >
+                  Open your reflection →
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <p>
+                  Take a quiet, private reflection on where you stand — and
+                  revisit it later to see what&apos;s shifted.
+                </p>
+                <Link
+                  href={`/reflection?s=${member.id}`}
+                  className="mt-3 inline-block font-semibold text-clay hover:text-ink"
+                >
+                  Start your reflection →
+                </Link>
+              </div>
+            )}
+          </Card>
+        )}
+
+        <Card title="Saved resources">
+          <p className="text-ink/65">
+            Soon you&apos;ll be able to save the guides and videos that help you,
+            build your own collection, and share it. Coming shortly.
+          </p>
+        </Card>
+
+        <form action={signOut} className="pt-2 text-center">
+          <button
+            type="submit"
+            className="text-sm font-medium text-ink/60 transition hover:text-clay"
+          >
+            Sign out
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
 // MAINTENANCE MODE — every route serves an "under construction" page.
 // To take the site DOWN again, flip MAINTENANCE back to true and redeploy.
@@ -45,7 +46,7 @@ const PAGE = `<!doctype html>
 </body>
 </html>`;
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   // Admin subdomain: admin.livingwithcoyotes.org serves the /admin app at its
   // root (its own password gate handles security; not subject to maintenance).
   const hostname = (req.headers.get("host") ?? "").split(":")[0].replace(/^www\./, "");
@@ -55,6 +56,32 @@ export function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
     url.pathname = "/admin";
     return NextResponse.rewrite(url);
+  }
+
+  // Member auth: refresh the Supabase session cookie on member/auth paths so
+  // server reads stay valid. Scoped to these paths so public pages skip the
+  // per-request auth round-trip.
+  const path = req.nextUrl.pathname;
+  if (path === "/login" || path.startsWith("/account") || path.startsWith("/auth")) {
+    const res = NextResponse.next({ request: req });
+    const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supaAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (supaUrl && supaAnonKey) {
+      const supabase = createServerClient(supaUrl, supaAnonKey, {
+        cookies: {
+          getAll() {
+            return req.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              res.cookies.set(name, value, options),
+            );
+          },
+        },
+      });
+      await supabase.auth.getUser();
+    }
+    return res;
   }
 
   if (!MAINTENANCE) return NextResponse.next();
