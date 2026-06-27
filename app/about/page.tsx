@@ -21,7 +21,7 @@ const tiers = [
   },
   {
     title: "Experts & professionals",
-    body: "Wildlife biologists, vets, animal-control, and shelter staff — grounding decisions in evidence and frontline data.",
+    body: "Wildlife biologists, vets, animal-control, and shelter staff — grounding the conversation in evidence and frontline data.",
   },
   {
     title: "Stewards",
@@ -84,8 +84,8 @@ export default function AboutPage() {
               Four tiers, one table
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
-              Coexistence works when everyone affected is in the room — and
-              accountable to results.
+              The conversation works best when everyone affected is in the room —
+              and every voice is heard.
             </p>
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -146,9 +146,9 @@ export default function AboutPage() {
               Our Board of Advisors
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-center text-ink/70">
-              We didn't want this Council's positions to be one person's
-              opinions. So we began with an advisory board spanning the
-              disciplines this work requires — urban coyote science, field
+              We wanted this conversation informed by many disciplines rather
+              than a single point of view. So we began with an advisory board
+              spanning the fields this work touches — urban coyote science, field
               research, coexistence-program design, humane practice, animal
               ethics, conflict mapping, environmental justice, management
               realism, and risk communication.
@@ -171,10 +171,10 @@ export default function AboutPage() {
               In full transparency: these are{" "}
               <strong className="text-ink">nine expertise seats</strong>,
               each modeled on the published work of leading authorities in that
-              discipline. It is a way to pressure-test every claim on this site
-              against the best of what each field knows, and to argue with our
-              blind spots before they become policy — not a claim that any
-              individual expert endorses us. The disciplines do not always point
+              discipline. It is a way to weigh what we hear against the best of
+              what each field knows, and to surface our blind spots before they
+              harden into assumptions — not a claim that any individual expert
+              endorses us. The disciplines do not always point
               the same way. That is the point. As real advisors join, we'll name
               them here with their consent.
             </p>
