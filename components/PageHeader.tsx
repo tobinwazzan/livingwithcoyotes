@@ -17,16 +17,17 @@ export default function PageHeader({
   return (
     <section
       data-sticky-header={sticky ? "" : undefined}
-      className={`overflow-hidden bg-dusk text-sand ${
+      className={`overflow-hidden border-b border-line/15 bg-surface text-ink ${
         sticky ? "sticky top-0 z-40" : "relative"
       }`}
     >
-      {/* Soft moss glow so interior headers feel related to the home hero */}
+      {/* A whisper of warm moss at the top so the header has a little depth
+          without the heavy dark band it used to carry. */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="pointer-events-none absolute inset-0 opacity-60"
         style={{
           background:
-            "radial-gradient(65% 90% at 50% 0%, rgba(90,107,74,0.45), transparent 70%)",
+            "radial-gradient(60% 80% at 50% 0%, rgba(90,107,74,0.10), transparent 70%)",
         }}
       />
       <div className="relative mx-auto max-w-3xl px-6 pb-14 pt-28 text-center sm:pt-32">
@@ -35,11 +36,11 @@ export default function PageHeader({
             {eyebrow}
           </p>
         )}
-        <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">
+        <h1 className="text-3xl font-extrabold leading-tight text-heading sm:text-4xl">
           {title}
         </h1>
         {subtitle && (
-          <p className="mx-auto mt-4 max-w-2xl text-balance text-base leading-relaxed text-sand/75 sm:text-lg">
+          <p className="mx-auto mt-4 max-w-2xl text-balance text-base leading-relaxed text-ink/70 sm:text-lg">
             {subtitle}
           </p>
         )}

@@ -53,8 +53,8 @@ export default function AboutPage() {
     <main>
       <PageHeader
         eyebrow="About"
-        title="We already live with coyotes. The only question is how."
-        subtitle="There is a coyote somewhere in your city tonight. It was here before the cul-de-sacs and the dog parks, and it will be here long after the next viral thread scrolls out of view. That is the starting point of every honest conversation."
+        title="A conversation, not a verdict."
+        subtitle="Coyotes are a growing part of daily life in Orange County, and the stakes are rising — more pets going missing, and real grief with each. What we should prioritize isn't for anyone to declare in advance — it's what this community has to work out together: one neighbor weighs their way of life and the pets they love, another the environmental equilibrium we all share. What we want — and how to get there — will take a real discussion, and an open invitation to the experts and municipal leaders who belong at the table. No time to waste. Let's begin."
       />
 
       {/* Why we exist */}
@@ -64,13 +64,14 @@ export default function AboutPage() {
             Why we exist
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-ink/85">
-            The most important question about coyotes in our neighborhoods was
-            settled long ago — <em>whether</em> we share this place with them.
-            Almost nobody is working on the question that's actually still open:{" "}
-            <strong className="text-ink">how.</strong> The Coyote Coexistence
-            Council brings residents, municipal officials, and wildlife experts
-            to one table to build, implement, and refine evidence-based safety
-            plans — and to stay accountable to them.
+            Coyotes live among us in Orange County, and the friction is real and
+            rising. Too often the conversation splits between panic and dismissal,
+            leaving little room to think it through. This Council is a modest
+            attempt to make that room — to bring residents, wildlife experts, and
+            municipal leaders to one table, ground the talk in evidence, and keep
+            it respectful. We can't promise the outcome; that will depend on the
+            input, tone, persistence, patience, and open minds everyone brings.
+            What we can promise is to convene it honestly — and to start now.
           </p>
         </Reveal>
 
