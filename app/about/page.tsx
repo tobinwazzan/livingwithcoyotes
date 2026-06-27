@@ -76,12 +76,33 @@ export default function AboutPage() {
         </Reveal>
 
         <Reveal>
-          <blockquote className="mt-8 border-l-4 border-clay bg-card/60 p-6 text-lg italic leading-relaxed text-ink/85">
-            A sighting is not an incident. A coyote crossing your yard at dusk is
-            a healthy animal doing exactly what it should. Real conflict
-            concentrates in a few individuals that have learned to associate
-            people with food — and that is almost always something we made.
-          </blockquote>
+          <figure className="mt-8 rounded-xl border-l-4 border-clay bg-card/60 p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-clay">
+              The science — not our opinion
+            </p>
+            <p className="mt-3 text-lg leading-relaxed text-ink/85">
+              A coyote crossing your yard at dusk is a healthy animal behaving
+              normally; a sighting is not an incident. Decades of urban-coyote
+              research find that serious conflict concentrates in the few
+              individuals that have learned to associate people with food — which
+              is also why the fix is within a neighborhood's reach.
+            </p>
+            <blockquote className="mt-5 border-t border-line/15 pt-5 text-lg italic leading-relaxed text-ink/90">
+              “Coyotes are here to stay — and the first step in learning to
+              coexist is for us to better understand them.”
+            </blockquote>
+            <figcaption className="mt-3 text-sm text-ink/70">
+              — Dr. Stanley Gehrt, wildlife ecologist and principal investigator,{" "}
+              <a
+                href="https://urbancoyoteresearch.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-clay underline-offset-2 hover:text-ink hover:underline"
+              >
+                Urban Coyote Research Project
+              </a>
+            </figcaption>
+          </figure>
         </Reveal>
 
         <Reveal>
