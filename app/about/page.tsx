@@ -74,50 +74,6 @@ export default function AboutPage() {
             What we can promise is to convene it honestly — and to start now.
           </p>
         </Reveal>
-
-        <Reveal>
-          <figure className="mt-8 rounded-xl border-l-4 border-clay bg-card/60 p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-clay">
-              The science — not our opinion
-            </p>
-            <p className="mt-3 text-lg leading-relaxed text-ink/85">
-              A coyote crossing your yard at dusk is a healthy animal behaving
-              normally; a sighting is not an incident. Decades of urban-coyote
-              research find that serious conflict concentrates in the few
-              individuals that have learned to associate people with food — which
-              is also why the fix is within a neighborhood's reach.
-            </p>
-            <blockquote className="mt-5 border-t border-line/15 pt-5 text-lg italic leading-relaxed text-ink/90">
-              “Coyotes are here to stay — and the first step in learning to
-              coexist is for us to better understand them.”
-            </blockquote>
-            <figcaption className="mt-3 text-sm text-ink/70">
-              — Dr. Stanley Gehrt, wildlife ecologist and principal investigator,{" "}
-              <a
-                href="https://urbancoyoteresearch.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-clay underline-offset-2 hover:text-ink hover:underline"
-              >
-                Urban Coyote Research Project
-              </a>
-            </figcaption>
-          </figure>
-        </Reveal>
-
-        <Reveal>
-          <p className="mt-8 leading-relaxed text-ink/80">
-            So the problem is not the coyote. It's a landscape we've made
-            extraordinarily hospitable to coyotes — and the fix starts in your
-            own yard: keep cats indoors, supervise small dogs, secure the trash,
-            pick up the fallen fruit. There's a second problem too, and it may be
-            the one this site exists to solve most directly: residents are caught
-            between a neighborhood-app fear spiral and an official “don't panic”
-            message, and neither tells you what to actually do. We intend to be
-            the first source that tells you plainly what is and isn't dangerous —
-            and exactly what to do about it.
-          </p>
-        </Reveal>
       </section>
 
       {/* Four tiers */}
