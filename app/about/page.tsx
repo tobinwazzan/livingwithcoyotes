@@ -31,20 +31,20 @@ const tiers = [
 
 const beliefs = [
   {
-    title: "Evidence over assumption",
-    body: "Every response we endorse must be grounded in what the data show — not in fear, and not in the path of least administrative resistance. We measure whether conflicts actually go down, and we say so when they don't.",
+    title: "Every side has a seat",
+    body: "We bring residents, officials, and experts to one table, and we work to see that every perspective has a place in the conversation — especially the ones easy to overlook.",
   },
   {
-    title: "Coexistence, not removal",
-    body: "Our goal is genuine shared space, not the quiet elimination of an inconvenient neighbor. The question is never only “what do we do about this coyote?” but “what created this, and what prevents the next one?”",
+    title: "Assumptions welcome — and questioned",
+    body: "We bring data, research, and lived experience into the open, and we invite every assumption — our own included — to be examined. The best conversations start when someone is willing to rethink what they were sure of.",
   },
   {
-    title: "Non-lethal first — stated honestly",
-    body: "Non-lethal tools are the first, default, and strongly preferred response, with attractant management underneath everything. We won't pretend “non-lethal first” means “never” — a credible council needs a transparent, last-resort protocol, not an absolutist promise it can't keep.",
+    title: "We convene; the table concludes",
+    body: "Our role is to host the discussion and describe what we hear. The conclusions belong to the people in the room.",
   },
   {
-    title: "Equity in reach",
-    body: "Coexistence infrastructure belongs in every community, not only the ones with the time and resources to ask for it. Our reporting tools will be multilingual and account-free by design.",
+    title: "Open to every community",
+    body: "Taking part stays within reach for everyone, whatever their time, money, or language — and our tools are built that way, so more voices are heard.",
   },
 ];
 
@@ -107,11 +107,11 @@ export default function AboutPage() {
       <section className="mx-auto max-w-3xl px-6 py-16">
         <Reveal>
           <h2 className="text-2xl font-bold text-heading sm:text-3xl">
-            What we believe
+            How we work
           </h2>
           <p className="mt-3 text-ink/70">
-            A council that launches with vague aspirations gives cover to
-            inaction. Here's where we stand.
+            These are our commitments — about how the conversation runs, and
+            about making sure every voice in it is heard.
           </p>
         </Reveal>
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
