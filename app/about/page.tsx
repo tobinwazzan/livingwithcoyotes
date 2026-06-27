@@ -7,7 +7,7 @@ import { ADVISORY_SEATS } from "@/content/board";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "We already live with coyotes — the only question is how. Who the Coyote Coexistence Council is, what we believe, and the advisory board behind our positions.",
+    "Coyotes are part of daily life in Orange County. The Coyote Coexistence Council brings residents, wildlife experts, and municipal leaders to one table to weigh the evidence together — a conversation, not a verdict.",
 };
 
 const tiers = [
@@ -54,7 +54,7 @@ export default function AboutPage() {
       <PageHeader
         eyebrow="About"
         title="A conversation, not a verdict."
-        subtitle="Coyotes are a growing part of daily life in Orange County, and the stakes are rising — more pets going missing, and real grief with each. What we should prioritize isn't for anyone to declare in advance — it's what this community has to work out together: one neighbor weighs their way of life and the pets they love, another the environmental equilibrium we all share. What we want — and how to get there — will take a real discussion, and an open invitation to the experts and municipal leaders who belong at the table. No time to waste. Let's begin."
+        subtitle="Coyotes are a growing part of daily life in Orange County, and the stakes are rising — more pets going missing, and real grief with each. What we should prioritize isn't for anyone to declare in advance — it's what this community has to work out together: one neighbor weighs their way of life and the pets they love, another the environmental equilibrium we all share. What we want — and how to get there — will take a real discussion, and an open invitation to the experts and municipal leaders who belong at the table. No time to waste. Let's begin."
       />
 
       {/* Why we exist */}

@@ -36,11 +36,14 @@ export default function PageHeader({
             {eyebrow}
           </p>
         )}
-        <h1 className="text-3xl font-extrabold leading-tight text-heading sm:text-4xl">
+        <h1 className="text-balance text-3xl font-extrabold leading-tight text-heading sm:text-4xl">
           {title}
         </h1>
         {subtitle && (
-          <p className="mx-auto mt-4 max-w-2xl text-balance text-base leading-relaxed text-ink/70 sm:text-lg">
+          // text-pretty (not balance): balance gives up past ~6 lines and lets a
+          // single-word widow strand on the last line; pretty keeps the orphan
+          // tucked up regardless of length.
+          <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-relaxed text-ink/70 sm:text-lg">
             {subtitle}
           </p>
         )}
