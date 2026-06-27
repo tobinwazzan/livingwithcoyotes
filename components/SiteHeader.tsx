@@ -53,10 +53,21 @@ export default function SiteHeader() {
             alt=""
             width={48}
             height={48}
-            className="h-9 w-9 sm:h-11 sm:w-11"
+            className="h-10 w-10 sm:h-12 sm:w-12"
           />
-          <span className="hidden text-base font-bold leading-tight text-heading sm:block">
-            Coyote Coexistence Council
+          {/* Stacked wordmark — the three words over one another, exposing the
+              three clay C's as a vertical "CCC" lockup beside the medallion.
+              Narrow by design so it doesn't crowd the nav. */}
+          <span className="hidden flex-col leading-[1.12] sm:flex">
+            {["oyote", "oexistence", "ouncil"].map((rest) => (
+              <span
+                key={rest}
+                className="text-[13px] font-bold uppercase tracking-[0.14em] text-heading"
+              >
+                <span className="text-clay">C</span>
+                {rest}
+              </span>
+            ))}
           </span>
         </Link>
 
