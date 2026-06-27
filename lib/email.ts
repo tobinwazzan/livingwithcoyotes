@@ -135,6 +135,13 @@ export async function sendWelcomeEmail(member: WelcomeMember) {
         <table role="presentation" style="margin:8px 0 4px;"><tr><td style="border-radius:8px;background:${CLAY};">
           <a href="${SITE}/resources" style="display:inline-block;padding:12px 22px;color:${SAND};font-size:15px;font-weight:600;text-decoration:none;">Explore the resources →</a>
         </td></tr></table>
+        <p style="margin:22px 0 8px;color:${INK};font-size:15px;line-height:1.6;">
+          One optional, private thing: take a two-minute reflection on where you
+          stand today. We'll invite you back later to see what's shifted.
+        </p>
+        <table role="presentation" style="margin:4px 0 2px;"><tr><td style="border-radius:8px;border:1px solid ${CLAY};">
+          <a href="${SITE}/reflection?s=${member.id}" style="display:inline-block;padding:11px 20px;color:${CLAY};font-size:15px;font-weight:600;text-decoration:none;">Take the reflection →</a>
+        </td></tr></table>
         <p style="margin:20px 0 0;color:#6f6657;font-size:13px;line-height:1.6;">
           We'll be in touch as the Council takes shape. Questions? Just reply to this email.
         </p>
@@ -156,6 +163,8 @@ Your membership funds plain-language guidance, the yard-proofing checklist, pet-
 
 Explore the resources: ${SITE}/resources
 
+Optional, private: take a two-minute reflection on where you stand today — ${SITE}/reflection?s=${member.id}
+
 We'll be in touch as the Council takes shape. Questions? Just reply to this email.
 
 Coyote Coexistence Council · livingwithcoyotes.org`;
@@ -166,6 +175,60 @@ Coyote Coexistence Council · livingwithcoyotes.org`;
     html,
     text,
   });
+}
+
+// ── Reflection revisit invite (the "weeks later" magic link) ─────────────────
+export async function sendReflectionRevisit(opts: {
+  email: string;
+  full_name: string | null;
+  token: string;
+}) {
+  const first = (opts.full_name || "").trim().split(/\s+/)[0] || "neighbor";
+  const url = `${SITE}/reflection/${opts.token}`;
+  const subject = `${first}, a quiet moment — revisit your reflection`;
+  const preheader =
+    "A few weeks ago you marked where you stood. Take a fresh look and see what's shifted.";
+
+  const html = `<!doctype html><html><body style="margin:0;background:${SAND};font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+  <table role="presentation" width="100%" style="background:${SAND};padding:24px 0;"><tr><td align="center">
+    <table role="presentation" width="560" style="max-width:560px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid rgba(90,107,74,.15);">
+      <tr><td style="background:${DUSK};padding:28px 32px;text-align:center;">
+        <img src="${SITE}/logo-ccc.png" width="64" height="64" alt="" style="display:inline-block;border:0;">
+        <div style="color:${SAND};font-size:18px;font-weight:700;margin-top:10px;letter-spacing:.2px;">Coyote Coexistence Council</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <h1 style="margin:0 0 12px;color:${DUSK};font-size:22px;">A quiet moment, ${first}.</h1>
+        <p style="margin:0 0 16px;color:${INK};font-size:15px;line-height:1.6;">
+          A while back you marked where you stood on living with coyotes, and made
+          the case for the side you lean against. Time has passed and you've heard
+          more of the conversation — so take a fresh look, and we'll set it beside
+          where you began. It's private, and just for you.
+        </p>
+        <table role="presentation" style="margin:8px 0 6px;"><tr><td style="border-radius:8px;background:${CLAY};">
+          <a href="${url}" style="display:inline-block;padding:12px 22px;color:${SAND};font-size:15px;font-weight:600;text-decoration:none;">Revisit your reflection →</a>
+        </td></tr></table>
+        <p style="margin:20px 0 0;color:#6f6657;font-size:13px;line-height:1.6;">
+          Kept confidential — never shown publicly or to other members.
+        </p>
+      </td></tr>
+      <tr><td style="padding:18px 32px;background:#faf8f2;border-top:1px solid rgba(90,107,74,.12);text-align:center;color:#6f6657;font-size:12px;">
+        Coyote Coexistence Council · <a href="${SITE}" style="color:${CLAY};text-decoration:none;">livingwithcoyotes.org</a>
+      </td></tr>
+    </table>
+  </td></tr></table></body></html>`;
+
+  const text = `A quiet moment, ${first}.
+
+A while back you marked where you stood on living with coyotes, and made the case for the side you lean against. Take a fresh look and we'll set it beside where you began — private, and just for you.
+
+Revisit your reflection: ${url}
+
+Kept confidential — never shown publicly or to other members.
+
+Coyote Coexistence Council · livingwithcoyotes.org`;
+
+  return sendEmail({ to: opts.email, subject, html, text });
 }
 
 // Claim-and-send: idempotent across all join paths and page refreshes. Returns

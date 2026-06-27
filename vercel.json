@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/reflection-invites",
+      "schedule": "0 16 * * *"
+    }
+  ]
+}
