@@ -1,16 +1,30 @@
 // Single source of truth for site navigation.
-// Add a page here and it appears in the header, mobile menu, and footer.
+// Top-level items can carry `children` — rendered as a dropdown on desktop and
+// an indented group on mobile. Keeps the bar from over-crowding.
 
-export type NavItem = { label: string; href: string };
+export type NavChild = { label: string; href: string };
+export type NavItem = { label: string; href: string; children?: NavChild[] };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "About", href: "/about" },
-  { label: "Charter", href: "/charter" },
+  {
+    label: "About",
+    href: "/about",
+    children: [
+      { label: "Charter", href: "/charter" },
+      { label: "The Pack", href: "/pack" },
+      { label: "Coyote Q&A", href: "/faq" },
+    ],
+  },
   { label: "Membership", href: "/membership" },
-  { label: "The Pack", href: "/pack" },
-  { label: "Report", href: "/report" },
-  { label: "Coyote Q&A", href: "/faq" },
-  { label: "Resources", href: "/resources" },
+  {
+    label: "Resources",
+    href: "/resources",
+    children: [
+      { label: "Report", href: "/report" },
+      { label: "Coyote Q&A", href: "/faq" },
+      { label: "The Pack", href: "/pack" },
+    ],
+  },
   { label: "Contact", href: "/contact" },
 ];
 

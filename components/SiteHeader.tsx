@@ -4,18 +4,38 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV_ITEMS, JOIN_HREF } from "@/lib/nav";
+import { NAV_ITEMS, JOIN_HREF, type NavItem } from "@/lib/nav";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
-import { getHeaderUser } from "@/app/account/actions";
+import { getHeaderUser, signOut } from "@/app/account/actions";
 
 type Auth = { signedIn: boolean; firstName: string | null };
+
+function Caret({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={className}
+    >
+      <path d="M3 4.5 6 7.5 9 4.5" />
+    </svg>
+  );
+}
 
 export default function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [userMenu, setUserMenu] = useState(false);
   const [auth, setAuth] = useState<Auth | null>(null);
 
   useEffect(() => {
@@ -45,16 +65,73 @@ export default function SiteHeader() {
     };
   }, [pathname]);
 
-  // Close the mobile menu whenever the route changes.
-  useEffect(() => setOpen(false), [pathname]);
+  // Close menus whenever the route changes.
+  useEffect(() => {
+    setOpen(false);
+    setUserMenu(false);
+  }, [pathname]);
 
-  // Solid (light) chrome everywhere except the very top of the home hero.
+  // Close the user menu on any outside click.
+  useEffect(() => {
+    if (!userMenu) return;
+    const close = () => setUserMenu(false);
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [userMenu]);
+
   const solid = !isHome || scrolled || open;
 
   const linkBase = "text-sm font-medium transition-colors";
   const linkColor = solid
     ? "text-ink/75 hover:text-clay"
     : "text-sand/90 hover:text-white";
+  const activeColor = solid ? "text-clay" : "text-white";
+
+  const panel =
+    "min-w-[190px] rounded-xl border border-line/15 bg-surface p-1.5 shadow-lg";
+  const itemLink =
+    "block rounded-lg px-3 py-2 text-sm font-medium text-ink/80 transition hover:bg-card hover:text-clay";
+
+  function DesktopItem({ item }: { item: NavItem }) {
+    const active = pathname === item.href;
+    if (!item.children) {
+      return (
+        <Link
+          href={item.href}
+          className={`${linkBase} ${linkColor} ${active ? activeColor : ""}`}
+        >
+          {item.label}
+        </Link>
+      );
+    }
+    const childActive = item.children.some((c) => c.href === pathname);
+    return (
+      <div className="group relative">
+        <Link
+          href={item.href}
+          className={`inline-flex items-center gap-1 ${linkBase} ${linkColor} ${
+            active || childActive ? activeColor : ""
+          }`}
+        >
+          {item.label}
+          <Caret className="opacity-70 transition-transform group-hover:rotate-180" />
+        </Link>
+        <div className="invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+          <div className={panel}>
+            {item.children.map((c) => (
+              <Link
+                key={c.href}
+                href={c.href}
+                className={`${itemLink} ${c.href === pathname ? "bg-card text-clay" : ""}`}
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <header
@@ -80,9 +157,6 @@ export default function SiteHeader() {
             height={48}
             className="h-10 w-10 sm:h-12 sm:w-12"
           />
-          {/* Stacked wordmark — the three words over one another, exposing the
-              three clay C's as a vertical "CCC" lockup beside the medallion.
-              Narrow by design so it doesn't crowd the nav. */}
           <span className="hidden flex-col leading-[1.12] sm:flex">
             {["oyote", "oexistence", "ouncil"].map((rest) => (
               <span
@@ -98,42 +172,57 @@ export default function SiteHeader() {
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-7 md:flex">
-          {NAV_ITEMS.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${linkBase} ${linkColor} ${
-                  active ? (solid ? "text-clay" : "text-white") : ""
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          {auth?.signedIn ? (
-            <Link href="/account" className={`${linkBase} ${linkColor}`}>
-              {auth.firstName || "Account"}
-            </Link>
-          ) : auth ? (
-            <Link href="/login" className={`${linkBase} ${linkColor}`}>
-              Sign in
-            </Link>
-          ) : null}
+          {NAV_ITEMS.map((item) => (
+            <DesktopItem key={item.label} item={item} />
+          ))}
+
           <ThemeToggle
             className={
-              solid
-                ? "text-ink/70 hover:text-clay"
-                : "text-sand/90 hover:text-white"
+              solid ? "text-ink/70 hover:text-clay" : "text-sand/90 hover:text-white"
             }
           />
-          <Link
-            href={JOIN_HREF}
-            className="rounded-lg bg-clay px-4 py-2 text-sm font-semibold text-sand transition hover:bg-bark"
-          >
-            Join
-          </Link>
+
+          {auth?.signedIn ? (
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                onClick={() => setUserMenu((v) => !v)}
+                aria-haspopup="menu"
+                aria-expanded={userMenu}
+                className={`inline-flex items-center gap-1 ${linkBase} ${linkColor}`}
+              >
+                {auth.firstName || "Account"}
+                <Caret className={`opacity-70 transition-transform ${userMenu ? "rotate-180" : ""}`} />
+              </button>
+              {userMenu && (
+                <div className={`absolute right-0 top-full z-50 mt-3 ${panel}`}>
+                  <Link href="/account" className={itemLink}>
+                    Account
+                  </Link>
+                  <p className="px-3 pb-1.5 pt-0.5 text-xs text-ink/45">
+                    Contact info and preferences
+                  </p>
+                  <form action={signOut} className="border-t border-line/10 pt-1">
+                    <button type="submit" className={`${itemLink} w-full text-left`}>
+                      Sign out
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+          ) : auth ? (
+            <>
+              <Link href="/login" className={`${linkBase} ${linkColor}`}>
+                Sign in
+              </Link>
+              <Link
+                href={JOIN_HREF}
+                className="rounded-lg bg-clay px-4 py-2 text-sm font-semibold text-sand transition hover:bg-bark"
+              >
+                Join
+              </Link>
+            </>
+          ) : null}
         </nav>
 
         {/* Mobile: theme toggle + menu button */}
@@ -146,20 +235,20 @@ export default function SiteHeader() {
             aria-expanded={open}
             className={solid ? "text-ink" : "text-sand"}
           >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            {open ? (
-              <>
-                <path d="M6 6l12 12" />
-                <path d="M18 6L6 18" />
-              </>
-            ) : (
-              <>
-                <path d="M4 7h16" />
-                <path d="M4 12h16" />
-                <path d="M4 17h16" />
-              </>
-            )}
-          </svg>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {open ? (
+                <>
+                  <path d="M6 6l12 12" />
+                  <path d="M18 6L6 18" />
+                </>
+              ) : (
+                <>
+                  <path d="M4 7h16" />
+                  <path d="M4 12h16" />
+                  <path d="M4 17h16" />
+                </>
+              )}
+            </svg>
           </button>
         </div>
       </div>
@@ -169,28 +258,66 @@ export default function SiteHeader() {
         <div className="border-t border-line/10 bg-card md:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col px-4 py-3">
             {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`border-b border-line/5 py-3 text-base font-medium ${
-                  pathname === item.href ? "text-clay" : "text-ink/80"
-                }`}
-              >
-                {item.label}
-              </Link>
+              <div key={item.label}>
+                <Link
+                  href={item.href}
+                  className={`block border-b border-line/5 py-3 text-base font-medium ${
+                    pathname === item.href ? "text-clay" : "text-ink/80"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+                {item.children && (
+                  <div className="ml-3 border-l border-line/10 pl-3">
+                    {item.children.map((c) => (
+                      <Link
+                        key={c.href}
+                        href={c.href}
+                        className={`block py-2.5 text-sm ${
+                          pathname === c.href ? "text-clay" : "text-ink/65"
+                        }`}
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
-            <Link
-              href={auth?.signedIn ? "/account" : "/login"}
-              className="border-b border-line/5 py-3 text-base font-medium text-ink/80"
-            >
-              {auth?.signedIn ? auth.firstName || "Account" : "Sign in"}
-            </Link>
-            <Link
-              href={JOIN_HREF}
-              className="mt-3 rounded-lg bg-clay px-4 py-3 text-center font-semibold text-sand"
-            >
-              Join the Council
-            </Link>
+
+            {auth?.signedIn ? (
+              <>
+                <Link
+                  href="/account"
+                  className="border-b border-line/5 py-3 text-base font-medium text-ink/80"
+                >
+                  {auth.firstName || "Account"}
+                </Link>
+                <form action={signOut}>
+                  <button
+                    type="submit"
+                    className="w-full py-3 text-left text-base font-medium text-ink/70"
+                  >
+                    Sign out
+                  </button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="border-b border-line/5 py-3 text-base font-medium text-ink/80"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href={JOIN_HREF}
+                  className="mt-3 rounded-lg bg-clay px-4 py-3 text-center font-semibold text-sand"
+                >
+                  Join the Council
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       )}
