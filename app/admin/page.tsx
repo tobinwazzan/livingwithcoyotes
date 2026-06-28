@@ -1,7 +1,7 @@
 import { isAdmin } from "@/lib/adminAuth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { dollars } from "@/lib/membership";
-import { adminLogout } from "./actions";
+import { adminLogout, hideReflection } from "./actions";
 import AdminLogin from "./AdminLogin";
 
 export const dynamic = "force-dynamic";
@@ -33,6 +33,22 @@ type Report = {
   status: string;
   created_at: string;
 };
+
+type SharedReflection = {
+  id: string;
+  lean: number | null;
+  certainty: number | null;
+  steelman: string | null;
+  visibility: string;
+  hidden: boolean;
+  created_at: string;
+  signups: { full_name: string | null } | { full_name: string | null }[] | null;
+};
+
+function sharedFirstName(row: SharedReflection): string {
+  const s = Array.isArray(row.signups) ? row.signups[0] : row.signups;
+  return (s?.full_name ?? "").trim().split(/\s+/)[0] || "";
+}
 
 const REPORT_CAT_LABEL: Record<string, string> = {
   sighting: "Sighting", encounter: "Encounter", pet_chase: "Pet chased",
@@ -88,7 +104,12 @@ export default async function AdminPage() {
     );
   }
 
-  const [{ data: membersRaw }, { data: eventsRaw }, { data: reportsRaw }] = await Promise.all([
+  const [
+    { data: membersRaw },
+    { data: eventsRaw },
+    { data: reportsRaw },
+    { data: sharedRaw },
+  ] = await Promise.all([
     supabaseAdmin
       .from("signups")
       .select("full_name, email, role, city, source, membership_status, membership_method, paid_amount_cents, created_at")
@@ -98,11 +119,17 @@ export default async function AdminPage() {
       .from("coyote_reports")
       .select("category, city, area, behavior, pet_involved, attractants, note, reporter_name, reporter_email, contact_ok, status, created_at")
       .order("created_at", { ascending: false }),
+    supabaseAdmin
+      .from("member_reflections")
+      .select("id, lean, certainty, steelman, visibility, hidden, created_at, signups(full_name)")
+      .in("visibility", ["shared_anon", "shared_named"])
+      .order("created_at", { ascending: false }),
   ]);
 
   const members = (membersRaw ?? []) as Member[];
   const events = (eventsRaw ?? []) as FunnelEvent[];
   const reports = (reportsRaw ?? []) as Report[];
+  const shared = (sharedRaw ?? []) as SharedReflection[];
   const urgentReports = reports.filter(
     (r) => r.category === "pet_attack" || r.category === "person",
   );
@@ -220,6 +247,55 @@ export default async function AdminPage() {
             })}
             {reports.length === 0 && (
               <tr><td colSpan={6} className="px-3 py-6 text-center text-ink/50">No reports yet.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Shared reflections — moderation for the wall of understanding */}
+      <h2 className="mt-10 text-sm font-semibold uppercase tracking-wide text-clay">
+        Shared reflections ({shared.length}) — wall of understanding
+      </h2>
+      <div className="mt-3 overflow-x-auto rounded-xl border border-line/15">
+        <table className="w-full text-sm">
+          <thead className="bg-card text-left text-xs uppercase tracking-wide text-ink/50">
+            <tr>
+              <th className="px-3 py-2">Shown as</th><th className="px-3 py-2">Lean</th>
+              <th className="px-3 py-2">Sure</th><th className="px-3 py-2">Steelman</th>
+              <th className="px-3 py-2">When</th><th className="px-3 py-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {shared.map((row) => {
+              const display =
+                row.visibility === "shared_named"
+                  ? sharedFirstName(row) || "—"
+                  : "Anonymous";
+              return (
+                <tr key={row.id} className={`border-t border-line/10 ${row.hidden ? "opacity-50" : ""}`}>
+                  <td className="px-3 py-2 text-ink/85">
+                    {display}
+                    {row.hidden && <span className="ml-1 text-xs text-clay">(hidden)</span>}
+                  </td>
+                  <td className="px-3 py-2 text-ink/70">{row.lean ?? "—"}/7</td>
+                  <td className="px-3 py-2 text-ink/70">{row.certainty ?? "—"}%</td>
+                  <td className="max-w-md px-3 py-2 text-ink/70">
+                    {(row.steelman ?? "").slice(0, 160)}
+                    {(row.steelman ?? "").length > 160 ? "…" : ""}
+                  </td>
+                  <td className="px-3 py-2 text-ink/55">{new Date(row.created_at).toLocaleDateString()}</td>
+                  <td className="px-3 py-2">
+                    {!row.hidden && (
+                      <form action={hideReflection.bind(null, row.id)}>
+                        <button className="text-xs font-semibold text-clay hover:text-ink">Hide</button>
+                      </form>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            {shared.length === 0 && (
+              <tr><td colSpan={6} className="px-3 py-6 text-center text-ink/50">No shared reflections yet.</td></tr>
             )}
           </tbody>
         </table>

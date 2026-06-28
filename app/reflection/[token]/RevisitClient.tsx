@@ -2,7 +2,67 @@
 
 import { useState } from "react";
 import LeanScale, { LEAN_ANCHORS } from "../LeanScale";
-import { saveRevisit } from "../actions";
+import { saveRevisit, setReflectionVisibility } from "../actions";
+import ReflectionTimeline from "../ReflectionTimeline";
+import type {
+  ReflectionInput,
+  ReflectionResult,
+  ReflectionRow,
+} from "@/lib/reflections";
+
+type Visibility = "private" | "shared_anon" | "shared_named";
+
+function ShareControl({
+  token,
+  initial,
+}: {
+  token: string;
+  initial: Visibility;
+}) {
+  const [vis, setVis] = useState<Visibility>(initial);
+  const [saving, setSaving] = useState(false);
+  const opts: { v: Visibility; label: string }[] = [
+    { v: "private", label: "Keep it private" },
+    { v: "shared_anon", label: "Share anonymously" },
+    { v: "shared_named", label: "Share with my name" },
+  ];
+  async function choose(v: Visibility) {
+    setSaving(true);
+    const res = await setReflectionVisibility(token, v);
+    setSaving(false);
+    if (res.ok) setVis(v);
+  }
+  return (
+    <div>
+      <p className="text-sm leading-relaxed text-ink/70">
+        This reflection is yours. If it might help others think, you can share
+        your case for the other side on the wall of understanding:
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {opts.map((o) => (
+          <button
+            key={o.v}
+            type="button"
+            disabled={saving}
+            onClick={() => choose(o.v)}
+            className={`rounded-full px-4 py-2 text-sm transition disabled:opacity-60 ${
+              vis === o.v
+                ? "bg-clay font-semibold text-sand"
+                : "border border-line/30 text-ink/70 hover:border-clay"
+            }`}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2.5 text-xs leading-relaxed text-ink/50">
+        Shared entries appear on the public wall — anonymous shows no name; “with
+        my name” shows your first name only. You can change or remove this
+        anytime.
+      </p>
+    </div>
+  );
+}
 
 export type Round = {
   round: number;
@@ -116,10 +176,16 @@ export default function RevisitClient({
   token,
   round1,
   round2,
+  reflections,
+  addAction,
+  latestVisibility,
 }: {
   token: string;
   round1: Round | null;
   round2: Round | null;
+  reflections: ReflectionRow[];
+  addAction: (input: ReflectionInput) => Promise<ReflectionResult>;
+  latestVisibility: Visibility;
 }) {
   const [lean, setLean] = useState<number | null>(null);
   const [certainty, setCertainty] = useState(50);
@@ -139,7 +205,22 @@ export default function RevisitClient({
 
   const existingRound2 = round2 ?? justSaved;
   if (existingRound2) {
-    return <Mirror round1={round1} round2={existingRound2} />;
+    return (
+      <div>
+        <Mirror round1={round1} round2={existingRound2} />
+        <div className="mt-10 border-t border-line/15 pt-8">
+          <ShareControl token={token} initial={latestVisibility} />
+        </div>
+        {reflections.length > 0 && (
+          <div className="mt-10 border-t border-line/15 pt-8">
+            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[0.14em] text-clay">
+              Your full record
+            </h3>
+            <ReflectionTimeline entries={reflections} addAction={addAction} />
+          </div>
+        )}
+      </div>
+    );
   }
 
   async function submit() {

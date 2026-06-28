@@ -2,9 +2,35 @@
 
 import { supabase } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import {
+  appendReflection,
+  setLatestVisibility,
+  signupIdFromToken,
+  type ReflectionInput,
+} from "@/lib/reflections";
 
 // Service-role only (RLS-locked table) — same posture as the signups writes.
 const db = supabaseAdmin ?? supabase;
+
+// Add a new check-in via the member's magic-link token (the revisit path).
+export async function addReflectionViaToken(
+  token: string,
+  input: ReflectionInput,
+): Promise<ReflectionResult> {
+  const signupId = await signupIdFromToken(token);
+  if (!signupId) return { ok: false, message: "This link isn't valid." };
+  return appendReflection(signupId, input);
+}
+
+// Share / unshare the member's latest reflection (the 3-tier choice on the mirror).
+export async function setReflectionVisibility(
+  token: string,
+  visibility: "private" | "shared_anon" | "shared_named",
+): Promise<ReflectionResult> {
+  const signupId = await signupIdFromToken(token);
+  if (!signupId) return { ok: false, message: "This link isn't valid." };
+  return setLatestVisibility(signupId, visibility);
+}
 
 export type ReflectionResult = { ok: boolean; token?: string; message?: string };
 

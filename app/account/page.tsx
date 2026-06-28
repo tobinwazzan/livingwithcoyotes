@@ -5,6 +5,9 @@ import PageHeader from "@/components/PageHeader";
 import { getSupabaseServer } from "@/lib/supabaseServer";
 import { supabase as anon } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { reflectionsForSignup } from "@/lib/reflections";
+import ReflectionTimeline from "@/app/reflection/ReflectionTimeline";
+import { addReflectionForMe } from "./actions";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -49,17 +52,8 @@ export default async function AccountPage() {
   const member = su?.[0] ?? null;
   const isMember = member?.membership_status === "active";
 
-  let reflectionToken: string | null = null;
-  let hasReflection = false;
-  if (member) {
-    const { data: refs } = await db
-      .from("member_reflections")
-      .select("round, revisit_token")
-      .eq("signup_id", member.id);
-    const r1 = refs?.find((r) => r.round === 1);
-    reflectionToken = (r1?.revisit_token as string) ?? null;
-    hasReflection = !!r1;
-  }
+  const reflections = member ? await reflectionsForSignup(member.id) : [];
+  const hasReflection = reflections.length > 0;
 
   const first = (member?.full_name ?? "").trim().split(/\s+/)[0];
 
@@ -103,25 +97,17 @@ export default async function AccountPage() {
         </Card>
 
         {member && (
-          <Card title="Your reflection">
-            {hasReflection && reflectionToken ? (
-              <div>
-                <p>
-                  Your Steelman Mirror — where you stood, and where you&apos;re
-                  growing.
-                </p>
-                <Link
-                  href={`/reflection/${reflectionToken}`}
-                  className="mt-3 inline-block font-semibold text-clay hover:text-ink"
-                >
-                  Open your reflection →
-                </Link>
-              </div>
+          <Card title="Your transformation">
+            {hasReflection ? (
+              <ReflectionTimeline
+                entries={reflections}
+                addAction={addReflectionForMe}
+              />
             ) : (
               <div>
                 <p>
-                  Take a quiet, private reflection on where you stand — and
-                  revisit it later to see what&apos;s shifted.
+                  Take a quiet, private reflection on where you stand — then add
+                  more over time and watch your thinking move.
                 </p>
                 <Link
                   href={`/reflection?s=${member.id}`}
@@ -133,6 +119,21 @@ export default async function AccountPage() {
             )}
           </Card>
         )}
+
+        <Card title="Keep exploring">
+          <p className="text-ink/75">Where to go next:</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Link href="/resources" className="font-semibold text-clay hover:text-ink">
+              Resources →
+            </Link>
+            <Link href="/faq" className="font-semibold text-clay hover:text-ink">
+              Coyote Q&amp;A →
+            </Link>
+            <Link href="/understanding" className="font-semibold text-clay hover:text-ink">
+              Wall of Understanding →
+            </Link>
+          </div>
+        </Card>
 
         <Card title="Saved resources">
           <p className="text-ink/65">

@@ -7,6 +7,14 @@ export type Resource = {
   source: string;
   length?: string;
   blurb: string;
+  // Perspective tags for the future adaptive journey (see media/content-tagging-model.md).
+  // lens: 1 (safety-first / remove) … 4 (balanced/evidence) … 7 (coexistence/ecological).
+  // lens_voice: the kind of voice it carries.
+  // NOTE: today's library skews lens ~5–7 / "data". These stay untagged until the
+  // media project fills the safety-first (lens 1–3) side so the journey can run
+  // SYMMETRICALLY. The sequencing engine must not ship one-sided.
+  lens?: number;
+  lens_voice?: "emotion" | "expert" | "lived" | "data";
 };
 
 export type ResourceGroup = {

@@ -2,7 +2,16 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ADMIN_COOKIE, adminToken } from "@/lib/adminAuth";
+import { revalidatePath } from "next/cache";
+import { ADMIN_COOKIE, adminToken, isAdmin } from "@/lib/adminAuth";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
+
+// Moderation: hide a shared reflection from the public wall. Admin-gated.
+export async function hideReflection(id: string): Promise<void> {
+  if (!isAdmin() || !supabaseAdmin) return;
+  await supabaseAdmin.from("member_reflections").update({ hidden: true }).eq("id", id);
+  revalidatePath("/admin");
+}
 
 export type LoginState = { error?: string };
 

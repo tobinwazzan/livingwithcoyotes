@@ -39,6 +39,23 @@ export default function CaptureForm({ signupId }: { signupId: string }) {
           In a few weeks we&apos;ll email you a private link to revisit it, and
           see what&apos;s shifted. No need to do anything until then.
         </p>
+        <div className="mt-6 border-t border-line/15 pt-6">
+          <p className="text-sm text-ink/60">While you&apos;re here, keep going:</p>
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
+            <a
+              href="/resources"
+              className="rounded-lg bg-clay px-5 py-2.5 text-sm font-semibold text-sand transition hover:bg-bark"
+            >
+              Explore the resources →
+            </a>
+            <a
+              href="/faq"
+              className="rounded-lg border border-line/30 px-5 py-2.5 text-sm font-semibold text-heading transition hover:bg-card"
+            >
+              Read the Coyote Q&amp;A
+            </a>
+          </div>
+        </div>
       </div>
     );
   }

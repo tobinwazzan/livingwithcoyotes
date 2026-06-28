@@ -4,6 +4,8 @@ import PageHeader from "@/components/PageHeader";
 import { supabase } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import RevisitClient, { type Round } from "./RevisitClient";
+import { reflectionsForSignup } from "@/lib/reflections";
+import { addReflectionViaToken } from "../actions";
 
 const db = supabaseAdmin ?? supabase;
 
@@ -49,14 +51,15 @@ export default async function RevisitPage({
   }
 
   const signupId = r1[0].signup_id as string;
-  const { data: all } = await db
-    .from("member_reflections")
-    .select("round, lean, certainty, steelman, moved, created_at")
-    .eq("signup_id", signupId)
-    .order("round");
+  const all = await reflectionsForSignup(signupId);
 
-  const round1 = (all?.find((r) => r.round === 1) ?? null) as Round | null;
-  const round2 = (all?.find((r) => r.round === 2) ?? null) as Round | null;
+  const round1 = (all.find((r) => r.round === 1) ?? null) as Round | null;
+  const round2 = (all.find((r) => r.round === 2) ?? null) as Round | null;
+  const latestVisibility = (all.length ? all[all.length - 1].visibility : "private") as
+    | "private"
+    | "shared_anon"
+    | "shared_named";
+  const addAction = addReflectionViaToken.bind(null, token);
 
   return (
     <main>
@@ -66,7 +69,14 @@ export default async function RevisitPage({
         subtitle="You marked where you stood when you joined. Here's a fresh look — then we'll set it beside where you began, just for you."
       />
       <section className="mx-auto max-w-2xl px-6 py-14">
-        <RevisitClient token={token} round1={round1} round2={round2} />
+        <RevisitClient
+          token={token}
+          round1={round1}
+          round2={round2}
+          reflections={all}
+          addAction={addAction}
+          latestVisibility={latestVisibility}
+        />
       </section>
     </main>
   );
