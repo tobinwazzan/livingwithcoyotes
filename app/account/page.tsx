@@ -5,7 +5,6 @@ import PageHeader from "@/components/PageHeader";
 import { getSupabaseServer } from "@/lib/supabaseServer";
 import { supabase as anon } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { signOut } from "./actions";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -142,14 +141,14 @@ export default async function AccountPage() {
           </p>
         </Card>
 
-        <form action={signOut} className="pt-2 text-center">
-          <button
-            type="submit"
+        <div className="pt-2 text-center">
+          <a
+            href="/logout"
             className="text-sm font-medium text-ink/60 transition hover:text-clay"
           >
             Sign out
-          </button>
-        </form>
+          </a>
+        </div>
       </section>
     </main>
   );

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { NAV_ITEMS, JOIN_HREF, type NavItem } from "@/lib/nav";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
-import { getHeaderUser, signOut } from "@/app/account/actions";
+import { getHeaderUser } from "@/app/account/actions";
 
 type Auth = { signedIn: boolean; firstName: string | null };
 
@@ -202,11 +202,9 @@ export default function SiteHeader() {
                   <p className="px-3 pb-1.5 pt-0.5 text-xs text-ink/45">
                     Contact info and preferences
                   </p>
-                  <form action={signOut} className="border-t border-line/10 pt-1">
-                    <button type="submit" className={`${itemLink} w-full text-left`}>
-                      Sign out
-                    </button>
-                  </form>
+                  <a href="/logout" className={`${itemLink} border-t border-line/10`}>
+                    Sign out
+                  </a>
                 </div>
               )}
             </div>
@@ -293,14 +291,12 @@ export default function SiteHeader() {
                 >
                   {auth.firstName || "Account"}
                 </Link>
-                <form action={signOut}>
-                  <button
-                    type="submit"
-                    className="w-full py-3 text-left text-base font-medium text-ink/70"
-                  >
-                    Sign out
-                  </button>
-                </form>
+                <a
+                  href="/logout"
+                  className="block py-3 text-base font-medium text-ink/70"
+                >
+                  Sign out
+                </a>
               </>
             ) : (
               <>
