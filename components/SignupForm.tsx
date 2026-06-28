@@ -289,7 +289,7 @@ export default function SignupForm() {
           <p className="mt-1 text-ink/80">
             {founding?.open
               ? "You're early — claim a free Founding Membership below, while spots last."
-              : <>Make it official — <strong>annual membership is $19</strong> for the year.</>}
+              : <>Make it official — <strong>annual membership is $20</strong> for the year.</>}
           </p>
         </div>
 
@@ -317,11 +317,11 @@ export default function SignupForm() {
           {founding?.open ? "Or become a member:" : "How would you like to join?"}
         </p>
 
-        {/* Contribution amount — $19 base; $50+ earns a Pack Leader badge. */}
+        {/* Contribution amount — $20 base; $50+ earns a Pack Leader badge. */}
         <div className="rounded-xl border border-line/15 bg-card/40 p-4">
           <p className="text-center text-sm font-medium text-ink/80">Choose your contribution</p>
           <div className="mt-3 grid grid-cols-4 gap-2">
-            {[1900, 5000, 10000].map((c) => (
+            {[2000, 5000, 10000].map((c) => (
               <button
                 key={c} type="button" onClick={() => pickAmount(c)}
                 className={`rounded-lg border px-2 py-2 text-sm font-semibold transition ${

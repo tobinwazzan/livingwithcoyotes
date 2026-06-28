@@ -223,7 +223,7 @@ export async function claimFounding(
   }
   if (result === "full") {
     await logFunnel("invalid", { signupId, meta: { reason: "founding_full" } });
-    return { ok: false, status: "full", message: "All founding spots are taken — you can still join for $19." };
+    return { ok: false, status: "full", message: "All founding spots are taken — you can still join for $20." };
   }
   if (result === "not_found") {
     await logFunnel("invalid", { signupId, meta: { reason: "founding_not_found" } });
