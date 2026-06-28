@@ -18,16 +18,6 @@ export type LeadState = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const FREE_EMAIL_DOMAINS = new Set([
-  "gmail.com", "yahoo.com", "ymail.com", "hotmail.com", "outlook.com",
-  "live.com", "msn.com", "icloud.com", "me.com", "mac.com", "aol.com",
-  "proton.me", "protonmail.com", "gmx.com", "comcast.net", "sbcglobal.net",
-  "att.net", "verizon.net", "cox.net", "pacbell.net",
-]);
-
-const VALID_ROLES = new Set([
-  "resident", "municipality", "expert", "partner", "other",
-]);
 const digits = (s: string) => s.replace(/\D/g, "");
 
 // A contribution is at least $19 (the membership) and at most $10,000 (sanity cap).
@@ -66,7 +56,9 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     }
   }
 
-  const role = String(formData.get("role") ?? "").trim();
+  // Public sign-up is residents/citizens only — officials & experts join by
+  // invitation (honorary/council codes). Never trust a client-supplied role.
+  const role = "resident";
   const fullName = String(formData.get("full_name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
@@ -95,29 +87,12 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     return { status: "error", message };
   };
 
-  if (!VALID_ROLES.has(role)) return invalid("role", "Please tell us how you're joining.");
   if (fullName.length < 2) return invalid("name", "Please enter your full name.");
   if (digits(phone).length < 10) return invalid("phone", "Please enter a valid phone number.");
   if (!EMAIL_RE.test(email)) return invalid("email", "Please enter a valid email address.");
   if (city.length < 2) return invalid("city", "Please enter your city.");
   if (String(formData.get("agree_terms") ?? "") !== "yes")
     return invalid("agree_terms", "Please agree to the Terms, Privacy Policy, and Release of Liability to continue.");
-
-  const domain = email.split("@")[1]?.toLowerCase() ?? "";
-  if (role === "municipality") {
-    if (FREE_EMAIL_DOMAINS.has(domain)) {
-      return invalid("muni_free_email", "City officials must sign up with an official government email (e.g., name@cityofirvine.org), not a personal address.");
-    }
-    const citySlug = city.toLowerCase().replace(/[^a-z]/g, "");
-    const domainCore = domain.replace(/\.[a-z.]+$/, "");
-    const looksGov = domain.endsWith(".gov") || domainCore.includes(citySlug);
-    if (!looksGov) {
-      return invalid("muni_not_gov", `Please use your official ${city} government email so we can verify your role (e.g., name@cityof${citySlug}.org).`);
-    }
-  }
-  if (role === "expert" && !/^https?:\/\/.+\..+/i.test(linkedin)) {
-    return invalid("expert_url", "Please add a link to your LinkedIn or professional website (starting with https://).");
-  }
 
   const { data, error } = await db.rpc("create_membership_lead", {
     p_role: role, p_full_name: fullName, p_phone: phone, p_email: email,

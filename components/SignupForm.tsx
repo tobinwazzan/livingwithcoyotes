@@ -102,7 +102,6 @@ function ContinueButton() {
 
 export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
-  const [role, setRole] = useState("");
   const [phone, setPhone] = useState("");
 
   // Supporters-wall opt-in + optional photo (uploaded to the public avatars bucket).
@@ -485,22 +484,9 @@ export default function SignupForm() {
           className="absolute left-[-9999px] h-0 w-0 opacity-0"
         />
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ink/80">
-            I&apos;m joining as <span className="text-clay">*</span>
-          </label>
-          <select
-            name="role" required value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className={inputCls + " text-ink/90"}
-          >
-            <option value="" disabled>Choose one …</option>
-            <option value="resident">Resident / citizen</option>
-            <option value="municipality">Municipality / city official</option>
-            <option value="expert">Expert / Industry Professional</option>
-            <option value="other">Other / Just interested</option>
-          </select>
-        </div>
+        {/* Public sign-up is residents/citizens only. Officials & experts join
+            by invitation (honorary/council codes). Role is fixed server-side too. */}
+        <input type="hidden" name="role" value="resident" />
 
         <div className="grid gap-4 sm:grid-cols-2">
           <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" className={inputCls} />
@@ -515,25 +501,11 @@ export default function SignupForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           <input
             type="email" name="email" required
-            placeholder={role === "municipality" ? "Official government email *" : "Email *"}
+            placeholder="Email *"
             aria-label="Email address" className={inputCls}
           />
           <input type="text" name="city" required placeholder="City *" aria-label="City of residence" className={inputCls} />
         </div>
-
-        {role === "municipality" && (
-          <p className="-mt-1 text-xs text-ink/60">
-            Use your official city/government email (e.g., name@cityofirvine.org) so we can verify your role.
-          </p>
-        )}
-
-        {role === "expert" && (
-          <input
-            type="url" name="linkedin" required
-            placeholder="LinkedIn or professional website *"
-            aria-label="LinkedIn or professional website" className={inputCls}
-          />
-        )}
 
         <fieldset className="rounded-lg border border-line/15 bg-card/40 p-4">
           <legend className="px-1 text-sm font-medium text-ink/80">
