@@ -11,14 +11,17 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/about",
     children: [{ label: "Charter", href: "/charter" }],
   },
-  { label: "Membership", href: "/membership" },
+  {
+    label: "Membership",
+    href: "/membership",
+    children: [{ label: "The Pack", href: "/pack" }],
+  },
   {
     label: "Resources",
     href: "/resources",
     children: [
       { label: "Report", href: "/report" },
       { label: "Coyote Q&A", href: "/faq" },
-      { label: "The Pack", href: "/pack" },
     ],
   },
   { label: "Contact", href: "/contact" },
