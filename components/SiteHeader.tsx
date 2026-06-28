@@ -87,6 +87,9 @@ export default function SiteHeader() {
               </Link>
             );
           })}
+          <Link href="/login" className={`${linkBase} ${linkColor}`}>
+            Sign in
+          </Link>
           <ThemeToggle
             className={
               solid
@@ -145,6 +148,12 @@ export default function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              href="/login"
+              className="border-b border-line/5 py-3 text-base font-medium text-ink/80"
+            >
+              Sign in
+            </Link>
             <Link
               href={JOIN_HREF}
               className="mt-3 rounded-lg bg-clay px-4 py-3 text-center font-semibold text-sand"

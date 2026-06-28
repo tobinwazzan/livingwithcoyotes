@@ -58,10 +58,20 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
+  const path = req.nextUrl.pathname;
+
+  // /admin now lives only on admin.livingwithcoyotes.org — bounce the apex there.
+  // (Held until the subdomain was confirmed serving, so nobody got locked out.)
+  if (hostname === "livingwithcoyotes.org" && path.startsWith("/admin")) {
+    return NextResponse.redirect(
+      `https://admin.livingwithcoyotes.org${path}${req.nextUrl.search}`,
+      308,
+    );
+  }
+
   // Member auth: refresh the Supabase session cookie on member/auth paths so
   // server reads stay valid. Scoped to these paths so public pages skip the
   // per-request auth round-trip.
-  const path = req.nextUrl.pathname;
   if (path === "/login" || path.startsWith("/account") || path.startsWith("/auth")) {
     const res = NextResponse.next({ request: req });
     const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
