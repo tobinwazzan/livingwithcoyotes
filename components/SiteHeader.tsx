@@ -6,12 +6,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NAV_ITEMS, JOIN_HREF } from "@/lib/nav";
 import ThemeToggle from "@/components/ThemeToggle";
+import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
+import { getHeaderUser } from "@/app/account/actions";
+
+type Auth = { signedIn: boolean; firstName: string | null };
 
 export default function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [auth, setAuth] = useState<Auth | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -19,6 +24,26 @@ export default function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Reflect sign-in state in the header. Check the session cookie locally first
+  // (no network for signed-out visitors), then fill in the name from the server.
+  useEffect(() => {
+    let ok = true;
+    getSupabaseBrowser()
+      .auth.getSession()
+      .then(({ data }) => {
+        if (!ok) return;
+        if (data.session) {
+          setAuth({ signedIn: true, firstName: null });
+          getHeaderUser().then((r) => ok && setAuth(r));
+        } else {
+          setAuth({ signedIn: false, firstName: null });
+        }
+      });
+    return () => {
+      ok = false;
+    };
+  }, [pathname]);
 
   // Close the mobile menu whenever the route changes.
   useEffect(() => setOpen(false), [pathname]);
@@ -87,9 +112,15 @@ export default function SiteHeader() {
               </Link>
             );
           })}
-          <Link href="/login" className={`${linkBase} ${linkColor}`}>
-            Sign in
-          </Link>
+          {auth?.signedIn ? (
+            <Link href="/account" className={`${linkBase} ${linkColor}`}>
+              {auth.firstName || "Account"}
+            </Link>
+          ) : auth ? (
+            <Link href="/login" className={`${linkBase} ${linkColor}`}>
+              Sign in
+            </Link>
+          ) : null}
           <ThemeToggle
             className={
               solid
@@ -149,10 +180,10 @@ export default function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/login"
+              href={auth?.signedIn ? "/account" : "/login"}
               className="border-b border-line/5 py-3 text-base font-medium text-ink/80"
             >
-              Sign in
+              {auth?.signedIn ? auth.firstName || "Account" : "Sign in"}
             </Link>
             <Link
               href={JOIN_HREF}
