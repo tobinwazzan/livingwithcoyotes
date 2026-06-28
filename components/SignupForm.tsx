@@ -610,7 +610,7 @@ export default function SignupForm() {
           <span>
             I&apos;m 18 or older and I agree to the{" "}
             <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
-              Terms of Service
+              Terms of Use
             </a>
             ,{" "}
             <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">

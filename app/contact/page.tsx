@@ -93,6 +93,23 @@ export default function ContactPage() {
             </a>
           </div>
         </Reveal>
+
+        <Reveal>
+          <p className="mt-8 text-center text-sm text-ink/60">
+            The fine print:{" "}
+            <Link href="/terms" className="text-clay hover:underline">
+              Terms of Use
+            </Link>{" "}
+            ·{" "}
+            <Link href="/privacy" className="text-clay hover:underline">
+              Privacy Policy
+            </Link>{" "}
+            ·{" "}
+            <Link href="/liability" className="text-clay hover:underline">
+              Release of Liability
+            </Link>
+          </p>
+        </Reveal>
       </section>
     </main>
   );

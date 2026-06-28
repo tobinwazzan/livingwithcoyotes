@@ -4,7 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "Terms of Service",
+  title: "Terms of Use",
   description:
     "The terms for using livingwithcoyotes.org and joining the Coyote Coexistence Council — membership, contributions, acceptable use, content, and the legal terms.",
 };
@@ -26,8 +26,8 @@ export default function TermsPage() {
   return (
     <main>
       <PageHeader
-        eyebrow="Terms of Service"
-        title="Terms of Service"
+        eyebrow="Terms of Use"
+        title="Terms of Use"
         subtitle="The plain-language agreement for using this site and joining the Council. Please read it before you join."
       />
 
@@ -42,7 +42,7 @@ export default function TermsPage() {
 
         <Section title="1. Who these terms are between">
           <p>
-            These Terms of Service (&ldquo;Terms&rdquo;) are an agreement between
+            These Terms of Use (&ldquo;Terms&rdquo;) are an agreement between
             you and the <strong>Coyote Coexistence Council</strong>{" "}
             (&ldquo;CCC,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;), which operates{" "}
             livingwithcoyotes.org (the &ldquo;Site&rdquo;).{" "}

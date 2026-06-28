@@ -114,7 +114,7 @@ export default function LiabilityPage() {
             Released Parties from claims arising out of your own actions, your
             content, or your violation of our{" "}
             <Link href="/terms" className="text-clay hover:underline">
-              Terms of Service
+              Terms of Use
             </Link>
             .{" "}
             <em>
@@ -138,7 +138,7 @@ export default function LiabilityPage() {
           <p>
             This page is part of, and incorporated into, our{" "}
             <Link href="/terms" className="text-clay hover:underline">
-              Terms of Service
+              Terms of Use
             </Link>
             . How we handle your information is covered by our{" "}
             <Link href="/privacy" className="text-clay hover:underline">
