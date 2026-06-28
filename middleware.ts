@@ -6,7 +6,7 @@ import { createServerClient } from "@supabase/ssr";
 const MAINTENANCE = false;
 
 // Assets the maintenance page itself needs are allowed through.
-const ALLOW = new Set(["/logo-ccc.png", "/favicon.ico"]);
+const ALLOW = new Set(["/logo-ccc.png", "/favicon.ico", "/unlock"]);
 
 // Preview bypass: visiting any URL with ?preview=<token> sets a cookie that lets
 // that browser through the wall (so we can build/test while the public stays down).
