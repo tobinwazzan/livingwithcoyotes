@@ -18,7 +18,7 @@ export async function adminLogin(_prev: LoginState, formData: FormData): Promise
       secure: true,
       sameSite: "lax",
       path: "/", // works at /admin on the main domain AND at the admin subdomain root
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 365, // 1 year — type the password rarely
     });
   }
   redirect("/admin");
