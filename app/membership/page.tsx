@@ -4,23 +4,23 @@ import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "Membership",
+  title: "Support",
   description:
-    "Why join the Coyote Coexistence Council — help shape your city's coyote plan and stand with neighbors turning worry into a coordinated, evidence-first response.",
+    "The Coyote Coexistence Council is free to join — resources, trainings, and neighborhood alerts at no cost. Contributions from people who can give keep it that way.",
 };
 
 const why = [
   {
-    title: "The work is real, and it isn't free",
-    body: "Hosting the tools, producing plain-language guides, standing up neighborhood hazing programs, and handing cities a turnkey package all cost time and money. Membership funds it directly.",
+    title: "Free for everyone",
+    body: "Register and you get the full resource library, the trainings, and the neighborhood alerts — no paywall, no catch. Safety information is never behind a fee.",
   },
   {
-    title: "Members are the mandate",
-    body: "A city listens when its residents organize. Every member is a signal — grouped by city — that coexistence has real local demand behind it.",
+    title: "Your contribution is the engine",
+    body: "Hosting the tools, producing the guides, and running the alert service cost real money. Contributions cover it — so it stays free for the next neighbor.",
   },
   {
-    title: "Accountable, not just well-meaning",
-    body: "Your dues fund an evidence-first effort that measures whether conflict actually goes down — and says so when it doesn't.",
+    title: "The Pack",
+    body: "Chip in and you're part of the Pack — on the supporters wall if you choose, a certificate, and a Pack Leader badge at $50+.",
   },
 ];
 
@@ -31,7 +31,7 @@ const offers = [
   },
   {
     title: "You keep it free for everyone",
-    body: "Your dues fund the guidance, videos, and tools the Council gives away — free for every resident in your city, member or not.",
+    body: "Your contribution funds the guidance, videos, and tools the Council gives away — free for every resident, registered or not.",
   },
   {
     title: "Tools as they launch",
@@ -55,9 +55,9 @@ export default function MembershipPage() {
   return (
     <main>
       <PageHeader
-        eyebrow="Membership"
-        title="Help shape the plan"
-        subtitle="Be proactive, not reactive — stand with the neighbors turning worry into a coordinated, evidence-first response, before the next scare instead of after."
+        eyebrow="Support"
+        title="Free to join. Kept alive by the Pack."
+        subtitle="Anyone can register and get everything — guidance, trainings, alerts — for free. Contributions from people who can give are what keep it that way."
       />
 
       {/* Top CTA — join without scrolling */}
@@ -74,7 +74,7 @@ export default function MembershipPage() {
       <section className="mx-auto max-w-5xl px-6 py-16">
         <Reveal>
           <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
-            Why membership matters
+            Why support the Council
           </h2>
         </Reveal>
         <div className="mt-10 grid gap-6 sm:grid-cols-3">
@@ -96,10 +96,10 @@ export default function MembershipPage() {
         <div className="mx-auto max-w-5xl px-6">
           <Reveal>
             <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
-              What your membership offers
+              What your support makes possible
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-ink/70">
-              Everything you get when you stand up for your neighborhood.
+              What everyone gets — and what your contribution keeps free.
             </p>
           </Reveal>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

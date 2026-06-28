@@ -285,36 +285,31 @@ export default function SignupForm() {
       <div className="space-y-5">
         <StickySteps current={2} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
-          <p className="text-lg font-semibold text-heading">You&apos;re on the list. ✅</p>
+          <p className="text-lg font-semibold text-heading">You&apos;re registered. ✅</p>
           <p className="mt-1 text-ink/80">
-            {founding?.open
-              ? "You're early — claim a free Founding Membership below, while spots last."
-              : <>Make it official — <strong>annual membership is $20</strong> for the year.</>}
+            That&apos;s everything — resources, trainings, and alerts — at no cost.
+            If you&apos;d like to help keep it going, add a contribution below.
           </p>
         </div>
 
-        {/* Founding offer — first 100 free */}
+        {/* Free is the default — confirm and you're done. */}
         {founding?.open && (
-          <div className="rounded-xl border-2 border-clay/50 bg-clay/5 p-5 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-clay">
-              Founding Members
-            </p>
-            <p className="mt-1 text-lg font-bold text-heading">The first 100 join free</p>
+          <div className="rounded-xl border-2 border-clay/40 bg-clay/5 p-5 text-center">
+            <p className="text-lg font-bold text-heading">Stay free — you&apos;re all set</p>
             <p className="mt-1 text-sm text-ink/75">
-              <strong>{founding.count} of {founding.cap}</strong> claimed
-              {" · "}{founding.remaining} {founding.remaining === 1 ? "spot" : "spots"} left
+              No payment, ever, for the resources, trainings, and alerts.
             </p>
             <button
               type="button" onClick={claimFoundingNow} disabled={busy}
               className="mt-4 w-full rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark disabled:opacity-60 sm:w-auto"
             >
-              {busy ? "Claiming…" : "Claim my free Founding Membership"}
+              {busy ? "Confirming…" : "I'm in for free →"}
             </button>
           </div>
         )}
 
         <p className="text-center text-sm font-medium text-ink/70">
-          {founding?.open ? "Or become a member:" : "How would you like to join?"}
+          Or chip in to support the work:
         </p>
 
         {/* Contribution amount — $20 base; $50+ earns a Pack Leader badge. */}

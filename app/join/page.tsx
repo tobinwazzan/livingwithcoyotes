@@ -6,7 +6,7 @@ import SignupForm from "@/components/SignupForm";
 export const metadata: Metadata = {
   title: "Join",
   description:
-    "Join the Coyote Coexistence Council. Tell us your city and how you'd like to help shape your neighborhood's coyote plan.",
+    "Join the Coyote Coexistence Council — free. Registering gets you the resources, trainings, and neighborhood alerts at no cost. Contribute if you can, to keep it going.",
 };
 
 const reasons = [
@@ -20,7 +20,7 @@ const reasons = [
   },
   {
     title: "Accountable to results",
-    body: "We measure whether conflict actually goes down, and we say so when it doesn't. Your membership funds an evidence-first effort.",
+    body: "We measure whether conflict actually goes down, and we say so when it doesn't. Contributions fund an evidence-first effort — and registering is always free.",
   },
 ];
 
@@ -29,9 +29,9 @@ export default function JoinPage() {
     <main>
       <PageHeader
         sticky
-        eyebrow="Join"
+        eyebrow="Join free"
         title="Be part of the plan"
-        subtitle="Tell us your city and how you'd like to help shape your neighborhood's coyote plan."
+        subtitle="Registering is free, and always will be — your city, your voice, the resources, and the alerts. If you can, add a contribution to keep it all running."
       />
 
       {/* Why join */}
