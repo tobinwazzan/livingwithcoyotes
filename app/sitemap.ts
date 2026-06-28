@@ -18,6 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact", priority: 0.6 },
     { path: "/join", priority: 0.9 },
     { path: "/privacy", priority: 0.3 },
+    { path: "/terms", priority: 0.3 },
+    { path: "/liability", priority: 0.3 },
   ];
   return routes.map((r) => ({
     url: `${BASE}${r.path}`,

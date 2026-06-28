@@ -71,6 +71,12 @@ export default function LoginForm() {
       <p className="mt-4 text-center text-xs text-ink/55">
         No passwords. We email you a secure one-time link.
       </p>
+      <p className="mt-3 text-center text-xs text-ink/45">
+        By continuing, you agree to our{" "}
+        <a href="/terms" className="hover:text-clay hover:underline">Terms</a>,{" "}
+        <a href="/privacy" className="hover:text-clay hover:underline">Privacy Policy</a>, and{" "}
+        <a href="/liability" className="hover:text-clay hover:underline">Release of Liability</a>.
+      </p>
     </form>
   );
 }

@@ -599,6 +599,31 @@ export default function SignupForm() {
           <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
         </div>
 
+        <label className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/75">
+          <input
+            type="checkbox"
+            name="agree_terms"
+            value="yes"
+            required
+            className="mt-1 h-4 w-4 shrink-0 accent-clay"
+          />
+          <span>
+            I&apos;m 18 or older and I agree to the{" "}
+            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
+              Terms of Service
+            </a>
+            ,{" "}
+            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
+              Privacy Policy
+            </a>
+            , and{" "}
+            <a href="/liability" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
+              Release of Liability
+            </a>
+            .
+          </span>
+        </label>
+
         {state.status === "error" && (
           <p className="text-sm text-clay" role="alert">{state.message}</p>
         )}

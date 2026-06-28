@@ -100,6 +100,8 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   if (digits(phone).length < 10) return invalid("phone", "Please enter a valid phone number.");
   if (!EMAIL_RE.test(email)) return invalid("email", "Please enter a valid email address.");
   if (city.length < 2) return invalid("city", "Please enter your city.");
+  if (String(formData.get("agree_terms") ?? "") !== "yes")
+    return invalid("agree_terms", "Please agree to the Terms, Privacy Policy, and Release of Liability to continue.");
 
   const domain = email.split("@")[1]?.toLowerCase() ?? "";
   if (role === "municipality") {

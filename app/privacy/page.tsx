@@ -82,6 +82,16 @@ export default function PrivacyPage() {
             your receipt.
           </p>
           <p>
+            <strong>Things you create as a member.</strong> If you use member
+            features, we store what you submit: coyote <strong>reports</strong> (a
+            coarse location — city and general area, never your exact address —
+            plus the details you provide); your private{" "}
+            <strong>reflections</strong> (the &ldquo;Steelman Mirror&rdquo; — where
+            you lean, how certain you are, and what you write); and, only if you
+            choose, an opt-in <strong>name, city, and photo</strong> for The Pack
+            wall.
+          </p>
+          <p>
             <strong>Payment information.</strong> Card payments are processed
             securely by <strong>Stripe</strong>. We never receive or store your
             full card number. For Venmo or Zelle, we only see the receipt you
@@ -129,7 +139,15 @@ export default function PrivacyPage() {
               • <strong>Supabase</strong> — our secure database and file storage.
             </li>
             <li>• <strong>Vercel</strong> — website hosting.</li>
-            <li>• <strong>Google Workspace</strong> — our email.</li>
+            <li>
+              • <strong>Resend</strong> — sending our emails (welcome notes and
+              sign-in links).
+            </li>
+            <li>
+              • <strong>Cloudflare</strong> — DNS and bot protection (the
+              verification check on our forms).
+            </li>
+            <li>• <strong>Google Workspace</strong> — our staff email.</li>
           </ul>
           <p>
             These providers process data on our behalf and aren&apos;t permitted
@@ -168,7 +186,54 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
+        <Section title="Your reflections, and research use">
+          <p>
+            The Steelman Mirror is a <strong>private</strong> space. Your
+            reflections — where you lean, your certainty, and what you write — are{" "}
+            <strong>never shown publicly or to other members</strong> unless you
+            explicitly choose to share them.
+          </p>
+          <p>
+            We may review reflections in <strong>anonymized and aggregate</strong>{" "}
+            form to understand how thinking shifts over time, and the Council may
+            publish such de-identified, aggregate findings. We will not publish
+            content that identifies you without your consent.{" "}
+            <em>
+              [If formal research or publication is planned, obtain explicit opt-in
+              consent and confirm whether IRB review applies — counsel/ethics to
+              advise.]
+            </em>
+          </p>
+        </Section>
+
+        <Section title="The Pack & photos">
+          <p>
+            The Pack supporters wall is{" "}
+            <strong>opt-in and anonymous by default</strong>. Nothing about you
+            appears there unless you choose it. If you opt in, only the display you
+            select is shown — first name or full name, your city, and an optional
+            photo — never your email, phone, or contribution amount. You can change
+            or remove your Pack display at any time by emailing us.
+          </p>
+        </Section>
+
+        <Section title="Your California privacy rights">
+          <p>
+            If you&apos;re a California resident, you have the right to know what
+            personal information we hold, to request a copy, to ask us to correct
+            or delete it, and to not be treated differently for exercising these
+            rights. <strong>We do not sell or share your personal information</strong>{" "}
+            for advertising. To make a request, email{" "}
+            <a href={`mailto:${EMAIL}`} className="text-clay hover:underline">
+              {EMAIL}
+            </a>
+            ; we may need to verify your identity first.{" "}
+            <em>[Confirm CCPA/CPRA applicability and exact rights language with counsel.]</em>
+          </p>
+        </Section>
+
         <Section title="Children">
+
           <p>
             The site is intended for adults and isn&apos;t directed to children
             under 13, and we don&apos;t knowingly collect their information.
@@ -198,7 +263,7 @@ export default function PrivacyPage() {
 
         <Reveal>
           <p className="mt-12 text-sm text-ink/50">
-            Effective June 24, 2026.
+            Effective June 28, 2026 · Draft pending legal review.
           </p>
         </Reveal>
       </div>

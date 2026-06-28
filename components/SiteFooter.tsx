@@ -64,6 +64,14 @@ export default function SiteFooter() {
           <Link href="/privacy" className="transition-colors hover:text-sand">
             Privacy
           </Link>{" "}
+          ·{" "}
+          <Link href="/terms" className="transition-colors hover:text-sand">
+            Terms
+          </Link>{" "}
+          ·{" "}
+          <Link href="/liability" className="transition-colors hover:text-sand">
+            Disclaimers
+          </Link>{" "}
           · livingwithcoyotes.org
         </div>
       </div>
