@@ -5,7 +5,10 @@ import Reveal from "@/components/Reveal";
 import { supabase } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
+// Always reflect the live shared list — never serve a cached copy.
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 export const metadata: Metadata = {
   title: "Wall of Understanding",
   description:
