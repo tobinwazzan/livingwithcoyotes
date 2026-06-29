@@ -3,7 +3,7 @@
 import { supabase } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { stripe } from "@/lib/stripe";
-import { MEMBERSHIP_CENTS, cardTotalCents, FOUNDING_CAP } from "@/lib/membership";
+import { MEMBERSHIP_CENTS, cardTotalCents } from "@/lib/membership";
 import { sendWelcomeIfClaimed } from "@/lib/email";
 import { logFunnel } from "@/lib/funnel";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -223,13 +223,6 @@ export async function claimFounding(
   return { ok: true, status: String(result), message: "You're a Founding Member — welcome aboard!" };
 }
 
-// Live founding count for the "X of 100 claimed" badge.
-export async function foundingStatus(): Promise<{ count: number; cap: number; remaining: number; open: boolean }> {
-  const { data } = await db.rpc("founding_count");
-  const count = typeof data === "number" ? data : 0;
-  const remaining = Math.max(0, FOUNDING_CAP - count);
-  return { count, cap: FOUNDING_CAP, remaining, open: remaining > 0 };
-}
 
 // Step 2c — start a Stripe Checkout session ($19 + card fee). Returns a URL.
 export async function startCheckout(

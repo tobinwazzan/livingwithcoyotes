@@ -169,7 +169,7 @@ export default async function AdminPage() {
         <Stat label="Total signups" value={members.length} />
         <Stat label="Paid / active" value={active.length} sub={dollars(revenue) + " collected"} />
         <Stat label="Leads (unpaid)" value={members.length - active.length} />
-        <Stat label="Founding members" value={`${founding.length} / 100`} sub={`${Math.max(0, 100 - founding.length)} free spots left`} />
+        <Stat label="Free members" value={founding.length} />
       </div>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-3">

@@ -1,9 +1,6 @@
 // Contribution & payment config.
 export const MEMBERSHIP_CENTS = 2000; // $20 / year, the amount CCC nets.
 
-// Founding offer: the first 100 members join free. After the cap, $20 resumes.
-export const FOUNDING_CAP = 100;
-
 // Cloudflare Turnstile public site key (safe in the browser). The secret key
 // lives only in Vercel env (TURNSTILE_SECRET_KEY) and is read server-side.
 export const TURNSTILE_SITE_KEY = "0x4AAAAAADqxyv8l9VxYhURV";
