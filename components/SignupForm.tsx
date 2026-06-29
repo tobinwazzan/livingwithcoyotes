@@ -89,18 +89,26 @@ function StickySteps({ current, top }: { current: number; top: number }) {
   );
 }
 
-function ContinueButton() {
+function ContinueButton({ disabled = false, label }: { disabled?: boolean; label: string }) {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark disabled:opacity-60"
     >
-      {pending ? "One moment…" : "Join the Council →"}
+      {pending ? "One moment…" : label}
     </button>
   );
 }
+
+// Minimal shape of the global Cloudflare Turnstile API we use.
+type TurnstileApi = {
+  render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+  remove: (id: string) => void;
+};
+const getTurnstile = () =>
+  (window as unknown as { turnstile?: TurnstileApi }).turnstile;
 
 const ROLES: { key: string; label: string; desc: string }[] = [
   { key: "resident", label: "Active listener", desc: "You live here and want to stay informed and have a say." },
@@ -148,6 +156,46 @@ export default function SignupForm() {
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const goBack = () => setStep((s) => Math.max(1, s - 1));
+
+  // Cloudflare Turnstile — render it explicitly the moment the user reaches
+  // screen 3, so the widget always initializes while VISIBLE. (A widget mounted
+  // inside a display:none step never issues a token — that was the cause of the
+  // silent "Join the Council" failure: the server's human-check gate rejected an
+  // empty token before it could reach the duplicate-email / sign-in branch.)
+  // The token is held in state and the submit button stays disabled until it
+  // arrives, so a missing token can no longer produce a silent dead-click.
+  const [tsToken, setTsToken] = useState("");
+  const tsRef = useRef<HTMLDivElement>(null);
+  const tsWidgetId = useRef<string | null>(null);
+  useEffect(() => {
+    if (step !== 3) return;
+    let cancelled = false;
+    const render = () => {
+      if (cancelled) return;
+      const ts = getTurnstile();
+      if (ts && tsRef.current && tsWidgetId.current === null) {
+        tsWidgetId.current = ts.render(tsRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          theme: "auto",
+          callback: (token: string) => setTsToken(token),
+          "expired-callback": () => setTsToken(""),
+          "error-callback": () => setTsToken(""),
+        });
+      } else if (!ts) {
+        window.setTimeout(render, 200); // API still loading — retry shortly.
+      }
+    };
+    render();
+    return () => {
+      cancelled = true;
+      const ts = getTurnstile();
+      if (ts && tsWidgetId.current !== null) {
+        try { ts.remove(tsWidgetId.current); } catch { /* already gone */ }
+      }
+      tsWidgetId.current = null;
+      setTsToken("");
+    };
+  }, [step]);
 
   // Measure the sticky dark header so the progress line can pin right beneath it.
   const [headerH, setHeaderH] = useState(0);
@@ -546,6 +594,10 @@ export default function SignupForm() {
         {meta.blurb}
       </p>
 
+      {/* Load the Turnstile API up front so it's ready by screen 3, where the
+          widget is rendered explicitly (see the effect above). */}
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+
       <form action={formAction} className="space-y-4">
         {/* Attribution (filled client-side) — invisible to the user. */}
         <input type="hidden" name="source" value={attr.source} />
@@ -643,10 +695,10 @@ export default function SignupForm() {
             </div>
           </fieldset>
 
-          {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}
-          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+          {/* Cloudflare Turnstile — human check (stops scripted abuse). Rendered
+              explicitly via the effect above so it always initializes visible. */}
           <div className="flex justify-center">
-            <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
+            <div ref={tsRef} />
           </div>
 
           <label className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/75">
@@ -699,7 +751,17 @@ export default function SignupForm() {
               Continue →
             </button>
           ) : (
-            <ContinueButton />
+            <div className="flex flex-col items-end gap-1.5">
+              <ContinueButton
+                disabled={!tsToken}
+                label={tsToken ? "Join the Council →" : "Verifying you're human…"}
+              />
+              {!tsToken && (
+                <span className="text-xs text-ink/45">
+                  One moment — finishing the quick human check above.
+                </span>
+              )}
+            </div>
           )}
         </div>
       </form>
