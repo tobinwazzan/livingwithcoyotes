@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {
   submitLead, redeemCode, recordManual, startCheckout, logClientIssue,
@@ -31,9 +31,10 @@ function formatPhone(value: string) {
   return "";
 }
 
-// Gamified progress: the three steps shown on a straight line above the form.
-const STEPS = ["Register", "Done"];
-function Stepper({ current }: { current: 1 | 2 }) {
+// Gamified progress: one node per screen, on a straight line above the form.
+// Three input screens (Role → Contact → Details), then Done.
+const STEPS = ["Role", "Contact", "Details", "Done"];
+function Stepper({ current }: { current: number }) {
   return (
     <ol className="flex items-center justify-center gap-2 sm:gap-3" aria-label="Progress">
       {STEPS.map((label, i) => {
@@ -76,7 +77,7 @@ function Stepper({ current }: { current: 1 | 2 }) {
 
 // The progress line pinned just beneath the sticky dark header (top = its height,
 // measured at runtime). bg-panel matches the form section so content scrolls under.
-function StickySteps({ current, top }: { current: 1 | 2; top: number }) {
+function StickySteps({ current, top }: { current: number; top: number }) {
   return (
     <div
       className="sticky z-30 -mx-6 mb-6 border-b border-line/10 bg-panel px-6 py-3"
@@ -95,7 +96,7 @@ function ContinueButton() {
       disabled={pending}
       className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark disabled:opacity-60"
     >
-      {pending ? "One moment…" : "Continue"}
+      {pending ? "One moment…" : "Join the Council →"}
     </button>
   );
 }
@@ -109,6 +110,13 @@ const ROLES: { key: string; label: string; desc: string }[] = [
   { key: "other", label: "Other", desc: "A role you'd invent — describe it below." },
 ];
 
+// One title + orienting line per wizard screen.
+const STEP_META = [
+  { title: "Choose your role", blurb: "Pick any that fit — you can change this anytime." },
+  { title: "Your contact information", blurb: "So we can reach you and route you to your city." },
+  { title: "A few more details", blurb: "Last step — then you're in." },
+];
+
 export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
   const [phone, setPhone] = useState("");
@@ -116,6 +124,29 @@ export default function SignupForm() {
   const [roles, setRoles] = useState<string[]>(["resident"]);
   const toggleRole = (k: string) =>
     setRoles((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
+
+  // Wizard: one screen per section (1 = Role, 2 = Contact, 3 = Details).
+  const TOTAL = 3;
+  const [step, setStep] = useState(1);
+  const stepRefs = [
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+  ];
+  // Validate the current screen's required fields before moving on, so nobody
+  // reaches the end and bounces back to an empty box.
+  const goNext = () => {
+    const invalid = stepRefs[step - 1].current?.querySelector<HTMLInputElement>(
+      "input:invalid, select:invalid, textarea:invalid",
+    );
+    if (invalid) {
+      invalid.reportValidity();
+      return;
+    }
+    setStep((s) => Math.min(TOTAL, s + 1));
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const goBack = () => setStep((s) => Math.max(1, s - 1));
 
   // Measure the sticky dark header so the progress line can pin right beneath it.
   const [headerH, setHeaderH] = useState(0);
@@ -182,7 +213,7 @@ export default function SignupForm() {
     const sid = state.signupId;
     return (
       <div>
-        <StickySteps current={2} top={headerH} />
+        <StickySteps current={4} top={headerH} />
         <div className="rounded-2xl border border-line/30 bg-card/60 p-6 sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-clay">
             You&apos;re in
@@ -234,7 +265,7 @@ export default function SignupForm() {
   if (state.status === "already_member") {
     return (
       <div>
-        <StickySteps current={2} top={headerH} />
+        <StickySteps current={4} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re already a member 🎉</p>
           <p className="mt-1 text-ink/80">
@@ -317,7 +348,7 @@ export default function SignupForm() {
 
     return (
       <div className="space-y-5">
-        <StickySteps current={2} top={headerH} />
+        <StickySteps current={4} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re registered. ✅</p>
           <p className="mt-1 text-ink/80">
@@ -489,15 +520,16 @@ export default function SignupForm() {
     );
   }
 
-  // ---------- PHASE 1: the info form ----------
+  // ---------- PHASE 1: the info form, one screen per section ----------
+  const meta = STEP_META[step - 1];
   return (
     <div>
-      <StickySteps current={1} top={headerH} />
+      <StickySteps current={step} top={headerH} />
       <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
-        Tell us about you
+        {meta.title}
       </h2>
       <p className="mx-auto mb-8 mt-3 max-w-md text-balance text-center text-ink/75">
-        So we can stay in touch.
+        {meta.blurb}
       </p>
 
       <form action={formAction} className="space-y-4">
@@ -519,122 +551,143 @@ export default function SignupForm() {
           className="absolute left-[-9999px] h-0 w-0 opacity-0"
         />
 
-        {/* ── 1 · Choose your role ── */}
-        <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
-          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-clay">
-            1 · Choose your role
-          </legend>
-          <p className="text-xs text-ink/60">
-            Pick any that fit — all that interest you. Roles are by interest; the
-            privileged ones are confirmed later.
-          </p>
-          <div className="mt-3 space-y-2.5">
-            {ROLES.map((r) => (
-              <label key={r.key} className="flex cursor-pointer gap-2.5">
-                <input
-                  type="checkbox" name="roles" value={r.key}
-                  checked={roles.includes(r.key)}
-                  onChange={() => toggleRole(r.key)}
-                  className="mt-1 h-4 w-4 shrink-0 accent-clay"
-                />
-                <span>
-                  <span className="block text-sm font-medium text-ink/90">{r.label}</span>
-                  <span className="block text-xs text-ink/55">{r.desc}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-          {roles.includes("other") && (
-            <input
-              type="text" name="role_other" maxLength={60}
-              placeholder="Describe the role you'd like to play"
-              aria-label="Describe your role"
-              className={inputCls + " mt-3"}
-            />
-          )}
-        </fieldset>
+        {/* All three screens stay mounted (so every field submits together) —
+            only the current one is shown. */}
 
-        {/* ── 2 · Contact information ── */}
-        <fieldset className="space-y-4 rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
-          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-clay">
-            2 · Contact information
-          </legend>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" autoComplete="name" className={inputCls} />
-            <input
-              type="tel" name="phone" required value={phone}
-              onChange={(e) => setPhone(formatPhone(e.target.value))}
-              inputMode="numeric" maxLength={14} autoComplete="tel"
-              placeholder="(555) 555-5555 *" aria-label="Phone number" className={inputCls}
-            />
-          </div>
-          <input type="email" name="email" required placeholder="Email *" aria-label="Email address" autoComplete="email" className={inputCls} />
-          <input type="text" name="address" required placeholder="Street address *" aria-label="Street address" autoComplete="street-address" className={inputCls} />
-          <input type="text" name="neighborhood" placeholder="Neighborhood or HOA (if any)" aria-label="Neighborhood or HOA" className={inputCls} />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <input type="text" name="city" required placeholder="City *" aria-label="City" autoComplete="address-level2" className={inputCls} />
-            <input type="text" name="zip" required placeholder="ZIP *" aria-label="ZIP code" inputMode="numeric" maxLength={10} autoComplete="postal-code" className={inputCls} />
-          </div>
-          <p className="text-xs text-ink/55">
-            Your address stays private — it&apos;s used only to send neighborhood
-            alerts and any contribution perk, never shown publicly.
-          </p>
-        </fieldset>
-
-        {/* ── 3 · Other information ── */}
-        <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
-          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-clay">
-            3 · Other information
-          </legend>
-          <p className="mt-1 text-xs text-ink/60">
-            Which neighborhood apps do you use? (select all that apply)
-          </p>
-          <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
-            {APPS.map((app) => (
-              <label key={app} className="flex items-center gap-2 text-sm text-ink/80">
-                <input type="checkbox" name="apps" value={app} className="h-4 w-4 accent-clay" />
-                {app}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}
-        <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
-        <div className="flex justify-center">
-          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
+        {/* ── Screen 1 · Choose your role ── */}
+        <div ref={stepRefs[0]} className={step === 1 ? "" : "hidden"}>
+          <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
+            <p className="text-xs text-ink/60">
+              Pick any that fit — all that interest you. Roles are by interest; the
+              privileged ones are confirmed later.
+            </p>
+            <div className="mt-3 space-y-2.5">
+              {ROLES.map((r) => (
+                <label key={r.key} className="flex cursor-pointer gap-2.5">
+                  <input
+                    type="checkbox" name="roles" value={r.key}
+                    checked={roles.includes(r.key)}
+                    onChange={() => toggleRole(r.key)}
+                    className="mt-1 h-4 w-4 shrink-0 accent-clay"
+                  />
+                  <span>
+                    <span className="block text-sm font-medium text-ink/90">{r.label}</span>
+                    <span className="block text-xs text-ink/55">{r.desc}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            {roles.includes("other") && (
+              <input
+                type="text" name="role_other" maxLength={60}
+                placeholder="Describe the role you'd like to play"
+                aria-label="Describe your role"
+                className={inputCls + " mt-3"}
+              />
+            )}
+          </fieldset>
         </div>
 
-        <label className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/75">
-          <input
-            type="checkbox"
-            name="agree_terms"
-            value="yes"
-            required
-            className="mt-1 h-4 w-4 shrink-0 accent-clay"
-          />
-          <span>
-            I&apos;m 18 or older and I agree to the{" "}
-            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
-              Terms of Use
-            </a>
-            ,{" "}
-            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
-              Privacy Policy
-            </a>
-            , and{" "}
-            <a href="/liability" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
-              Release of Liability
-            </a>
-            .
-          </span>
-        </label>
+        {/* ── Screen 2 · Contact information ── */}
+        <div ref={stepRefs[1]} className={step === 2 ? "" : "hidden"}>
+          <fieldset className="space-y-4 rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" autoComplete="name" className={inputCls} />
+              <input
+                type="tel" name="phone" required value={phone}
+                onChange={(e) => setPhone(formatPhone(e.target.value))}
+                inputMode="numeric" maxLength={14} autoComplete="tel"
+                placeholder="(555) 555-5555 *" aria-label="Phone number" className={inputCls}
+              />
+            </div>
+            <input type="email" name="email" required placeholder="Email *" aria-label="Email address" autoComplete="email" className={inputCls} />
+            <input type="text" name="address" required placeholder="Street address *" aria-label="Street address" autoComplete="street-address" className={inputCls} />
+            <input type="text" name="neighborhood" placeholder="Neighborhood or HOA (if any)" aria-label="Neighborhood or HOA" className={inputCls} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <input type="text" name="city" required placeholder="City *" aria-label="City" autoComplete="address-level2" className={inputCls} />
+              <input type="text" name="zip" required placeholder="ZIP *" aria-label="ZIP code" inputMode="numeric" maxLength={10} autoComplete="postal-code" className={inputCls} />
+            </div>
+            <p className="text-xs text-ink/55">
+              Your address stays private — it&apos;s used only to send neighborhood
+              alerts and any contribution perk, never shown publicly.
+            </p>
+          </fieldset>
+        </div>
+
+        {/* ── Screen 3 · Other information + verify + agree ── */}
+        <div ref={stepRefs[2]} className={step === 3 ? "space-y-4" : "hidden"}>
+          <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
+            <p className="text-xs text-ink/60">
+              Which neighborhood apps do you use? (select all that apply)
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+              {APPS.map((app) => (
+                <label key={app} className="flex items-center gap-2 text-sm text-ink/80">
+                  <input type="checkbox" name="apps" value={app} className="h-4 w-4 accent-clay" />
+                  {app}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}
+          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+          <div className="flex justify-center">
+            <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
+          </div>
+
+          <label className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/75">
+            <input
+              type="checkbox"
+              name="agree_terms"
+              value="yes"
+              required
+              className="mt-1 h-4 w-4 shrink-0 accent-clay"
+            />
+            <span>
+              I&apos;m 18 or older and I agree to the{" "}
+              <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
+                Terms of Use
+              </a>
+              ,{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
+                Privacy Policy
+              </a>
+              , and{" "}
+              <a href="/liability" target="_blank" rel="noopener noreferrer" className="text-clay hover:underline">
+                Release of Liability
+              </a>
+              .
+            </span>
+          </label>
+        </div>
 
         {state.status === "error" && (
           <p className="text-sm text-clay" role="alert">{state.message}</p>
         )}
-        <div className="flex justify-end">
-          <ContinueButton />
+
+        {/* Wizard navigation */}
+        <div className="flex items-center justify-between pt-2">
+          {step > 1 ? (
+            <button
+              type="button" onClick={goBack}
+              className="rounded-lg px-4 py-3 text-sm font-medium text-ink/55 transition hover:text-ink"
+            >
+              ← Back
+            </button>
+          ) : (
+            <span />
+          )}
+          {step < TOTAL ? (
+            <button
+              type="button" onClick={goNext}
+              className="rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark"
+            >
+              Continue →
+            </button>
+          ) : (
+            <ContinueButton />
+          )}
         </div>
       </form>
     </div>
