@@ -100,33 +100,22 @@ function ContinueButton() {
   );
 }
 
+const ROLES: { key: string; label: string; desc: string }[] = [
+  { key: "resident", label: "Bystander resident", desc: "You live here and want to stay informed and have a say." },
+  { key: "sme", label: "Subject-matter expert (SME)", desc: "Wildlife, veterinary, animal-control, or ecology expertise to lend." },
+  { key: "municipality_rep", label: "Representative to a municipality", desc: "You can carry this to your city, or speak for it." },
+  { key: "coordinator", label: "Local community coordinator", desc: "You'd help organize neighbors, block by block." },
+  { key: "admin", label: "Admin / steward", desc: "You'd help keep the conversation open, respectful, and moving." },
+  { key: "other", label: "Other", desc: "A role you'd invent — describe it below." },
+];
+
 export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
   const [phone, setPhone] = useState("");
-  const [role, setRole] = useState("resident");
-
-  // Supporters-wall opt-in + optional photo (uploaded to the public avatars bucket).
-  const [wallChoice, setWallChoice] = useState("hidden");
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [photoBusy, setPhotoBusy] = useState(false);
-  const onPhoto = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setPhotoBusy(true);
-    try {
-      const ext = (file.name.split(".").pop() || "jpg").replace(/[^a-z0-9]/gi, "").slice(0, 5);
-      const path = `wall/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const { error } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: false, contentType: file.type });
-      if (error) throw error;
-      setPhotoUrl(supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl);
-    } catch {
-      setPhotoUrl("");
-    } finally {
-      setPhotoBusy(false);
-    }
-  };
+  // Roles are multi-select now (choose all that apply). Default: resident.
+  const [roles, setRoles] = useState<string[]>(["resident"]);
+  const toggleRole = (k: string) =>
+    setRoles((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
 
   // Measure the sticky dark header so the progress line can pin right beneath it.
   const [headerH, setHeaderH] = useState(0);
@@ -530,60 +519,77 @@ export default function SignupForm() {
           className="absolute left-[-9999px] h-0 w-0 opacity-0"
         />
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ink/80">
-            The role you&apos;d like to play <span className="text-clay">*</span>
-          </label>
-          <select
-            name="role" required value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className={inputCls + " text-ink/90"}
-          >
-            <option value="resident">Bystander resident</option>
-            <option value="sme">Subject-matter expert (SME)</option>
-            <option value="municipality_rep">Representative to a municipality</option>
-            <option value="coordinator">Local community coordinator</option>
-            <option value="admin">Admin / steward</option>
-            <option value="other">Other — I&apos;ll describe it</option>
-          </select>
-          <p className="mt-1 text-xs text-ink/55">
-            The part you&apos;d like to play — not a title. Every role is by
-            interest; the privileged ones are confirmed later.
-          </p>
-        </div>
-
-        {role === "other" && (
-          <input
-            type="text" name="role_other" maxLength={60}
-            placeholder="What role would you like to play?"
-            aria-label="Describe your role" className={inputCls}
-          />
-        )}
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" className={inputCls} />
-          <input
-            type="tel" name="phone" required value={phone}
-            onChange={(e) => setPhone(formatPhone(e.target.value))}
-            inputMode="numeric" maxLength={14}
-            placeholder="(555) 555-5555 *" aria-label="Phone number" className={inputCls}
-          />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <input
-            type="email" name="email" required
-            placeholder="Email *"
-            aria-label="Email address" className={inputCls}
-          />
-          <input type="text" name="city" required placeholder="City *" aria-label="City of residence" className={inputCls} />
-        </div>
-
-        <fieldset className="rounded-lg border border-line/15 bg-card/40 p-4">
-          <legend className="px-1 text-sm font-medium text-ink/80">
-            Which of these do you use? (select all that apply)
+        {/* ── 1 · Choose your role ── */}
+        <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
+          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-clay">
+            1 · Choose your role
           </legend>
-          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+          <p className="text-xs text-ink/60">
+            Pick any that fit — all that interest you. Roles are by interest; the
+            privileged ones are confirmed later.
+          </p>
+          <div className="mt-3 space-y-2.5">
+            {ROLES.map((r) => (
+              <label key={r.key} className="flex cursor-pointer gap-2.5">
+                <input
+                  type="checkbox" name="roles" value={r.key}
+                  checked={roles.includes(r.key)}
+                  onChange={() => toggleRole(r.key)}
+                  className="mt-1 h-4 w-4 shrink-0 accent-clay"
+                />
+                <span>
+                  <span className="block text-sm font-medium text-ink/90">{r.label}</span>
+                  <span className="block text-xs text-ink/55">{r.desc}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+          {roles.includes("other") && (
+            <input
+              type="text" name="role_other" maxLength={60}
+              placeholder="Describe the role you'd like to play"
+              aria-label="Describe your role"
+              className={inputCls + " mt-3"}
+            />
+          )}
+        </fieldset>
+
+        {/* ── 2 · Contact information ── */}
+        <fieldset className="space-y-4 rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
+          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-clay">
+            2 · Contact information
+          </legend>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" autoComplete="name" className={inputCls} />
+            <input
+              type="tel" name="phone" required value={phone}
+              onChange={(e) => setPhone(formatPhone(e.target.value))}
+              inputMode="numeric" maxLength={14} autoComplete="tel"
+              placeholder="(555) 555-5555 *" aria-label="Phone number" className={inputCls}
+            />
+          </div>
+          <input type="email" name="email" required placeholder="Email *" aria-label="Email address" autoComplete="email" className={inputCls} />
+          <input type="text" name="address" required placeholder="Street address *" aria-label="Street address" autoComplete="street-address" className={inputCls} />
+          <input type="text" name="neighborhood" placeholder="Neighborhood or HOA (if any)" aria-label="Neighborhood or HOA" className={inputCls} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <input type="text" name="city" required placeholder="City *" aria-label="City" autoComplete="address-level2" className={inputCls} />
+            <input type="text" name="zip" required placeholder="ZIP *" aria-label="ZIP code" inputMode="numeric" maxLength={10} autoComplete="postal-code" className={inputCls} />
+          </div>
+          <p className="text-xs text-ink/55">
+            Your address stays private — it&apos;s used only to send neighborhood
+            alerts and any contribution perk, never shown publicly.
+          </p>
+        </fieldset>
+
+        {/* ── 3 · Other information ── */}
+        <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
+          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-clay">
+            3 · Other information
+          </legend>
+          <p className="mt-1 text-xs text-ink/60">
+            Which neighborhood apps do you use? (select all that apply)
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
             {APPS.map((app) => (
               <label key={app} className="flex items-center gap-2 text-sm text-ink/80">
                 <input type="checkbox" name="apps" value={app} className="h-4 w-4 accent-clay" />
@@ -592,45 +598,6 @@ export default function SignupForm() {
             ))}
           </div>
         </fieldset>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ink/80">
-            Add me to The Pack (our public wall of supporters)?
-          </label>
-          <select
-            name="wall_display" value={wallChoice}
-            onChange={(e) => setWallChoice(e.target.value)}
-            className={inputCls + " text-ink/90"}
-          >
-            <option value="hidden">No — keep me anonymous</option>
-            <option value="first">Yes — first name + city</option>
-            <option value="full">Yes — full name + city</option>
-          </select>
-          <p className="mt-1 text-xs text-ink/55">
-            Optional. We never show your email, phone, or amount — and you can change this anytime.
-          </p>
-
-          {wallChoice !== "hidden" && (
-            <div className="mt-3 flex items-center gap-3">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line/30 bg-card">
-                {photoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={photoUrl} alt="" className="h-full w-full object-cover" />
-                ) : (
-                  <span className="text-[10px] text-ink/40">Photo</span>
-                )}
-              </div>
-              <label className="cursor-pointer text-sm font-medium text-clay underline-offset-2 hover:underline">
-                {photoBusy ? "Uploading…" : photoUrl ? "Change photo" : "Add a photo (optional)"}
-                <input
-                  type="file" accept="image/png,image/jpeg,image/webp"
-                  className="hidden" disabled={photoBusy} onChange={onPhoto}
-                />
-              </label>
-            </div>
-          )}
-          <input type="hidden" name="wall_photo_url" value={photoUrl} />
-        </div>
 
         {/* Cloudflare Turnstile — invisible human check (stops scripted abuse). */}
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />

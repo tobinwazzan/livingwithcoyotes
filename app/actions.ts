@@ -59,17 +59,27 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   // Self-selected "role you'd like to play" — a stated interest, NOT a credential
   // or privilege grant (admin/municipal status stays invitation-only). Validate
   // against the known set; unknown → resident. 'other' carries a free-text label.
+  // Roles are now multi-select ("choose all that apply"). Validate each against
+  // the known set; keep order, drop unknowns/dupes; fall back to ["resident"].
   const ALLOWED_ROLES = new Set([
     "resident", "sme", "municipality_rep", "coordinator", "admin", "other",
   ]);
-  let role = String(formData.get("role") ?? "").trim();
-  if (!ALLOWED_ROLES.has(role)) role = "resident";
+  const roles = Array.from(
+    new Set(formData.getAll("roles").map((r) => String(r).trim()).filter((r) => ALLOWED_ROLES.has(r))),
+  );
+  if (roles.length === 0) roles.push("resident");
+  // Primary role kept for the existing single-column schema (first non-resident
+  // choice wins, else resident) — the full set lives in meta.roles.
+  const role = roles.find((r) => r !== "resident") ?? roles[0];
   const roleOther =
-    role === "other" ? String(formData.get("role_other") ?? "").trim().slice(0, 60) : "";
+    roles.includes("other") ? String(formData.get("role_other") ?? "").trim().slice(0, 60) : "";
   const fullName = String(formData.get("full_name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const city = String(formData.get("city") ?? "").trim();
+  const address = String(formData.get("address") ?? "").trim().slice(0, 200);
+  const neighborhood = String(formData.get("neighborhood") ?? "").trim().slice(0, 120);
+  const zip = String(formData.get("zip") ?? "").trim().slice(0, 10);
   const linkedin = String(formData.get("linkedin") ?? "").trim();
   const apps = formData.getAll("apps").map((a) => String(a));
 
@@ -88,6 +98,10 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     meta = {};
   }
   if (roleOther) meta.role_other = roleOther;
+  meta.roles = roles.join(",");
+  if (address) meta.address = address;
+  if (neighborhood) meta.neighborhood = neighborhood;
+  if (zip) meta.zip = zip;
 
   // Log the drop reason so we can see *where* people fall off, then show the error.
   const invalid = async (reason: string, message: string): Promise<LeadState> => {
@@ -99,6 +113,8 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   if (digits(phone).length < 10) return invalid("phone", "Please enter a valid phone number.");
   if (!EMAIL_RE.test(email)) return invalid("email", "Please enter a valid email address.");
   if (city.length < 2) return invalid("city", "Please enter your city.");
+  if (address.length < 4) return invalid("address", "Please enter your street address.");
+  if (zip.length < 5) return invalid("zip", "Please enter your ZIP code.");
   if (String(formData.get("agree_terms") ?? "") !== "yes")
     return invalid("agree_terms", "Please agree to the Terms, Privacy Policy, and Release of Liability to continue.");
 
@@ -114,20 +130,9 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
 
   const signupId = String(data);
 
-  // Supporters-wall consent (opt-in; default hidden). Stored separately so the
-  // lead RPC signature stays put. Never published without an explicit choice.
-  const wallRaw = String(formData.get("wall_display") ?? "hidden");
-  const wallDisplay = wallRaw === "first" || wallRaw === "full" ? wallRaw : "hidden";
-  // Optional wall photo — only accept a URL that really points at our avatars
-  // bucket (so a tampered form can't inject an arbitrary external image).
-  const photoRaw = String(formData.get("wall_photo_url") ?? "").trim();
-  const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-  const photoUrl =
-    photoRaw && supaUrl &&
-    photoRaw.startsWith(`${supaUrl}/storage/v1/object/public/avatars/`)
-      ? photoRaw.slice(0, 500)
-      : null;
-  await db.from("signups").update({ wall_display: wallDisplay, photo_url: photoUrl }).eq("id", signupId);
+  // (The Pack/supporters-wall opt-in has moved off the join form — it's now
+  // captured at contribution time, since the wall lists contributors, not
+  // members. Registration stays free and identity-light.)
 
   // Already a member? Don't send them to the payment step — prevents a re-charge.
   const { data: existing } = await db
