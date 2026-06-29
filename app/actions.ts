@@ -33,14 +33,10 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   // is always visible. This is the signal that was missing when the form broke.
   await logFunnel("continue_clicked");
 
-  // Honeypot: a hidden field real users never see. Bots fill everything, so a
-  // non-empty value means a bot — silently drop it (no row, no progression).
-  // NB: field is named "hp_token" (not an autofill keyword) so real members'
-  // browser autofill / password managers don't accidentally trip it.
-  if (String(formData.get("hp_token") ?? "").trim() !== "") {
-    await logFunnel("dropped_bot", { isBot: true, meta: { reason: "honeypot" } });
-    return { status: "idle", message: "" };
-  }
+  // (Honeypot removed: browser/password-manager autofill kept filling the hidden
+  // field on real members, so every genuine submit was silently dropped as a
+  // "bot." Cloudflare Turnstile below is a mandatory, far stronger bot check and
+  // fully covers this — no need for a trap that catches humans.)
 
   // Human verification (Cloudflare Turnstile). A scripted form/RPC abuser has no
   // valid token, so this blocks the founding-spot-burning attack. Skipped for
