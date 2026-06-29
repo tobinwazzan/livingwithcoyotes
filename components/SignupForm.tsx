@@ -4,7 +4,7 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import {
   submitLead, redeemCode, recordManual, startCheckout, logClientIssue,
-  claimFounding, foundingStatus, type LeadState,
+  claimFounding, type LeadState,
 } from "@/app/actions";
 import { supabase } from "@/lib/supabase";
 import Script from "next/script";
@@ -32,8 +32,8 @@ function formatPhone(value: string) {
 }
 
 // Gamified progress: the three steps shown on a straight line above the form.
-const STEPS = ["Contact information", "Payment", "Done"];
-function Stepper({ current }: { current: 1 | 2 | 3 }) {
+const STEPS = ["Register", "Done"];
+function Stepper({ current }: { current: 1 | 2 }) {
   return (
     <ol className="flex items-center justify-center gap-2 sm:gap-3" aria-label="Progress">
       {STEPS.map((label, i) => {
@@ -76,7 +76,7 @@ function Stepper({ current }: { current: 1 | 2 | 3 }) {
 
 // The progress line pinned just beneath the sticky dark header (top = its height,
 // measured at runtime). bg-panel matches the form section so content scrolls under.
-function StickySteps({ current, top }: { current: 1 | 2 | 3; top: number }) {
+function StickySteps({ current, top }: { current: 1 | 2; top: number }) {
   return (
     <div
       className="sticky z-30 -mx-6 mb-6 border-b border-line/10 bg-panel px-6 py-3"
@@ -170,27 +170,72 @@ export default function SignupForm() {
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState("");
-  const [done, setDone] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
 
   // Founding offer status (first 100 free) — fetched once when we reach Phase 2.
   type Founding = { count: number; cap: number; remaining: number; open: boolean };
   const [founding, setFounding] = useState<Founding | null>(null);
-  useEffect(() => {
-    if (state.status === "lead" && state.signupId && founding === null) {
-      foundingStatus()
-        .then(setFounding)
-        .catch(() => setFounding({ count: 0, cap: 100, remaining: 0, open: false }));
-    }
-  }, [state.status, state.signupId, founding]);
+  void founding;
+  void setFounding;
 
-  // ---------- PHASE 3: done ----------
+  // Registration is FREE; contributions are entirely separate (the Contribute
+  // page, never this flow). So the moment a lead is created, activate the free
+  // membership in the background and go straight to the thank-you — no payment.
+  useEffect(() => {
+    if (state.status === "lead" && state.signupId && !done) {
+      claimFounding(state.signupId).catch(() => {});
+      setDone(true);
+    }
+  }, [state.status, state.signupId, done]);
+
+  // ---------- Done ----------
   if (done) {
+    const sid = state.signupId;
     return (
       <div>
-        <StickySteps current={3} top={headerH} />
-        <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
-          <p className="text-lg font-semibold text-heading">Welcome aboard.</p>
-          <p className="mt-1 text-ink/80">{done}</p>
+        <StickySteps current={2} top={headerH} />
+        <div className="rounded-2xl border border-line/30 bg-card/60 p-6 sm:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-clay">
+            You&apos;re in
+          </p>
+          <h2 className="mt-2 text-2xl font-bold leading-snug text-heading">
+            Great — thank you for joining. Your voice means a lot.
+          </h2>
+          <p className="mt-3 text-ink/75">
+            Here are a few ways to put the site to use:
+          </p>
+          <ul className="mt-4 space-y-3 text-sm leading-relaxed">
+            {sid && (
+              <li>
+                <a href={`/reflection?s=${sid}`} className="font-semibold text-clay hover:text-ink">
+                  Take the quiet reflection →
+                </a>{" "}
+                <span className="text-ink/65">
+                  where you stand on living with coyotes, just for you.
+                </span>
+              </li>
+            )}
+            <li>
+              <a href="/understanding" className="font-semibold text-clay hover:text-ink">
+                The Wall of Understanding →
+              </a>{" "}
+              <span className="text-ink/65">
+                neighbors making the strongest case for the other side.
+              </span>
+            </li>
+            <li>
+              <a href="/resources" className="font-semibold text-clay hover:text-ink">
+                Explore the resources →
+              </a>{" "}
+              <span className="text-ink/65">short, credible, mostly video.</span>
+            </li>
+            <li>
+              <a href="/faq" className="font-semibold text-clay hover:text-ink">
+                Coyote Q&amp;A →
+              </a>{" "}
+              <span className="text-ink/65">what&apos;s normal, what isn&apos;t, what to do.</span>
+            </li>
+          </ul>
         </div>
       </div>
     );
@@ -200,7 +245,7 @@ export default function SignupForm() {
   if (state.status === "already_member") {
     return (
       <div>
-        <StickySteps current={3} top={headerH} />
+        <StickySteps current={2} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re already a member 🎉</p>
           <p className="mt-1 text-ink/80">
@@ -240,14 +285,14 @@ export default function SignupForm() {
       setBusy(true); setNote("");
       const r = await redeemCode(signupId, code);
       setBusy(false);
-      r.ok ? setDone(r.message) : setNote(r.message);
+      r.ok ? setDone(true) : setNote(r.message);
     };
 
     const claimFoundingNow = async () => {
       setBusy(true); setNote("");
       const r = await claimFounding(signupId);
       setBusy(false);
-      if (r.ok) { setDone(r.message); return; }
+      if (r.ok) { setDone(true); return; }
       // Spots just filled — close the offer and fall back to the $19 options.
       if (r.status === "full") {
         setFounding({ count: founding?.cap ?? 100, cap: founding?.cap ?? 100, remaining: 0, open: false });
@@ -266,7 +311,7 @@ export default function SignupForm() {
         if (error) throw error;
         const r = await recordManual(signupId, m, path, amountCents);
         setBusy(false);
-        r.ok ? setDone(r.message) : setNote(r.message);
+        r.ok ? setDone(true) : setNote(r.message);
       } catch {
         setBusy(false);
         setNote("That upload didn't go through. Try a different file, or pay by card or code.");
@@ -446,7 +491,7 @@ export default function SignupForm() {
 
         <button
           type="button"
-          onClick={() => setDone("No problem — we have your info and we'll be in touch as the Council takes shape.")}
+          onClick={() => setDone(true)}
           className="mx-auto block text-sm text-ink/50 underline-offset-2 hover:text-ink/80 hover:underline"
         >
           I&apos;ll decide later — just keep me posted

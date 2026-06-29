@@ -31,7 +31,7 @@ export default function JoinPage() {
         sticky
         eyebrow="Join free"
         title="Be part of the plan"
-        subtitle="Registering is free, and always will be — your city, your voice, the resources, and the alerts. If you can, add a contribution to keep it all running."
+        subtitle="Registering is free, and always will be — your city, your voice, the resources, and the alerts. It takes about two minutes."
       />
 
       {/* Why join */}
