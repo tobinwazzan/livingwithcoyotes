@@ -103,7 +103,7 @@ function ContinueButton() {
 }
 
 const ROLES: { key: string; label: string; desc: string }[] = [
-  { key: "resident", label: "Bystander resident", desc: "You live here and want to stay informed and have a say." },
+  { key: "resident", label: "Active listener", desc: "You live here and want to stay informed and have a say." },
   { key: "sme", label: "Subject-matter expert (SME)", desc: "Wildlife, veterinary, animal-control, or ecology expertise to lend." },
   { key: "municipality_rep", label: "Representative to a municipality", desc: "You can carry this to your city, or speak for it." },
   { key: "coordinator", label: "Local community coordinator", desc: "You'd help organize neighbors, block by block." },
