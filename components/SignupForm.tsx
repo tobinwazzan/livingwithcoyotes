@@ -75,11 +75,15 @@ function Stepper({ current }: { current: number }) {
   );
 }
 
-// The progress line. Scrolls with the page (not pinned) so it never covers the
-// screen heading beneath it. bg-panel matches the form section behind it.
-function StickySteps({ current }: { current: number }) {
+// The progress line, pinned just beneath the sticky dark header (top = its
+// height, measured at runtime) so it stays visible through the whole intake.
+// bg-panel matches the form section so content scrolls under it.
+function StickySteps({ current, top }: { current: number; top: number }) {
   return (
-    <div className="-mx-6 mb-6 border-b border-line/10 bg-panel px-6 py-3">
+    <div
+      className="sticky z-30 -mx-6 mb-6 border-b border-line/10 bg-panel px-6 py-3"
+      style={{ top }}
+    >
       <Stepper current={current} />
     </div>
   );
@@ -145,6 +149,18 @@ export default function SignupForm() {
   };
   const goBack = () => setStep((s) => Math.max(1, s - 1));
 
+  // Measure the sticky dark header so the progress line can pin right beneath it.
+  const [headerH, setHeaderH] = useState(0);
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>("[data-sticky-header]");
+    if (!el) return;
+    const update = () => setHeaderH(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   // Attribution — capture which channel sent them (UTM / ref) and the landing
   // context, so the recruitment plan can see what's working. Best-effort only.
   const [attr, setAttr] = useState({ source: "", referrer: "", meta: "{}" });
@@ -198,7 +214,7 @@ export default function SignupForm() {
     const sid = state.signupId;
     return (
       <div>
-        <StickySteps current={4} />
+        <StickySteps current={4} top={headerH} />
         <div className="rounded-2xl border border-line/30 bg-card/60 p-6 sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-clay">
             You&apos;re in
@@ -250,7 +266,7 @@ export default function SignupForm() {
   if (state.status === "already_member") {
     return (
       <div>
-        <StickySteps current={4} />
+        <StickySteps current={4} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re already a member 🎉</p>
           <p className="mt-1 text-ink/80">
@@ -333,7 +349,7 @@ export default function SignupForm() {
 
     return (
       <div className="space-y-5">
-        <StickySteps current={4} />
+        <StickySteps current={4} top={headerH} />
         <div className="rounded-xl border border-line/30 bg-card/60 p-5 text-center">
           <p className="text-lg font-semibold text-heading">You&apos;re registered. ✅</p>
           <p className="mt-1 text-ink/80">
@@ -509,7 +525,7 @@ export default function SignupForm() {
   const meta = STEP_META[step - 1];
   return (
     <div>
-      <StickySteps current={step} />
+      <StickySteps current={step} top={headerH} />
       <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
         {meta.title}
       </h2>
