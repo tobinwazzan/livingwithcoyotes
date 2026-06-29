@@ -336,7 +336,12 @@ ${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}
 
 Admin dashboard: ${ADMIN_URL}`;
 
-  return sendEmail({ to: ADMIN_NOTIFY_EMAIL, from: SIGNUPS_FROM, subject, html, text });
+  const res = await sendEmail({ to: ADMIN_NOTIFY_EMAIL, from: SIGNUPS_FROM, subject, html, text });
+  await logFunnel(res.sent ? "email_sent" : "email_failed", {
+    signupId,
+    meta: { kind: "new_member_alert", error: res.sent ? undefined : res.error },
+  });
+  return res;
 }
 
 // Claim-and-send: idempotent across all join paths and page refreshes. Returns
