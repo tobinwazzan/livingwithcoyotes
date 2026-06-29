@@ -558,8 +558,7 @@ export default function SignupForm() {
         <div ref={stepRefs[0]} className={step === 1 ? "" : "hidden"}>
           <fieldset className="rounded-xl border border-line/15 bg-card/40 p-4 sm:p-5">
             <p className="text-xs text-ink/60">
-              Pick any that fit — all that interest you. Roles are by interest; the
-              privileged ones are confirmed later.
+              These are interests, not titles — the privileged roles are confirmed later.
             </p>
             <div className="mt-3 space-y-2.5">
               {ROLES.map((r) => (
