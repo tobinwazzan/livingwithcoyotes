@@ -14,7 +14,10 @@ export const NAV_ITEMS: NavItem[] = [
   {
     label: "Membership",
     href: "/membership",
-    children: [{ label: "The Pack", href: "/pack" }],
+    children: [
+      { label: "Contribute", href: "/contribute" },
+      { label: "The Pack", href: "/pack" },
+    ],
   },
   {
     label: "Resources",
