@@ -338,8 +338,8 @@ export default function SignupForm() {
     return (
       <div>
         <StickySteps current={4} top={headerH} />
-        <div className="rounded-2xl border border-line/30 bg-card/60 p-6 text-center sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-clay">
+        <div className="rounded-2xl border-2 border-red-500/40 bg-red-500/5 p-6 text-center shadow-[0_0_0_4px_rgba(239,68,68,0.06)] sm:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-400">
             Already registered
           </p>
           <h2 className="mt-2 text-2xl font-bold leading-snug text-heading">
