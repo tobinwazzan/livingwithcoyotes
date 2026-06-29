@@ -103,6 +103,7 @@ function ContinueButton() {
 export default function SignupForm() {
   const [state, formAction] = useFormState(submitLead, initialState);
   const [phone, setPhone] = useState("");
+  const [role, setRole] = useState("resident");
 
   // Supporters-wall opt-in + optional photo (uploaded to the public avatars bucket).
   const [wallChoice, setWallChoice] = useState("hidden");
@@ -484,9 +485,35 @@ export default function SignupForm() {
           className="absolute left-[-9999px] h-0 w-0 opacity-0"
         />
 
-        {/* Public sign-up is residents/citizens only. Officials & experts join
-            by invitation (honorary/council codes). Role is fixed server-side too. */}
-        <input type="hidden" name="role" value="resident" />
+        <div>
+          <label className="mb-1 block text-sm font-medium text-ink/80">
+            The role you&apos;d like to play <span className="text-clay">*</span>
+          </label>
+          <select
+            name="role" required value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className={inputCls + " text-ink/90"}
+          >
+            <option value="resident">Bystander resident</option>
+            <option value="sme">Subject-matter expert (SME)</option>
+            <option value="municipality_rep">Representative to a municipality</option>
+            <option value="coordinator">Local community coordinator</option>
+            <option value="admin">Admin / steward</option>
+            <option value="other">Other — I&apos;ll describe it</option>
+          </select>
+          <p className="mt-1 text-xs text-ink/55">
+            The part you&apos;d like to play — not a title. Every role is by
+            interest; the privileged ones are confirmed later.
+          </p>
+        </div>
+
+        {role === "other" && (
+          <input
+            type="text" name="role_other" maxLength={60}
+            placeholder="What role would you like to play?"
+            aria-label="Describe your role" className={inputCls}
+          />
+        )}
 
         <div className="grid gap-4 sm:grid-cols-2">
           <input type="text" name="full_name" required placeholder="Full name *" aria-label="Full name" className={inputCls} />

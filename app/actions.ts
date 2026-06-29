@@ -56,9 +56,16 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     }
   }
 
-  // Public sign-up is residents/citizens only — officials & experts join by
-  // invitation (honorary/council codes). Never trust a client-supplied role.
-  const role = "resident";
+  // Self-selected "role you'd like to play" — a stated interest, NOT a credential
+  // or privilege grant (admin/municipal status stays invitation-only). Validate
+  // against the known set; unknown → resident. 'other' carries a free-text label.
+  const ALLOWED_ROLES = new Set([
+    "resident", "sme", "municipality_rep", "coordinator", "admin", "other",
+  ]);
+  let role = String(formData.get("role") ?? "").trim();
+  if (!ALLOWED_ROLES.has(role)) role = "resident";
+  const roleOther =
+    role === "other" ? String(formData.get("role_other") ?? "").trim().slice(0, 60) : "";
   const fullName = String(formData.get("full_name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
@@ -80,6 +87,7 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   } catch {
     meta = {};
   }
+  if (roleOther) meta.role_other = roleOther;
 
   // Log the drop reason so we can see *where* people fall off, then show the error.
   const invalid = async (reason: string, message: string): Promise<LeadState> => {

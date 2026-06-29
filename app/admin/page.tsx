@@ -56,8 +56,10 @@ const REPORT_CAT_LABEL: Record<string, string> = {
 };
 
 const ROLE_LABEL: Record<string, string> = {
-  resident: "Residents", municipality: "Municipalities",
+  resident: "Bystander residents", municipality: "Municipalities",
   expert: "Experts & pros", partner: "Experts & pros (partner)", other: "Other",
+  sme: "SMEs", municipality_rep: "Municipality reps",
+  coordinator: "Coordinators", admin: "Admin / stewards",
 };
 
 function tally<T>(rows: T[], key: (row: T) => string) {
