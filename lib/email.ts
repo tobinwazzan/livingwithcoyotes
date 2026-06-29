@@ -20,6 +20,7 @@ export async function sendEmail(opts: {
   subject: string;
   html: string;
   text?: string;
+  from?: string; // override the sender display name/address (same verified domain)
 }): Promise<{ sent: boolean; error?: string }> {
   if (!RESEND_API_KEY) {
     console.warn("[email] RESEND_API_KEY not configured — skipping send to", opts.to);
@@ -33,7 +34,7 @@ export async function sendEmail(opts: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: EMAIL_FROM,
+        from: opts.from || EMAIL_FROM,
         to: opts.to,
         subject: opts.subject,
         html: opts.html,
@@ -231,6 +232,113 @@ Coyote Coexistence Council · livingwithcoyotes.org`;
   return sendEmail({ to: opts.email, subject, html, text });
 }
 
+// ── Internal alert: a new member just registered ─────────────────────────────
+// Goes to the team (not the member). Distinguished sender + subject so it's easy
+// to spot and filter in the inbox. Fires exactly once per member — see below.
+const ADMIN_NOTIFY_EMAIL = (
+  process.env.ADMIN_NOTIFY_EMAIL || "tobin@livingwithcoyotes.org"
+).trim();
+const SIGNUPS_FROM = "Coyote Council · Signups <members@livingwithcoyotes.org>";
+const ADMIN_URL = "https://admin.livingwithcoyotes.org";
+
+const ROLE_LABELS: Record<string, string> = {
+  resident: "Active listener",
+  sme: "Subject-matter expert (SME)",
+  municipality_rep: "Representative to a municipality",
+  coordinator: "Local community coordinator",
+  admin: "Admin / steward",
+  other: "Other",
+};
+
+const esc = (s: unknown) =>
+  String(s ?? "").replace(/[&<>"]/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string,
+  );
+
+export async function sendNewMemberAlert(signupId: string) {
+  const { data, error } = await db
+    .from("signups")
+    .select("*")
+    .eq("id", signupId)
+    .limit(1);
+  if (error || !data || !data[0]) return { sent: false };
+  const m = data[0] as Record<string, unknown>;
+  const meta = (m.meta && typeof m.meta === "object" ? m.meta : {}) as Record<string, string>;
+
+  const name = (String(m.full_name ?? "").trim()) || "—";
+  const city = (m.city as string) || "—";
+  const when =
+    new Date(m.created_at as string).toLocaleString("en-US", {
+      timeZone: "America/Los_Angeles",
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }) + " PT";
+
+  const roleKeys = (meta.roles ? meta.roles.split(",") : [m.role as string]).filter(Boolean);
+  const roles =
+    roleKeys.map((k) => ROLE_LABELS[k] || k).join(", ") +
+    (meta.role_other ? ` — “${meta.role_other}”` : "") || "—";
+  const apps =
+    Array.isArray(m.apps) && (m.apps as string[]).length ? (m.apps as string[]).join(", ") : "—";
+  const address =
+    [meta.address, meta.neighborhood, [city, meta.zip].filter(Boolean).join(" ")]
+      .filter(Boolean)
+      .join(" · ") || city;
+
+  const rows: [string, string][] = [
+    ["Name", name],
+    ["City", city],
+    ["Address", address],
+    ["Phone", (m.phone as string) || "—"],
+    ["Email", (m.email as string) || "—"],
+    ["Role(s)", roles],
+    ["Neighborhood apps", apps],
+    ["Signed up", when],
+    ["Came from", (m.source as string) || "—"],
+  ];
+
+  const subject = `🐾 New member — ${name}, ${city}`;
+  const rowsHtml = rows
+    .map(
+      ([k, v], i) => `<tr>
+        <td style="padding:9px 14px;font-size:13px;color:#6f6657;white-space:nowrap;vertical-align:top;border-top:${i ? "1px solid rgba(90,107,74,.12)" : "0"};">${esc(k)}</td>
+        <td style="padding:9px 14px;font-size:14px;color:${INK};font-weight:600;border-top:${i ? "1px solid rgba(90,107,74,.12)" : "0"};">${esc(v)}</td>
+      </tr>`,
+    )
+    .join("");
+
+  const html = `<!doctype html><html><body style="margin:0;background:${SAND};font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" style="background:${SAND};padding:24px 0;"><tr><td align="center">
+    <table role="presentation" width="560" style="max-width:560px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid rgba(90,107,74,.15);">
+      <tr><td style="background:${CLAY};padding:22px 28px;">
+        <span style="display:inline-block;background:rgba(255,255,255,.18);color:${SAND};font-size:11px;font-weight:800;letter-spacing:1.5px;padding:4px 10px;border-radius:999px;">🐾 NEW MEMBER</span>
+        <div style="color:${SAND};font-size:21px;font-weight:800;margin-top:12px;">A new voice at the table</div>
+        <div style="color:${SAND};opacity:.9;font-size:14px;margin-top:4px;">${esc(name)} just registered with the Council.</div>
+      </td></tr>
+      <tr><td style="padding:8px 14px 4px;">
+        <table role="presentation" width="100%" style="border-collapse:collapse;">${rowsHtml}</table>
+      </td></tr>
+      <tr><td style="padding:14px 28px 26px;">
+        <table role="presentation"><tr><td style="border-radius:8px;background:${DUSK};">
+          <a href="${ADMIN_URL}" style="display:inline-block;padding:11px 20px;color:${SAND};font-size:14px;font-weight:600;text-decoration:none;">Open the admin dashboard →</a>
+        </td></tr></table>
+      </td></tr>
+    </table>
+  </td></tr></table></body></html>`;
+
+  const text = `🐾 NEW MEMBER — a new voice at the table
+
+${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}
+
+Admin dashboard: ${ADMIN_URL}`;
+
+  return sendEmail({ to: ADMIN_NOTIFY_EMAIL, from: SIGNUPS_FROM, subject, html, text });
+}
+
 // Claim-and-send: idempotent across all join paths and page refreshes. Returns
 // member details only to the first caller, so the email goes out exactly once.
 export async function sendWelcomeIfClaimed(signupId: string) {
@@ -244,5 +352,8 @@ export async function sendWelcomeIfClaimed(signupId: string) {
     signupId,
     meta: { method: member.membership_method ?? "", error: res.sent ? undefined : res.error },
   });
+  // Internal "new member" alert — gated by the same once-only claim above, so the
+  // team is notified exactly once, on every real activation path.
+  await sendNewMemberAlert(signupId).catch(() => {});
   return res;
 }
