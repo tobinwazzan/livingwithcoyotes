@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import LeanScale from "./LeanScale";
+import LeanScale, { leanFlipped, leanPercent } from "./LeanScale";
+import CertaintySlider from "./CertaintySlider";
 import type {
   ReflectionInput,
   ReflectionResult,
@@ -26,8 +27,8 @@ function monthYear(iso: string): string {
   }
 }
 
-function MiniLean({ lean }: { lean: number | null }) {
-  const pct = lean ? ((lean - 1) / 6) * 100 : 50;
+function MiniLean({ lean, flipped = false }: { lean: number | null; flipped?: boolean }) {
+  const pct = leanPercent(lean, flipped);
   return (
     <div className="relative my-1 h-2 w-28 rounded-full bg-line/30">
       <span
@@ -76,11 +77,14 @@ function CertaintyTrend({ rows }: { rows: ReflectionRow[] }) {
 export default function ReflectionTimeline({
   entries,
   addAction,
+  signupId,
 }: {
   entries: ReflectionRow[];
   addAction: (input: ReflectionInput) => Promise<ReflectionResult>;
+  signupId?: string;
 }) {
   const router = useRouter();
+  const flipped = leanFlipped(signupId);
   const [open, setOpen] = useState(false);
   const [lean, setLean] = useState<number | null>(null);
   const [certainty, setCertainty] = useState(50);
@@ -124,20 +128,10 @@ export default function ReflectionTimeline({
             <p className="mb-3 text-sm font-bold text-heading">
               Where do you lean today?
             </p>
-            <LeanScale value={lean} onChange={setLean} />
-            <p className="mb-2 mt-6 text-sm font-bold text-heading">
-              How certain are you?
-            </p>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              step={1}
-              value={certainty}
-              onChange={(e) => setCertainty(Number(e.target.value))}
-              className="w-full accent-clay"
-              aria-label="How certain are you"
-            />
+            <LeanScale value={lean} onChange={setLean} flipped={flipped} />
+            <div className="mt-6">
+              <CertaintySlider value={certainty} onChange={setCertainty} />
+            </div>
             <p className="mb-2 mt-5 text-sm font-bold text-heading">
               The best case for the side you lean against
             </p>
@@ -205,7 +199,7 @@ export default function ReflectionTimeline({
                 lean {e.lean ?? "—"}/7 · certainty {e.certainty ?? "—"}%
               </span>
             </div>
-            <MiniLean lean={e.lean} />
+            <MiniLean lean={e.lean} flipped={flipped} />
             {e.steelman && (
               <blockquote
                 className={`mt-1 border-l-[3px] pl-3 text-sm italic leading-relaxed ${

@@ -73,6 +73,7 @@ export default async function RevisitPage({
       <section className="mx-auto max-w-2xl px-6 py-14">
         <RevisitClient
           token={token}
+          signupId={signupId}
           round1={round1}
           round2={round2}
           reflections={all}

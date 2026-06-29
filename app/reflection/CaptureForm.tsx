@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import LeanScale from "./LeanScale";
+import LeanScale, { leanFlipped } from "./LeanScale";
+import CertaintySlider from "./CertaintySlider";
 import { saveReflection } from "./actions";
 
 export default function CaptureForm({ signupId }: { signupId: string }) {
@@ -66,25 +67,11 @@ export default function CaptureForm({ signupId }: { signupId: string }) {
         <p className="mb-4 text-sm font-bold text-heading">
           Which way do you lean right now?
         </p>
-        <LeanScale value={lean} onChange={setLean} />
+        <LeanScale value={lean} onChange={setLean} flipped={leanFlipped(signupId)} />
       </div>
 
       <div className="mb-9">
-        <p className="mb-3 text-sm font-bold text-heading">How certain are you?</p>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          step={1}
-          value={certainty}
-          onChange={(e) => setCertainty(Number(e.target.value))}
-          className="w-full accent-clay"
-          aria-label="How certain are you, 0 to 100"
-        />
-        <div className="mt-1 flex justify-between text-xs text-ink/60">
-          <span>Still figuring it out</span>
-          <span>Completely sure</span>
-        </div>
+        <CertaintySlider value={certainty} onChange={setCertainty} />
       </div>
 
       <div className="border-t border-line/15 pt-7">

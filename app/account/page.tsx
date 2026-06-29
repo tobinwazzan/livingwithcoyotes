@@ -104,6 +104,7 @@ export default async function AccountPage() {
               <ReflectionTimeline
                 entries={reflections}
                 addAction={addReflectionForMe}
+                signupId={member!.id}
               />
             ) : (
               <div>

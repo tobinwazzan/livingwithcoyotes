@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import LeanScale, { LEAN_ANCHORS } from "../LeanScale";
+import LeanScale, { leanFlipped, leanPercent } from "../LeanScale";
+import CertaintySlider from "../CertaintySlider";
 import { saveRevisit, setReflectionVisibility } from "../actions";
 import ReflectionTimeline from "../ReflectionTimeline";
 import type {
@@ -85,8 +86,8 @@ function monthYear(iso: string): string {
 }
 
 // Static lean read-out for the mirror — a dot at the saved position.
-function MiniLean({ lean }: { lean: number | null }) {
-  const pct = lean ? ((lean - 1) / 6) * 100 : 50;
+function MiniLean({ lean, flipped }: { lean: number | null; flipped: boolean }) {
+  const pct = leanPercent(lean, flipped);
   return (
     <div className="relative my-1.5 h-2 rounded-full bg-line/30">
       <span
@@ -101,10 +102,12 @@ function Snapshot({
   label,
   emphasis,
   round,
+  flipped,
 }: {
   label: string;
   emphasis: boolean;
   round: Round;
+  flipped: boolean;
 }) {
   return (
     <div
@@ -120,7 +123,7 @@ function Snapshot({
         {label}
       </p>
       <p className="mt-2 text-xs text-ink/60">Lean</p>
-      <MiniLean lean={round.lean} />
+      <MiniLean lean={round.lean} flipped={flipped} />
       <p className="mt-2 text-xs text-ink/60">
         Certainty <strong className="text-ink">{round.certainty}%</strong>
       </p>
@@ -128,12 +131,12 @@ function Snapshot({
   );
 }
 
-function Mirror({ round1, round2 }: { round1: Round; round2: Round }) {
+function Mirror({ round1, round2, flipped }: { round1: Round; round2: Round; flipped: boolean }) {
   return (
     <div>
       <div className="mb-6 flex gap-3">
-        <Snapshot label={`When you joined · ${monthYear(round1.created_at)}`} emphasis={false} round={round1} />
-        <Snapshot label={`Today · ${monthYear(round2.created_at)}`} emphasis round={round2} />
+        <Snapshot label={`When you joined · ${monthYear(round1.created_at)}`} emphasis={false} round={round1} flipped={flipped} />
+        <Snapshot label={`Today · ${monthYear(round2.created_at)}`} emphasis round={round2} flipped={flipped} />
       </div>
 
       <p className="text-sm font-bold text-heading">
@@ -174,6 +177,7 @@ function Mirror({ round1, round2 }: { round1: Round; round2: Round }) {
 
 export default function RevisitClient({
   token,
+  signupId,
   round1,
   round2,
   reflections,
@@ -181,12 +185,14 @@ export default function RevisitClient({
   latestVisibility,
 }: {
   token: string;
+  signupId: string;
   round1: Round | null;
   round2: Round | null;
   reflections: ReflectionRow[];
   addAction: (input: ReflectionInput) => Promise<ReflectionResult>;
   latestVisibility: Visibility;
 }) {
+  const flipped = leanFlipped(signupId);
   const [lean, setLean] = useState<number | null>(null);
   const [certainty, setCertainty] = useState(50);
   const [steelman, setSteelman] = useState("");
@@ -207,7 +213,7 @@ export default function RevisitClient({
   if (existingRound2) {
     return (
       <div>
-        <Mirror round1={round1} round2={existingRound2} />
+        <Mirror round1={round1} round2={existingRound2} flipped={flipped} />
         <div className="mt-10 border-t border-line/15 pt-8">
           <ShareControl token={token} initial={latestVisibility} />
         </div>
@@ -216,7 +222,7 @@ export default function RevisitClient({
             <h3 className="mb-5 text-sm font-semibold uppercase tracking-[0.14em] text-clay">
               Your full record
             </h3>
-            <ReflectionTimeline entries={reflections} addAction={addAction} />
+            <ReflectionTimeline entries={reflections} addAction={addAction} signupId={signupId} />
           </div>
         )}
       </div>
@@ -256,25 +262,11 @@ export default function RevisitClient({
         <p className="mb-4 text-sm font-bold text-heading">
           Which way do you lean today?
         </p>
-        <LeanScale value={lean} onChange={setLean} />
+        <LeanScale value={lean} onChange={setLean} flipped={flipped} />
       </div>
 
       <div className="mb-9">
-        <p className="mb-3 text-sm font-bold text-heading">How certain are you?</p>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          step={1}
-          value={certainty}
-          onChange={(e) => setCertainty(Number(e.target.value))}
-          className="w-full accent-clay"
-          aria-label="How certain are you, 0 to 100"
-        />
-        <div className="mt-1 flex justify-between text-xs text-ink/60">
-          <span>Still figuring it out</span>
-          <span>Completely sure</span>
-        </div>
+        <CertaintySlider value={certainty} onChange={setCertainty} />
       </div>
 
       <div className="border-t border-line/15 pt-7">
