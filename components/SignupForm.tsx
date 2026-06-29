@@ -262,17 +262,30 @@ export default function SignupForm() {
     );
   }
 
-  // ---------- Already a member (skip payment, avoid a re-charge) ----------
+  // ---------- Already registered → send them to Sign in (not a re-register) ----------
   if (state.status === "already_member") {
+    const loginHref = state.email ? `/login?email=${encodeURIComponent(state.email)}` : "/login";
     return (
       <div>
         <StickySteps current={4} top={headerH} />
-        <div className="rounded-xl border border-line/30 bg-card/60 p-6 text-center">
-          <p className="text-lg font-semibold text-heading">You&apos;re already a member 🎉</p>
-          <p className="mt-1 text-ink/80">
-            {state.email} is already on the Council — no need to join again. Check
-            your inbox for your welcome note, or just reply to it if you need anything.
+        <div className="rounded-2xl border border-line/30 bg-card/60 p-6 text-center sm:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-clay">
+            Already registered
           </p>
+          <h2 className="mt-2 text-2xl font-bold leading-snug text-heading">
+            You&apos;re already on the Council
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-ink/75">
+            {state.email ? <strong className="text-ink">{state.email}</strong> : "That email"}{" "}
+            is already registered — there&apos;s no need to join again. Sign in and
+            we&apos;ll email you a secure one-time link to get back in.
+          </p>
+          <a
+            href={loginHref}
+            className="mt-5 inline-block rounded-lg bg-clay px-6 py-3 font-semibold text-sand transition hover:bg-bark"
+          >
+            Sign in instead →
+          </a>
         </div>
       </div>
     );

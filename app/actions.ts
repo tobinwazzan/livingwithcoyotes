@@ -118,6 +118,23 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   if (String(formData.get("agree_terms") ?? "") !== "yes")
     return invalid("agree_terms", "Please agree to the Terms, Privacy Policy, and Release of Liability to continue.");
 
+  // Already registered? Registration is free and passwordless, so a returning
+  // email doesn't re-register — we route them to Sign in. Check up front (after
+  // the human/Turnstile gate, so this can't be used to enumerate emails) so the
+  // message is reliable instead of a silent dead-end on the last screen.
+  // Escape LIKE wildcards (an email can legitimately contain "_") for an exact,
+  // case-insensitive match against the unique lower(email) index.
+  const emailLike = email.replace(/([\\%_])/g, "\\$1");
+  const { data: priorRows } = await db
+    .from("signups")
+    .select("id")
+    .ilike("email", emailLike)
+    .limit(1);
+  if (priorRows && priorRows.length > 0) {
+    await logFunnel("invalid", { signupId: priorRows[0].id, meta: { reason: "duplicate_email" } });
+    return { status: "already_member", message: "", signupId: priorRows[0].id, email };
+  }
+
   const { data, error } = await db.rpc("create_membership_lead", {
     p_role: role, p_full_name: fullName, p_phone: phone, p_email: email,
     p_city: city, p_linkedin: linkedin, p_apps: apps,

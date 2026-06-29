@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 
-export default function LoginForm() {
-  const [email, setEmail] = useState("");
+export default function LoginForm({ defaultEmail = "" }: { defaultEmail?: string }) {
+  const [email, setEmail] = useState(defaultEmail);
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [msg, setMsg] = useState("");
 

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: { error?: string; email?: string };
 }) {
   const supabase = getSupabaseServer();
   const {
@@ -22,6 +22,7 @@ export default async function LoginPage({
   if (user) redirect("/account");
 
   const error = (searchParams?.error ?? "").trim();
+  const prefillEmail = (searchParams?.email ?? "").trim().slice(0, 200);
 
   return (
     <main>
@@ -37,7 +38,7 @@ export default async function LoginPage({
             fresh one below.
           </p>
         )}
-        <LoginForm />
+        <LoginForm defaultEmail={prefillEmail} />
       </section>
     </main>
   );
