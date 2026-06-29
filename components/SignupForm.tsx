@@ -142,6 +142,15 @@ export default function SignupForm() {
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
   ];
+
+  // When a screen flips, re-anchor to the top of the flow (the progress bar +
+  // heading) — NOT the page hero. scroll-margin-top (set on the wrapper from the
+  // sticky-header height) keeps the heading just below the header, so the new
+  // screen and its action button land in view instead of jumping to the top.
+  const flowRef = useRef<HTMLDivElement>(null);
+  const scrollToFlow = () =>
+    flowRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+
   // Validate the current screen's required fields before moving on, so nobody
   // reaches the end and bounces back to an empty box.
   const goNext = () => {
@@ -153,9 +162,12 @@ export default function SignupForm() {
       return;
     }
     setStep((s) => Math.min(TOTAL, s + 1));
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToFlow();
   };
-  const goBack = () => setStep((s) => Math.max(1, s - 1));
+  const goBack = () => {
+    setStep((s) => Math.max(1, s - 1));
+    scrollToFlow();
+  };
 
   // Cloudflare Turnstile — render it explicitly the moment the user reaches
   // screen 3, so the widget always initializes while VISIBLE. (A widget mounted
@@ -268,7 +280,8 @@ export default function SignupForm() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (done || state.status === "already_member") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // Land on the result card (with its action button), not the page hero.
+      flowRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     } else if ((state.status === "error" || formError) && errorRef.current) {
       errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
@@ -283,7 +296,7 @@ export default function SignupForm() {
   if (done) {
     const sid = state.signupId;
     return (
-      <div>
+      <div ref={flowRef} style={{ scrollMarginTop: headerH + 8 }}>
         <StickySteps current={4} top={headerH} />
         <div className="rounded-2xl border border-line/30 bg-card/60 p-6 sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-clay">
@@ -336,7 +349,7 @@ export default function SignupForm() {
   if (state.status === "already_member") {
     const loginHref = state.email ? `/login?email=${encodeURIComponent(state.email)}` : "/login";
     return (
-      <div>
+      <div ref={flowRef} style={{ scrollMarginTop: headerH + 8 }}>
         <StickySteps current={4} top={headerH} />
         <div className="rounded-2xl border-2 border-red-500/40 bg-red-500/5 p-6 text-center shadow-[0_0_0_4px_rgba(239,68,68,0.06)] sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-red-400">
@@ -607,7 +620,7 @@ export default function SignupForm() {
   // ---------- PHASE 1: the info form, one screen per section ----------
   const meta = STEP_META[step - 1];
   return (
-    <div>
+    <div ref={flowRef} style={{ scrollMarginTop: headerH + 8 }}>
       <StickySteps current={step} top={headerH} />
       <h2 className="text-center text-2xl font-bold text-heading sm:text-3xl">
         {meta.title}
