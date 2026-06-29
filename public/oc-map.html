@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>OC map — prototype</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #20251b; color: #f4f0e6;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 20px 64px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .eyebrow { color: #b5764f; font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
+  h1 { font-size: 26px; font-weight: 800; margin: 8px 0 6px; }
+  p.note { color: #cdc7b6; font-size: 14px; line-height: 1.6; max-width: 62ch; margin: 0 0 22px; }
+  .card { background: #2e3528; border: 1px solid rgba(244,240,230,.12); border-radius: 16px; padding: 14px; }
+  img { display: block; width: 100%; height: auto; border-radius: 10px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px 26px; margin: 20px 2px 0; font-size: 13px; color: #cdc7b6; }
+  .legend span { display: inline-flex; align-items: center; gap: 9px; }
+  .sw { width: 22px; height: 14px; border-radius: 3px; display: inline-block; }
+  .ln { width: 22px; height: 0; border-top: 1.5px solid #b5764f; display: inline-block; }
+  .ln.zip { border-top: 1px solid rgba(244,240,230,.35); }
+  .cap { margin-top: 26px; color: #9a9484; font-size: 12.5px; line-height: 1.6; max-width: 70ch; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">🐾 Prototype · not published</div>
+    <h1>Orange County — styled map test</h1>
+    <p class="note">
+      Real boundaries from Orange County's open GIS (34 cities) and the Census ZIP/ZCTA
+      layer, rendered in our palette. The point of this pass is the <em>look</em>, not the
+      final data — react to the style and we'll refine from here.
+    </p>
+
+    <div class="card">
+      <img src="/oc-map-proto.svg" alt="Styled map of Orange County showing city areas, ZIP boundaries, and open space">
+    </div>
+
+    <div class="legend">
+      <span><i class="sw" style="background:#46523a"></i> Open / unincorporated land (hills &amp; canyons — proxy)</span>
+      <span><i class="sw" style="background:#3a4230"></i> City / built-up areas</span>
+      <span><i class="ln"></i> City borders</span>
+      <span><i class="ln zip"></i> ZIP boundaries</span>
+    </div>
+
+    <p class="cap">
+      Notes: the green “open land” here is a stand-in drawn from unincorporated areas — a
+      real hills/terrain layer (USGS relief + NLCD land cover, or the OC vegetation map)
+      is the next pass and will show the actual wildland edges coyotes range from. City
+      labels show the 16 largest by area to avoid clutter. Sources: Orange County Open GIS
+      Data Portal · US Census TIGER/ZCTA.
+    </p>
+  </div>
+</body>
+</html>
