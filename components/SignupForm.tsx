@@ -257,6 +257,28 @@ export default function SignupForm() {
     }
   }, [state.status, state.signupId, done]);
 
+  // Client-side message when the submit can't go through yet (e.g. the human
+  // check hasn't finished) — so the button is never a silent dead-click.
+  const [formError, setFormError] = useState("");
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  // Whenever a result or error appears, bring it into view. The result screens
+  // (done / already-registered) render ABOVE the form, so a member who clicked
+  // "Join" while scrolled down would otherwise see no change. Always scroll up.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (done || state.status === "already_member") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if ((state.status === "error" || formError) && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [done, state.status, state.message, formError]);
+
+  // Clear any stale client error once the human check completes.
+  useEffect(() => {
+    if (tsToken) setFormError("");
+  }, [tsToken]);
+
   // ---------- Done ----------
   if (done) {
     const sid = state.signupId;
@@ -598,7 +620,18 @@ export default function SignupForm() {
           widget is rendered explicitly (see the effect above). */}
       <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
 
-      <form action={formAction} className="space-y-4">
+      <form
+        action={formAction}
+        onSubmit={(e) => {
+          // Only the final screen actually submits. If the human check hasn't
+          // issued a token yet, stop here and say so — never a silent no-op.
+          if (step === TOTAL && !tsToken) {
+            e.preventDefault();
+            setFormError("Just finishing the quick human check above — give it a second, then tap Join the Council again.");
+          }
+        }}
+        className="space-y-4"
+      >
         {/* Attribution (filled client-side) — invisible to the user. */}
         <input type="hidden" name="source" value={attr.source} />
         <input type="hidden" name="referrer" value={attr.referrer} />
@@ -727,8 +760,14 @@ export default function SignupForm() {
           </label>
         </div>
 
-        {state.status === "error" && (
-          <p className="text-sm text-clay" role="alert">{state.message}</p>
+        {(state.status === "error" || formError) && (
+          <div
+            ref={errorRef}
+            role="alert"
+            className="rounded-lg border border-clay/40 bg-clay/10 px-4 py-3 text-sm text-clay"
+          >
+            {formError || state.message}
+          </div>
         )}
 
         {/* Wizard navigation */}
@@ -751,17 +790,7 @@ export default function SignupForm() {
               Continue →
             </button>
           ) : (
-            <div className="flex flex-col items-end gap-1.5">
-              <ContinueButton
-                disabled={!tsToken}
-                label={tsToken ? "Join the Council →" : "Verifying you're human…"}
-              />
-              {!tsToken && (
-                <span className="text-xs text-ink/45">
-                  One moment — finishing the quick human check above.
-                </span>
-              )}
-            </div>
+            <ContinueButton label="Join the Council →" />
           )}
         </div>
       </form>
