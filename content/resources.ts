@@ -248,7 +248,7 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         url: "https://foothillssentry.com/story-archives-1/f/the-21st-century-urban-coyote-is-a-new-kind-of-wild",
         source: "Foothills Sentry",
         blurb:
-          "A local feature on how Orange County's coyotes have adapted to life among us — a new kind of wild shaped by the suburbs they now call home. A good, grounding read from our own foothills paper.",
+          "How a diet of human food and trash made the urban coyote bolder and more habituated than its rural cousins — and why the research it cites complicates any simple fix, from ignoring them to removing them.",
       },
     ],
   },
