@@ -243,6 +243,13 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         blurb:
           "A representative OC city page with hazing guidance, fence standards, and online reporting.",
       },
+      {
+        title: "The 21st-Century Urban Coyote Is a New Kind of Wild",
+        url: "https://foothillssentry.com/story-archives-1/f/the-21st-century-urban-coyote-is-a-new-kind-of-wild",
+        source: "Foothills Sentry",
+        blurb:
+          "A local feature on how Orange County's coyotes have adapted to life among us — a new kind of wild shaped by the suburbs they now call home. A good, grounding read from our own foothills paper.",
+      },
     ],
   },
   {
