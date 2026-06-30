@@ -24,6 +24,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/resources",
     children: [
       { label: "Report", href: "/report" },
+      { label: "Habitat & Corridors", href: "/corridors" },
       { label: "Coyote Q&A", href: "/faq" },
       { label: "Wall of Understanding", href: "/understanding" },
     ],

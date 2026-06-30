@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/terms", priority: 0.3 },
     { path: "/liability", priority: 0.3 },
     { path: "/understanding", priority: 0.5 },
+    { path: "/corridors", priority: 0.6 },
     { path: "/contribute", priority: 0.5 },
   ];
   return routes.map((r) => ({
