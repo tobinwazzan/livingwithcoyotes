@@ -16,9 +16,11 @@ type Member = {
   membership_status: string;
   membership_method: string | null;
   paid_amount_cents: number | null;
+  is_droid: boolean | null;
   created_at: string;
 };
 type FunnelEvent = { event: string; is_bot: boolean };
+type ForumPost = { id: string; hidden: boolean; signups: { is_droid: boolean | null } | { is_droid: boolean | null }[] | null };
 type Report = {
   category: string;
   city: string | null;
@@ -111,10 +113,12 @@ export default async function AdminPage() {
     { data: eventsRaw },
     { data: reportsRaw },
     { data: sharedRaw },
+    { data: postsRaw },
+    { data: forumCommentsRaw },
   ] = await Promise.all([
     supabaseAdmin
       .from("signups")
-      .select("full_name, email, role, city, source, membership_status, membership_method, paid_amount_cents, created_at")
+      .select("full_name, email, role, city, source, membership_status, membership_method, paid_amount_cents, is_droid, created_at")
       .order("created_at", { ascending: false }),
     supabaseAdmin.from("funnel_events").select("event, is_bot"),
     supabaseAdmin
@@ -126,12 +130,16 @@ export default async function AdminPage() {
       .select("id, lean, certainty, steelman, visibility, hidden, created_at, signups(full_name)")
       .in("visibility", ["shared_anon", "shared_named"])
       .order("created_at", { ascending: false }),
+    supabaseAdmin.from("forum_posts").select("id, hidden, signups(is_droid)"),
+    supabaseAdmin.from("forum_comments").select("id, hidden"),
   ]);
 
   const members = (membersRaw ?? []) as Member[];
   const events = (eventsRaw ?? []) as FunnelEvent[];
   const reports = (reportsRaw ?? []) as Report[];
   const shared = (sharedRaw ?? []) as SharedReflection[];
+  const forumPosts = (postsRaw ?? []) as ForumPost[];
+  const forumComments = (forumCommentsRaw ?? []) as { id: string; hidden: boolean }[];
   const urgentReports = reports.filter(
     (r) => r.category === "pet_attack" || r.category === "person",
   );
@@ -142,7 +150,22 @@ export default async function AdminPage() {
 
   const active = members.filter((m) => m.membership_status === "active");
   const founding = active.filter((m) => m.membership_method === "founding");
-  const revenue = active.reduce((s, m) => s + (m.paid_amount_cents ?? 0), 0);
+
+  // Real money vs droid (simulated) money — never mixed.
+  const realActive = active.filter((m) => !m.is_droid);
+  const droidActive = active.filter((m) => m.is_droid);
+  const realRevenue = realActive.reduce((s, m) => s + (m.paid_amount_cents ?? 0), 0);
+  const droidRevenue = droidActive.reduce((s, m) => s + (m.paid_amount_cents ?? 0), 0);
+  const droidMembers = members.filter((m) => m.is_droid);
+
+  // Forum activity, split human vs droid.
+  const postIsDroid = (p: ForumPost) => {
+    const s = Array.isArray(p.signups) ? p.signups[0] : p.signups;
+    return !!s?.is_droid;
+  };
+  const visiblePosts = forumPosts.filter((p) => !p.hidden);
+  const droidPosts = visiblePosts.filter(postIsDroid);
+  const visibleComments = forumComments.filter((c) => !c.hidden);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
@@ -167,7 +190,7 @@ export default async function AdminPage() {
       <h2 className="mt-10 text-sm font-semibold uppercase tracking-wide text-clay">Members</h2>
       <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Total signups" value={members.length} />
-        <Stat label="Paid / active" value={active.length} sub={dollars(revenue) + " collected"} />
+        <Stat label="Paid / active (real)" value={realActive.length} sub={`${droidActive.length} droids excluded`} />
         <Stat label="Leads (unpaid)" value={members.length - active.length} />
         <Stat label="Free members" value={founding.length} />
       </div>
@@ -176,6 +199,23 @@ export default async function AdminPage() {
         <Breakdown title="By segment" rows={tally(members, (m) => ROLE_LABEL[m.role] ?? m.role)} />
         <Breakdown title="By city" rows={tally(members, (m) => m.city)} />
         <Breakdown title="By channel" rows={tally(members, (m) => m.source ?? "(none)")} />
+      </div>
+
+      {/* Contributions — real money kept strictly apart from droid (simulated) money */}
+      <h2 className="mt-10 text-sm font-semibold uppercase tracking-wide text-clay">Contributions</h2>
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <Stat label="Real money" value={dollars(realRevenue)} sub={`${realActive.length} real members — actually collected`} />
+        <Stat label="Droid money (simulated)" value={dollars(droidRevenue)} sub={`${droidActive.length} droids — NOT real, never collected`} />
+        <Stat label="Droid accounts" value={droidMembers.length} sub="synthetic test members" />
+      </div>
+
+      {/* Forum */}
+      <h2 className="mt-10 text-sm font-semibold uppercase tracking-wide text-clay">Forum</h2>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label="Posts" value={visiblePosts.length} />
+        <Stat label="Replies" value={visibleComments.length} />
+        <Stat label="Droid posts" value={droidPosts.length} sub="by synthetic members" />
+        <Stat label="Human posts" value={visiblePosts.length - droidPosts.length} />
       </div>
 
       {/* Recent */}
@@ -191,8 +231,11 @@ export default async function AdminPage() {
           </thead>
           <tbody>
             {members.slice(0, 25).map((m, i) => (
-              <tr key={i} className="border-t border-line/10">
-                <td className="px-3 py-2 text-ink/85">{m.full_name || m.email}</td>
+              <tr key={i} className={`border-t border-line/10 ${m.is_droid ? "bg-clay/5" : ""}`}>
+                <td className="px-3 py-2 text-ink/85">
+                  {m.full_name || m.email}
+                  {m.is_droid && <span className="ml-1 text-xs font-semibold text-clay">(droid)</span>}
+                </td>
                 <td className="px-3 py-2 text-ink/70">{ROLE_LABEL[m.role] ?? m.role}</td>
                 <td className="px-3 py-2 text-ink/70">{m.city}</td>
                 <td className="px-3 py-2 text-ink/70">{m.membership_status}</td>

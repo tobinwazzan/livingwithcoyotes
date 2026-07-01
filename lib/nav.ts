@@ -29,6 +29,7 @@ export const NAV_ITEMS: NavItem[] = [
       { label: "Wall of Understanding", href: "/understanding" },
     ],
   },
+  { label: "Forum", href: "/forum" },
   { label: "Contact", href: "/contact" },
 ];
 
