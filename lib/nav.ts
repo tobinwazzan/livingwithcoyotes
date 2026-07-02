@@ -30,6 +30,7 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: "Forum", href: "/forum" },
+  { label: "Videos", href: "/videos" },
   { label: "Contact", href: "/contact" },
 ];
 
