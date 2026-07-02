@@ -22,8 +22,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   // Cloudflare Turnstile loads its widget script (challenges.cloudflare.com).
   `script-src 'self' 'unsafe-inline'${devEval} https://challenges.cloudflare.com`,
-  // Turnstile renders inside an iframe from the same origin.
-  "frame-src https://challenges.cloudflare.com",
+  // Turnstile iframe, plus video embeds (links only — we never re-host video).
+  "frame-src https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com https://www.tiktok.com https://www.instagram.com https://platform.twitter.com https://www.facebook.com",
   "connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com",
   "upgrade-insecure-requests",
 ].join("; ");
